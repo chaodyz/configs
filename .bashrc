@@ -5,18 +5,12 @@
 # If not running interactively, don't do anything
 [[ $- != *i* ]] && return
 
-alias ls='ls --color=auto'
+# comment out for starship
 # PS1='[\u@\h \W]\$ '
-
-
 
 ### EXPORT
 export TERM="xterm-256color"                      # getting proper colors
 export HISTCONTROL=ignoredups:erasedups           # no duplicate entries
-
-### "nvim" as manpager
-# export MANPAGER="nvim -c 'set ft=man' -"
-
 
 ### SET VI MODE ###
 set -o vi
@@ -40,16 +34,6 @@ shopt -s checkwinsize # checks term size when bash regains control
 #ignore upper and lowercase when TAB completion
 bind "set completion-ignore-case on"
 
-# vim and emacs
-alias vim="nvim"
-
-# Changing "ls" to "exa"
-#alias ls='exa -al --color=always --group-directories-first' # my preferred listing
-#alias la='exa -a --color=always --group-directories-first'  # all files and dirs
-#alias ll='exa -l --color=always --group-directories-first'  # long format
-#alias lt='exa -aT --color=always --group-directories-first' # tree listing
-#alias l.='exa -a | egrep "^\."'
-
 # pacman and yay
 alias pacsyu='sudo pacman -Syyu'                 # update only standard pkgs
 alias yaysua='yay -Sua --noconfirm'              # update only AUR pkgs (yay)
@@ -57,7 +41,7 @@ alias yaysyu='yay -Syu --noconfirm'              # update standard pkgs and AUR 
 alias parsua='paru -Sua --noconfirm'             # update only AUR pkgs (paru)
 alias parsyu='paru -Syu --noconfirm'             # update standard pkgs and AUR pkgs (paru)
 alias unlock='sudo rm /var/lib/pacman/db.lck'    # remove pacman lock
-alias cleanup='sudo pacman -Rns (pacman -Qtdq)'  # remove orphaned packages
+alias cleanup='sudo pacman -Rns $(pacman -Qtdq)'  # remove orphaned packages
 
 # Colorize grep output (good for log files)
 alias grep='grep --color=auto'
@@ -71,14 +55,22 @@ alias rm='rm -i'
 
 # adding flags
 alias df='df -h'                          # human-readable sizes
-alias free='free -m'                      # show sizes in MB
 
-# ps
-alias psa="ps auxf"
-alias psgrep="ps aux | grep -v grep | grep -i -e VSZ -e"
-alias psmem='ps auxf | sort -nr -k 4'
-alias pscpu='ps auxf | sort -nr -k 3'
+# system shortcut
+alias bt="bluetoothctl"
+alias alsa="alsamixer"
+alias c="clear"
+alias ls='ls --color=auto'
+alias ll='ls -l --color=auto'
+alias la='ls -a --color=auto'
+alias lla='ls -a -l --color=auto'
 
-# Fix mouse issue in Alacritty
-set ttymouse=sgr
+# vim
+alias vim="nvim"
+alias v="nvim"
+
+# Git
+alias gb='git branch'
+alias gc='git checkout'
+
 eval "$(starship init bash)"
