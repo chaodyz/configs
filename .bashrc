@@ -64,6 +64,7 @@ alias ls='ls --color=auto'
 alias ll='ls -l --color=auto'
 alias la='ls -a --color=auto'
 alias lla='ls -a -l --color=auto'
+alias sysmd-on='systemctl list-unit-files --state=enabled'
 
 # vim
 alias vim="nvim"
