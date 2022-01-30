@@ -33,9 +33,8 @@ colors:
     cyan:    '#ffd700'
     white:   '#ffffff'
 
-background_opacity: 0.95
-
 window:
+  opacity: 0.95
   padding:
     x: 2
     y: 2
