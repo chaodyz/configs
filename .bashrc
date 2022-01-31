@@ -22,6 +22,19 @@ bind '"\e[B": history-search-forward'
 ### AUTO COMPLETE NAME
 complete -cf sudo
 
+### PATH
+if [ -d "$HOME/.bin" ] ;
+  then PATH="$HOME/.bin:$PATH"
+fi
+
+if [ -d "$HOME/.local/bin" ] ;
+  then PATH="$HOME/.local/bin:$PATH"
+fi
+
+if [ -d "$HOME/Applications" ] ;
+  then PATH="$HOME/Applications:$PATH"
+fi
+
 ### SHOPT
 shopt -s autocd # change to named directory
 shopt -s cdspell # autocorrects cd misspellings
@@ -61,6 +74,25 @@ ex ()
   fi
 }
 
+# navigation
+up () {
+  local d=""
+  local limit="$1"
+
+  # Default to limit of 1
+  if [ -z "$limit" ] || [ "$limit" -le 0 ]; then
+    limit=1
+  fi
+
+  for ((i=1;i<=limit;i++)); do
+    d="../$d"
+  done
+
+  # perform cd. Show error if cd fails
+  if ! cd "$d"; then
+    echo "Couldn't go up $limit dirs.";
+  fi
+}
 
 # pacman and yay
 alias pacsyu='sudo pacman -Syyu'                 # update only standard pkgs
@@ -70,6 +102,9 @@ alias parsua='paru -Sua --noconfirm'             # update only AUR pkgs (paru)
 alias parsyu='paru -Syu --noconfirm'             # update standard pkgs and AUR pkgs (paru)
 alias unlock='sudo rm /var/lib/pacman/db.lck'    # remove pacman lock
 alias cleanup='sudo pacman -Rns $(pacman -Qtdq)'  # remove orphaned packages
+
+# get error messages from journalctl
+alias jctl="journalctl -p 3 -xb"
 
 # Colorize grep output (good for log files)
 alias grep='grep --color=auto'
@@ -101,5 +136,9 @@ alias v="nvim"
 # Git
 alias gb='git branch'
 alias gc='git checkout'
+
+# the terminal rickroll
+alias rr='curl -s -L https://raw.githubusercontent.com/keroserene/rickrollrc/master/roll.sh | bash'
+
 
 eval "$(starship init bash)"
