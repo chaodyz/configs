@@ -65,14 +65,14 @@ font:
   normal:
     family: "FiraMono Nerd Font"
     style: Regular
-  # bold:
-  #   family: "FiraMono Nerd Font"
-  #   style: Bold
+  bold:
+    family: "FiraMono Nerd Font"
+    style: Medium
   # italic:
-  #   family: "FiraMono Nerd Font"
+  #   family: "Hack Nerd Font"
   #   style: Italic
   # bold_italic:
-  #   family: "FiraMono Nerd Font"
+  #   family: "Hack Nerd Font"
   #   style: Bold Italic
   offset:
     x: 0
