@@ -1,6 +1,6 @@
- if (vim.g.vscode) then
-    -- VSCode extension
-    vim.cmd([[source $HOME/.config/nvim/vscode/settings.vim]])
+if (vim.g.vscode) then
+  require "vscode.init"
+  require "user.comment"
 else
     -- ordinary neovim
   require "user.options"
