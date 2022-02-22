@@ -45,7 +45,7 @@ alias ll='ls -la -G'
 alias l.='ls -d .* -G'
 
 # alias updatedb = 'sudo /usr/libexec/locate.updatedb'
-alias updatedb = 'sudo /usr/libexec/locate.updatedb'
+alias updatedb='sudo /usr/libexec/locate.updatedb'
 # vim
 alias vim="nvim"
 
@@ -74,7 +74,5 @@ if [ -f '/Users/diz/google-cloud-sdk/path.bash.inc' ]; then . '/Users/diz/google
 
 if [ -f '/Users/diz/google-cloud-sdk/completion.bash.inc' ]; then . '/Users/diz/google-cloud-sdk/completion.bash.inc'; fi
 
-
-alias backup = "bash ~/projects/configs/exec/backup.sh"
 
 eval "$(starship init bash)"
