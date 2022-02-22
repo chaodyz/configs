@@ -22,19 +22,6 @@ bind '"\e[B": history-search-forward'
 ### AUTO COMPLETE NAME
 complete -cf sudo
 
-### PATH
-if [ -d "$HOME/.bin" ] ;
-  then PATH="$HOME/.bin:$PATH"
-fi
-
-if [ -d "$HOME/.local/bin" ] ;
-  then PATH="$HOME/.local/bin:$PATH"
-fi
-
-if [ -d "$HOME/Applications" ] ;
-  then PATH="$HOME/Applications:$PATH"
-fi
-
 ### SHOPT
 shopt -s autocd # change to named directory
 shopt -s cdspell # autocorrects cd misspellings
@@ -137,12 +124,25 @@ alias v="nvim"
 alias gb='git branch'
 alias gc='git checkout'
 
-# the terminal rickroll
-alias rr='curl -s -L https://raw.githubusercontent.com/keroserene/rickrollrc/master/roll.sh | bash'
+### PATH
+if [ -d "$HOME/.bin" ] ;
+  then PATH="$HOME/.bin:$PATH"
+fi
+
+if [ -d "$HOME/.local/bin" ] ;
+  then PATH="$HOME/.local/bin:$PATH"
+fi
+
+if [ -d "$HOME/Applications" ] ;
+  then PATH="$HOME/Applications:$PATH"
+fi
 
 # fnm
 export PATH=/home/diz/.fnm:$PATH
 eval "`fnm env`"
+
+# Cargo
+export PATH=/home/diz/.cargo/bin:$PATH
 
 eval "$(starship init bash)"
 

@@ -1,6 +1,7 @@
 # Compiled Lua sources
 luac.out
 *.DS_Store
+nvim/plugin/packer_compiled.lua
 # luarocks build files
 *.src.rock
 *.zip
@@ -38,6 +39,3 @@ luac.out
 *.i*86
 *.x86_64
 *.hex
-
-
-nvim/plugin/packer_compiled.lua
