@@ -1,5 +1,8 @@
+"i-> Insert mode
 "n-> Normal mode
-"v-> Visual Mode
+"v-> Visual mode
+" noremap-> non recursive map
+
 "Better Navigation
 nnoremap <silent> <C-j> :call VSCodeNotify('workbench.action.navigateDown')<CR>
 nnoremap <silent> <C-k> :call VSCodeNotify('workbench.action.navigateUp')<CR>
@@ -10,11 +13,6 @@ xnoremap <silent> <C-j> :call VSCodeNotify('workbench.action.navigateDown')<CR>
 xnoremap <silent> <C-k> :call VSCodeNotify('workbench.action.navigateUp')<CR>
 xnoremap <silent> <C-h> :call VSCodeNotify('workbench.action.navigateLeft')<CR>
 xnoremap <silent> <C-l> :call VSCodeNotify('workbench.action.navigateRight')<CR>
-
-" Bind C-/ to vscode commentary since calling from vscode produce double
-" comments
-xnoremap <silent> <C-/> :call Comment()<CR>
-nnoremap <silent> <C-/> :call Comment()<CR>
 
 " Space to envoke VsCode Which key plugin
 xnoremap <silent> <Space> :call VSCodeNotify('whichkey.show')<CR>
@@ -56,3 +54,7 @@ xnoremap <C-w>- <Cmd>call <SID>manageEditorSize(v:count, 'decrease')<CR>
 
 " Open Quick Fix
 nnoremap('z=', "<Cmd>call VSCodeNotify('keyboard-quickfix.openQuickFix')<Cr>")
+
+
+" G 
+nnoremap vgd <Cmd>call VSCodeNotify('editor.action.revealDefinitionAside')<CR>
