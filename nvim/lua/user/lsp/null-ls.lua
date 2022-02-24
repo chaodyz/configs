@@ -20,9 +20,9 @@ null_ls.setup({
 		-- formatting.black.with({ extra_args = { "--fast" } }),
 		-- diagnostics.flake8,
 		-- eslint_d
-		-- formatting.eslint_d,
-		-- diagnostics.eslint_d,
-		-- code_actions.eslint_d,
+		formatting.eslint_d,
+		diagnostics.eslint_d,
+		code_actions.eslint_d,
 		code_actions.gitsigns,
 		code_actions.refactoring,
 		-- lua

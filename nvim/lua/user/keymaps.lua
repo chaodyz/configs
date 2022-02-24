@@ -62,15 +62,5 @@ keymap("x", "<A-k>", ":move '<-2<CR>gv-gv", opts)
 
 keymap("n", "<leader>Y","\"+y", opts)
 keymap("n", "<leader>y","\"*y", opts)
-keymap("n", "<leader>P","\"+P", opts)
-keymap("n", "<leader>p","\"*p", opts)
--- keymap("n", "<leader>w","w!<CR>", opts)
--- keymap("n", "<leader>q","q!<CR>", opts)
 
--- Terminal --
--- Better terminal navigation
--- keymap("t", "<C-h>", "<C-\\><C-N><C-w>h", term_opts)
--- keymap("t", "<C-j>", "<C-\\><C-N><C-w>j", term_opts)
--- keymap("t", "<C-k>", "<C-\\><C-N><C-w>k", term_opts)
--- keymap("t", "<C-l>", "<C-\\><C-N><C-w>l", term_opts)
-
+vim.api.nvim_set_keymap('n', '<Leader>qr',  '<cmd>:lua require("user.telescope").reload()<CR>', { noremap = true, silent = true })

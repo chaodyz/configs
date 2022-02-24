@@ -1,0 +1,1 @@
+require("user.tele.telescope")
