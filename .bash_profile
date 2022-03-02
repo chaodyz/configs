@@ -51,7 +51,7 @@ alias vim="nvim"
 
 alias k='kubectl'
 alias wc-run='cd /Users/diz/Projects/ultipro-app&&npm run start:engaging-developing-web'
-alias wc-test='cd /Users/diz/Projects/ultipro-app&&npm run start:engaging-developing-web:watch'
+alias wc-test='cd /Users/diz/Projects/ultipro-app&&npm run test:engaging-developing-web:watch'
 alias wc-cypress='cd /Users/diz/Projects/ultipro-app&&npm run test:engaging-developing-web:cypress'
 alias wc-local='cd /Users/diz/Projects/ed-localization&&npm start'
 alias mock-tms="cd /Users/diz/Projects/mock-tms&&nodemon"
