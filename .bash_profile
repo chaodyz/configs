@@ -56,6 +56,12 @@ alias wc-cypress='cd /Users/diz/Projects/ultipro-app&&npm run test:engaging-deve
 alias wc-local='cd /Users/diz/Projects/ed-localization&&npm start'
 alias mock-tms="cd /Users/diz/Projects/mock-tms&&nodemon"
 
+alias gc="git checkout"
+alias gp="git pull"
+alias gpp="git push"
+alias gf="git fetch"
+alias gc="git commit"
+
 M2_HOME=/opt/apache-maven-3.8.4
 JAVA_HOME=/Library/Java/JavaVirtualMachines/zulu-11.jdk/Contents/Home/
 export PATH="~/.local/bin:$JAVA_HOME/bin:$M2_HOME/bin:$PATH"
