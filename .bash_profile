@@ -83,3 +83,5 @@ if [ -f '/Users/diz/google-cloud-sdk/completion.bash.inc' ]; then . '/Users/diz/
 
 
 eval "$(starship init bash)"
+
+[ -s "/Users/diz/.jabba/jabba.sh" ] && source "/Users/diz/.jabba/jabba.sh"
