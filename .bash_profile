@@ -65,7 +65,7 @@ alias gcc="git commit"
 
 M2_HOME=/opt/apache-maven-3.8.4
 JAVA_HOME=/Library/Java/JavaVirtualMachines/zulu-11.jdk/Contents/Home/
-export PATH="~/.local/bin:$JAVA_HOME/bin:$M2_HOME/bin:$PATH"
+export PATH="~/.local/bin:$JAVA_HOME/bin:$M2_HOME/bin:/opt/homebrew/bin:$PATH"
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm

@@ -47,8 +47,14 @@ return packer.startup(function(use)
   use "windwp/nvim-autopairs" -- Autopairs, integrates with both cmp and treesitter
   use "numToStr/Comment.nvim" -- Easily comment stuff
   use "kyazdani42/nvim-web-devicons"
-  use "kyazdani42/nvim-tree.lua"
-  use {'akinsho/bufferline.nvim', tag = "v2.*", requires = 'kyazdani42/nvim-web-devicons'}
+  use {
+    "kyazdani42/nvim-tree.lua",
+    requires = {
+      "kyazdani42/nvim-web-devicons", -- optional, for file icon
+    },
+    tag = "nightly", -- optional, updated every week. (see issue #1193)
+  }
+  use { "akinsho/bufferline.nvim", tag = "v2.*", requires = "kyazdani42/nvim-web-devicons" }
   use "moll/vim-bbye" --Bbye allows you to do delete buffers (close files) without closing your windows or messing up your layout.
   use "nvim-lualine/lualine.nvim"
   use "ahmedkhalf/project.nvim"
@@ -97,8 +103,14 @@ return packer.startup(function(use)
   use "JoosepAlviste/nvim-ts-context-commentstring"
 
   -- Git
-  use "lewis6991/gitsigns.nvim"
-  use { "sindrets/diffview.nvim" }
+  use {
+    "lewis6991/gitsigns.nvim",
+    config = function()
+      require("gitsigns").setup()
+    end,
+  }
+
+  use { "sindrets/diffview.nvim", requires = "nvim-lua/plenary.nvim" }
   -- Markdown
   use "davidgranstrom/nvim-markdown-preview" -- browser
   use { "ellisonleao/glow.nvim" } -- terminal
