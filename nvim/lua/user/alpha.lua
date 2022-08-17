@@ -180,9 +180,9 @@ alpha.setup(dashboard.opts)
 --
 -- function M:setup()
 --     -- Setup highlight
---     vim.cmd('hi AlphaHeader guifg=#5c6370')
---     vim.cmd('hi AlphaBody guifg=#5c6370')
---     vim.cmd('hi AlphaFooter guifg=#5c6370')
+--     vim.cmd('hi AlphaHeader fg=#5c6370')
+--     vim.cmd('hi AlphaBody fg=#5c6370')
+--     vim.cmd('hi AlphaFooter fg=#5c6370')
 --     require('alpha').setup(config)
 --     require('util').map('n', '<leader>.', '<cmd>Alpha<CR>')
 -- end

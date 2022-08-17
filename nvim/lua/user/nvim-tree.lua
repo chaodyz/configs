@@ -13,7 +13,7 @@ require'nvim-tree'.setup { -- BEGIN_DEFAULT_OPTS
   open_on_tab = false,
   sort_by = "name",
   update_cwd = false,
-  reload_on_bufenter = false,
+  -- reload_on_bufenter = false,
   view = {
     width = 30,
     height = 30,
@@ -41,7 +41,7 @@ require'nvim-tree'.setup { -- BEGIN_DEFAULT_OPTS
     },
     icons = {
       webdev_colors = true,
-      git_placement = "before",
+      -- git_placement = "before",
     },
   },
   hijack_directories = {
@@ -108,10 +108,10 @@ require'nvim-tree'.setup { -- BEGIN_DEFAULT_OPTS
     cmd = "trash",
     require_confirm = true,
   },
-  live_filter = {
-    prefix = "[FILTER]: ",
-    always_show_folders = true,
-  },
+  -- live_filter = {
+  --   prefix = "[FILTER]: ",
+  --   always_show_folders = true,
+  -- },
   log = {
     enable = false,
     truncate = false,
