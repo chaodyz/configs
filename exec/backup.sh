@@ -25,6 +25,8 @@ cp ~/.config/alacritty/alacritty.yml  ~/projects/configs/alacritty.yml &&
 
 cp ~/.config/joplin/keymap.json  ~/projects/configs/keymap.json &&
 
-cp -rf ~/.config/nvim  ~/projects/configs/
+cp -rf ~/.config/nvim  ~/projects/configs/ &&
+
+cp ~/.emacs.d/init.el ~/projects/configs/emacs/init.el
 
 echo "done"
