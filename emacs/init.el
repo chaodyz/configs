@@ -17,7 +17,10 @@
 
 ;; Initialize package.el
 (require 'package)
-(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+(setq package-archives '(("melpa" . "https://melpa.org/packages/")
+                         ("melpa-stable" . "https://stable.melpa.org/packages/")
+                         ("org" . "https://orgmode.org/elpa/")
+                         ("elpa" . "https://elpa.gnu.org/packages/"))))
 (package-initialize)
 
 (unless (package-installed-p 'use-package)
@@ -39,7 +42,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(move-lines evil-nerd-commenter general helpful which-key ivy evil magit use-package))
+   '(command-log-mode move-lines evil-nerd-commenter general helpful which-key ivy evil magit use-package))
  '(warning-suppress-types '((use-package) (use-package) (use-package) (use-package))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -62,12 +65,12 @@
   (evil-global-set-key 'motion "j" 'evil-next-visual-line)
   (evil-global-set-key 'motion "k" 'evil-previous-visual-line)
   )
+
 (use-package evil-nerd-commenter
   :ensure t
   :config
   (evilnc-default-hotkeys))
 (define-key evil-normal-state-map "gc" 'evilnc-comment-or-uncomment-lines)
-
 
 ;; TODO: Try to mimic move lines action
 ;; keymap("x", "J", ":move '>+1<CR>gv-gv", opts)
@@ -161,3 +164,8 @@
   (which-key-mode)
   (setq which-key-idle-delay 0.3)
   (setq which-key-prefix-prefix "SPC"))
+
+
+;; Comand log mode
+(use-package command-log-mode
+  :ensure t)
