@@ -38,7 +38,9 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages '(which-key ivy evil magit use-package)))
+ '(package-selected-packages
+   '(move-lines evil-nerd-commenter general helpful which-key ivy evil magit use-package))
+ '(warning-suppress-types '((use-package) (use-package) (use-package) (use-package))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -49,13 +51,31 @@
 ;; Evil
 (use-package evil
   :ensure t
-  ;; :bind (:map evil-normal-state-map
-  ;;        ("C-u" . evil-scroll-up)
-  ;;        :map evil-insert-state-map
-  ;;        ("C-a" . beginning-of-line)
-  ;;        ("C-e" . end-of-line))
+  :init
+  (setq evil-want-integration t)
+  (setq evil-want-keybinding nil)
+  (setq evil-want-C-u-scroll t)
+  (setq evil-want-C-i-jump nil)
   :config
-  (evil-mode 1))
+  (evil-mode 1)
+ ;; Use visual line motions even outside of visual-line-mode buffers
+  (evil-global-set-key 'motion "j" 'evil-next-visual-line)
+  (evil-global-set-key 'motion "k" 'evil-previous-visual-line)
+  )
+(use-package evil-nerd-commenter
+  :ensure t
+  :config
+  (evilnc-default-hotkeys))
+(define-key evil-normal-state-map "gc" 'evilnc-comment-or-uncomment-lines)
+
+
+;; TODO: Try to mimic move lines action
+;; keymap("x", "J", ":move '>+1<CR>gv-gv", opts)
+;; keymap("x", "K", ":move '<-2<CR>gv-gv", opts)
+;; keymap("x", "<A-j>", ":move '>+1<CR>gv-gv", opts)
+;; keymap("x", "<A-k>", ":move '<-2<CR>gv-gv", opts)
+;; -------------
+
 ;; Escape key to quit menu
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
 
@@ -94,9 +114,50 @@
   :config
   (setq ivy-initial-inputs-alist nil))
 
+(global-set-key (kbd "C-M-j") 'counsel-switch-buffer)
+
 ;; Theme
 (use-package zenburn-theme
   :ensure t
   :config
   (load-theme 'zenburn t))
 
+;; Helpful
+(use-package helpful
+  :ensure t
+  :custom
+  (counsel-describe-function-function #'helpful-callable)
+  (counsel-describe-variable-function #'helpful-variable)
+  :bind
+  ([remap describe-function] . helpful-function)
+  ([remap describe-symbol] . helpful-symbol)
+  ([remap describe-variable] . helpful-variable)
+  ([remap describe-command] . helpful-command)
+  ([remap describe-key] . helpful-key))
+
+;; General
+(use-package general
+  :ensure t
+  :config
+  (general-create-definer leader-key-def
+    :states '(normal visual insert emacs)
+    :prefix "SPC"
+    :non-normal-prefix "M-SPC")
+
+;; Define some key bindings using the leader key
+  (leader-key-def
+    "f" 'counsel-find-file
+    "r" 'counsel-recentf
+    "b" 'counsel-ibuffer
+    "c" 'kill-buffer
+    "R" 'eval-last-sexp
+    "w" 'save-buffer))
+
+;; Which key
+(use-package which-key
+  :ensure t
+  :diminish
+  :config
+  (which-key-mode)
+  (setq which-key-idle-delay 0.3)
+  (setq which-key-prefix-prefix "SPC"))
