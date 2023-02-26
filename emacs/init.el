@@ -17,6 +17,9 @@
 (set-fringe-mode 10) ; Give some breathing room
 (menu-bar-mode -1)  ; Disable the menu bar
 
+(setq split-width-threshold 160) ; the minimum width of a window that Emacs should split horizontally instead of vertically. 
+(setq split-height-threshold 80)
+
 ;; -----------------------------------------
 ;; Initialize package.e
 (require 'package)
@@ -40,12 +43,26 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes
-   '("51ec7bfa54adf5fff5d466248ea6431097f5a18224788d0bd7eb1257a4f7b773" "2dc03dfb67fbcb7d9c487522c29b7582da20766c9998aaad5e5b63b5c27eec3f" "443e2c3c4dd44510f0ea8247b438e834188dc1c6fb80785d83ad3628eadf9294" default))
+   '("00445e6f15d31e9afaa23ed0d765850e9cd5e929be5e8e63b114a3346236c44c" "285d1bf306091644fb49993341e0ad8bafe57130d9981b680c1dbd974475c5c7" "51ec7bfa54adf5fff5d466248ea6431097f5a18224788d0bd7eb1257a4f7b773" "2dc03dfb67fbcb7d9c487522c29b7582da20766c9998aaad5e5b63b5c27eec3f" "443e2c3c4dd44510f0ea8247b438e834188dc1c6fb80785d83ad3628eadf9294" default))
  '(package-selected-packages
    '(org-superstar pyim command-log-mode move-lines evil-nerd-commenter general helpful which-key ivy evil magit use-package))
  '(pyim-dicts
    '((:name "lazy" :file "/Users/diz/.emacs.d/pyim/pyim-bigdict.pyim.gz")))
  '(warning-suppress-types '((use-package) (use-package) (use-package) (use-package))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(org-block ((t (:inherit fixed-pitch :height 0.9))))
+ '(org-code ((t (:inherit (shadow fixed-pitch) :height 0.9))))
+ '(org-default ((t (:inherit default :height 1.0))))
+ '(org-ellipsis ((t (:inherit default :weight normal :height 1.0 :underline nil))))
+ '(org-level-1 ((t (:inherit outline-1 :height 1.3))))
+ '(org-level-2 ((t (:inherit outline-2 :height 1.2))))
+ '(org-level-3 ((t (:inherit outline-3 :height 1.2))))
+ '(org-level-4 ((t (:inherit outline-4 :height 1.05))))
+ '(org-link ((t (:inherit link :height 1.0)))))
 
 ;; ---------------------  Begin use-package
 ;; Magit
@@ -55,9 +72,15 @@
 
 
 ;; Evil
+(use-package undo-tree
+  :ensure t
+  :config
+  (global-undo-tree-mode))
+
 (use-package evil
   :ensure t
   :init
+  (setq evil-undo-system 'undo-tree)
   (setq evil-want-integration t)
   (setq evil-want-keybinding nil)
   (setq evil-want-C-u-scroll t)
@@ -129,13 +152,31 @@
   (setq zenburn-use-variable-pitch 0)
   (setq zenburn-scale-org-headlines 0)
   (setq zenburn-scale-outline-headlines 0)
-  (load-theme 'zenburn t))
+  ;; (load-theme 'zenburn t)
+  )
 
-;; (use-package solarized-theme
-;;   :ensure t
-;;   :config
-;;   (setq solarized-high-contrast-mode-line 0)
-;;   (load-theme 'solarized-light t))
+(use-package solarized-theme
+  :ensure t
+  :config
+  (setq solarized-high-contrast-mode-line 0)
+  ;; (load-theme 'solarized-light t)
+  )
+
+;; Load Theme by location's sunrise and sunset 
+(use-package circadian
+  :config
+  ;; Set Toronto as the location for sunrise and sunset times
+  (setq calendar-latitude 43.6532
+        calendar-longitude -79.3832
+        calendar-location-name "Toronto, Canada")
+  ;; Define a function to set the theme based on the time of day
+  (defun my/circadian-setup ()
+    (if (eq (car (circadian-now)) 'day)
+        (load-theme 'solarized-light-high-contrast t)
+      (load-theme 'zenburn t)))
+  ;; Enable circadian mode
+  (circadian-setup)
+  (add-hook 'circadian-after-load-theme-hook #'my/circadian-setup))
 
 ;; Helpful
 (use-package helpful
@@ -150,6 +191,16 @@
   ([remap describe-command] . helpful-command)
   ([remap describe-key] . helpful-key))
 
+(defun describe-thing-at-point ()
+  "Show the documentation of the symbol at point."
+  (interactive)
+  (let ((thing (symbol-at-point)))
+    (if thing
+        (describe-symbol thing)
+      (message "No symbol at point."))))
+(global-set-key (kbd "C-c d") 'describe-thing-at-point)
+
+
 ;; General
 (use-package general
   :ensure t
@@ -162,16 +213,29 @@
 ;; Define some key bindings using the leader key
   (leader-key-def
     "a" 'org-agenda
-    "b" 'counsel-ibuffer
+    "d" 'describe-thing-at-point
     "f" 'counsel-find-file
     "h" 'counsel-command-history
-    "H" 'ivy-resume
-    "m" 'evil-window-map ; bind Vim window 
-    "q" 'kill-buffer
     "r" 'counsel-recentf
     "w" 'save-buffer
     "R" 'eval-last-sexp
-    ))
+    )
+
+  ;; Key-Buffer
+  (leader-key-def
+    "b" '(:ignore t:which-key "Buffer")
+    "b l" 'counsel-ibuffer
+    "b c" 'kill-buffer
+    "b w" 'save-buffer 
+    )
+   ;; Key-Org
+  (leader-key-def
+    "o" '(:ignore t:which-key "Org")
+    "o a" 'org-agenda
+    "o s" 'org-schedule
+    "o d" 'org-deadline
+    )
+  )
 
 
 ;; Which key
@@ -252,8 +316,11 @@
   (setq org-ellipsis " ▼"
 	org-hide-emphasis-markers t
         org-directory "~/org/"
-        org-default-notes-file "~/org/index.org"
-	)
+        org-default-notes-file "~/org/index.org")
+  (setq org-agenda-files '("~/org/agenda"))
+  (setq org-agenda-start-with-log-mode t)
+  (setq org-log-done 'time)
+  (setq org-log-into-drawer t)
   :hook (org-mode . my-org-mode-setup)
   :config
 ;; Configure org mode to start with modes that more visual appealing
@@ -268,11 +335,10 @@
   ;; Set faces for headings, lists, and other elements
   (custom-set-faces
   ;; Set font and size for headlines
-  '(org-level-1 ((t (:inherit outline-1 :height 1.5))))
-  '(org-level-2 ((t (:inherit outline-2 :height 1.3))))
+  '(org-level-1 ((t (:inherit outline-1 :height 1.3))))
+  '(org-level-2 ((t (:inherit outline-2 :height 1.2))))
   '(org-level-3 ((t (:inherit outline-3 :height 1.2))))
-  '(org-level-4 ((t (:inherit outline-4 :height 1.1))))
-
+  '(org-level-4 ((t (:inherit outline-4 :height 1.05))))
   '(org-default ((t (:inherit default :height 1.0))))
   '(org-block ((t (:inherit fixed-pitch :height 0.9))))
   '(org-code ((t (:inherit (shadow fixed-pitch) :height 0.9))))
