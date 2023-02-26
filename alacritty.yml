@@ -63,10 +63,10 @@ colors:
 font:
   size: 15.0
   normal:
-    family: "FuraMono Nerd Font"
+    family: "Fira Code"
     style: Regular
   bold:
-    family: "FuraMono Nerd Font"
+    family: "Fira Code"
     style: Medium
   # italic:
   #   family: "Hack Nerd Font"

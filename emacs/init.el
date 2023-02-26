@@ -1,8 +1,9 @@
 ;; Font 
 ;; Set font by different mode: (set-face-attribute 'default nil :font "FONT_NAME":height: FONT_SIZE MODE/BUFFER)
-(set-face-attribute 'default nil :font "FiraMono Nerd Font" :height 180)
-;; 
-;;(load-theme 'tango)
+(set-face-attribute 'default nil :font "Fira Code" :height 180)
+(set-face-attribute 'variable-pitch nil :family "Arial" :height 180 :weight 'thin)
+(set-face-attribute 'fixed-pitch nil :font "Fira Code" :height 160)
+(set-fontset-font t 'han (font-spec :family "Source Han Sans CN"))
 
 ;; Enable visible bell
 (setq visible-bell t)
@@ -15,7 +16,7 @@
 (set-fringe-mode 10) ; Give some breathing room
 (menu-bar-mode -1)  ; Disable the menu bar
 
-;; Initialize package.el
+;; Initialize package.e
 (require 'package)
 (setq package-archives '(("melpa" . "https://melpa.org/packages/")
                          ("melpa-stable" . "https://stable.melpa.org/packages/")
@@ -41,8 +42,10 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(custom-safe-themes
+   '("51ec7bfa54adf5fff5d466248ea6431097f5a18224788d0bd7eb1257a4f7b773" "2dc03dfb67fbcb7d9c487522c29b7582da20766c9998aaad5e5b63b5c27eec3f" "443e2c3c4dd44510f0ea8247b438e834188dc1c6fb80785d83ad3628eadf9294" default))
  '(package-selected-packages
-   '(pyim command-log-mode move-lines evil-nerd-commenter general helpful which-key ivy evil magit use-package))
+   '(org-superstar pyim command-log-mode move-lines evil-nerd-commenter general helpful which-key ivy evil magit use-package))
  '(pyim-dicts
    '((:name "lanrenbao" :file "/Users/diz/Downloads/pyim-bigdict.pyim.gz")))
  '(warning-suppress-types '((use-package) (use-package) (use-package) (use-package))))
@@ -51,7 +54,21 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(font-lock-comment-face ((t (:foreground "#5c6370" :slant italic)))))
+ '(font-lock-comment-face ((t (:foreground "#5c6370" :slant italic))))
+ '(org-block ((t (:inherit fixed-pitch :height 0.9))))
+ '(org-code ((t (:inherit (shadow fixed-pitch) :height 0.9))))
+ '(org-default ((t (:inherit default :height 1.0))))
+ '(org-document-title ((t (:inherit default :weight bold :foreground "#DCDCCC" :font "Arial" :height 2.0 :underline nil))))
+ '(org-ellipsis ((t (:inherit default :weight normal :height 1.0 :underline nil))))
+ '(org-level-1 ((t (:inherit default :weight bold :foreground "#DCDCCC" :font "Arial" :height 1.75))))
+ '(org-level-2 ((t (:inherit default :weight bold :foreground "#DCDCCC" :font "Arial" :height 1.5))))
+ '(org-level-3 ((t (:inherit default :weight bold :foreground "#DCDCCC" :font "Arial" :height 1.25))))
+ '(org-level-4 ((t (:inherit default :weight bold :foreground "#DCDCCC" :font "Arial" :height 1.1))))
+ '(org-level-5 ((t (:inherit default :weight bold :foreground "#DCDCCC" :font "Arial"))))
+ '(org-level-6 ((t (:inherit default :weight bold :foreground "#DCDCCC" :font "Arial"))))
+ '(org-level-7 ((t (:inherit default :weight bold :foreground "#DCDCCC" :font "Arial"))))
+ '(org-level-8 ((t (:inherit default :weight bold :foreground "#DCDCCC" :font "Arial"))))
+ '(org-link ((t (:inherit link :height 1.0)))))
 
 ;; Evil
 (use-package evil
@@ -125,7 +142,16 @@
 (use-package zenburn-theme
   :ensure t
   :config
+  (setq zenburn-use-variable-pitch 0)
+  (setq zenburn-scale-org-headlines 0)
+  (setq zenburn-scale-outline-headlines 0)
   (load-theme 'zenburn t))
+
+;; (use-package solarized-theme
+;;   :ensure t
+;;   :config
+;;   (setq solarized-high-contrast-mode-line 0)
+;;   (load-theme 'solarized-light t))
 
 ;; Helpful
 (use-package helpful
@@ -151,12 +177,18 @@
 
 ;; Define some key bindings using the leader key
   (leader-key-def
-    "f" 'counsel-find-file
-    "r" 'counsel-recentf
+    "a" 'org-agenda
     "b" 'counsel-ibuffer
-    "c" 'kill-buffer
+    "f" 'counsel-find-file
+    "h" 'counsel-command-history
+    "H" 'ivy-resume
+    "m" 'evil-window-map ; bind Vim window 
+    "q" 'kill-buffer
+    "r" 'counsel-recentf
+    "w" 'save-buffer
     "R" 'eval-last-sexp
-    "w" 'save-buffer))
+    ))
+
 
 ;; Which key
 (use-package which-key
@@ -172,9 +204,7 @@
 (use-package command-log-mode
   :ensure t)
 
-
-(use-package org)
-
+;; 拼音
 (use-package pyim
   :ensure nil
   :config
@@ -230,3 +260,64 @@
   (add-hook mode (lambda () (display-line-numbers-mode 0))))
 ; Wrap text 
 (global-visual-line-mode t)
+
+;; Org Mode
+(use-package org
+  :ensure t
+  :init
+  (setq org-ellipsis " ▼"
+	org-hide-emphasis-markers t
+        org-directory "~/org/"
+        org-default-notes-file "~/org/index.org"
+	)
+  :hook (org-mode . my-org-mode-setup)
+  :config
+;; Configure org mode to start with modes that more visual appealing
+;; - visual-line-mode: wraps lines at window width for easy reading and editing
+;; - variable-pitch-mode 1: sets the font face to a variable-width font for a more natural and aesthetically pleasing look
+  (defun my-org-mode-setup ()
+    "Setup visual line and variable pitch modes for Org mode."
+    (visual-line-mode)  
+    (variable-pitch-mode 1) 
+    )
+  ;; Other Org mode configurations here...
+  ;; Set faces for headings, lists, and other elements
+  (custom-set-faces
+  ;; Set font and size for headlines
+  '(org-level-1 ((t (:inherit outline-1 :height 1.75))))
+  '(org-level-2 ((t (:inherit outline-2 :height 1.5))))
+  '(org-level-3 ((t (:inherit outline-3 :height 1.25))))
+  '(org-level-4 ((t (:inherit outline-4 :height 1.1))))
+
+  '(org-default ((t (:inherit default :height 1.0))))
+  '(org-block ((t (:inherit fixed-pitch :height 0.9))))
+  '(org-code ((t (:inherit (shadow fixed-pitch) :height 0.9))))
+  '(org-link ((t (:inherit link :height 1.0))))
+  '(org-ellipsis ((t (:inherit default :weight normal :height 1.0 :underline nil)))))
+)
+
+;; Make sure org-indent face is available
+(require 'org-indent)
+;; Ensure that anything that should be fixed-pitch in Org files appears that way
+(set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch)
+(set-face-attribute 'org-table nil  :inherit 'fixed-pitch)
+(set-face-attribute 'org-formula nil  :inherit 'fixed-pitch)
+(set-face-attribute 'org-code nil   :inherit '(shadow fixed-pitch))
+(set-face-attribute 'org-indent nil :inherit '(org-hide fixed-pitch))
+(set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
+(set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
+(set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
+(set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch)
+
+;; Get rid of the background on column views
+(set-face-attribute 'org-column nil :background nil)
+(set-face-attribute 'org-column-title nil :background nil)
+
+(use-package org-superstar
+  :ensure t
+  :hook (org-mode . org-superstar-mode)
+  :custom
+  (org-superstar-remove-leading-stars t)
+  (org-superstar-headline-bullets-list '("◉" "○" "✻" "✿"))
+  :config
+  (set-face-attribute 'org-superstar-item nil :height 1.0))
