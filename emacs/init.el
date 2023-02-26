@@ -20,7 +20,7 @@
 (setq package-archives '(("melpa" . "https://melpa.org/packages/")
                          ("melpa-stable" . "https://stable.melpa.org/packages/")
                          ("org" . "https://orgmode.org/elpa/")
-                         ("elpa" . "https://elpa.gnu.org/packages/"))))
+                         ("elpa" . "https://elpa.gnu.org/packages/")))
 (package-initialize)
 
 (unless (package-installed-p 'use-package)
@@ -42,7 +42,9 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(command-log-mode move-lines evil-nerd-commenter general helpful which-key ivy evil magit use-package))
+   '(pyim command-log-mode move-lines evil-nerd-commenter general helpful which-key ivy evil magit use-package))
+ '(pyim-dicts
+   '((:name "lanrenbao" :file "/Users/diz/Downloads/pyim-bigdict.pyim.gz")))
  '(warning-suppress-types '((use-package) (use-package) (use-package) (use-package))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -169,3 +171,62 @@
 ;; Comand log mode
 (use-package command-log-mode
   :ensure t)
+
+
+(use-package org)
+
+(use-package pyim
+  :ensure nil
+  :config
+  ;; 激活 basedict 拼音词库
+  (use-package pyim-basedict
+    :ensure nil
+    :config (pyim-basedict-enable))
+  ;; 设置 pyim 探针设置，这是 pyim 高级功能设置，可以实现 *无痛* 中英文切换 :-)
+  ;; 我自己使用的中英文动态切换规则是：
+  ;; 1. 光标只有在注释里面时，才可以输入中文。
+  ;; 2. 光标前是汉字字符时，才能输入中文。
+  ;; 3. 使用 M-j 快捷键，强制将光标前的拼音字符串转换为中文。
+
+ (setq-default pyim-english-input-switch-functions
+                '(pyim-probe-dynamic-english
+                  pyim-probe-isearch-mode
+                  pyim-probe-program-mode
+                  pyim-probe-org-structure-template))
+  (setq-default pyim-punctuation-half-width-functions
+                '(pyim-probe-punctuation-line-beginning
+                  pyim-probe-punctuation-after-punctuation))
+
+  ;; 开启拼音搜索功能
+  (pyim-isearch-mode 1)
+
+  ;; ;; 使用 pupup-el 来绘制选词框
+  ;; (setq pyim-page-tooltip 'popup)
+  ;; (setq pyim-page-tooltip 'pos-tip)
+
+  ;; 选词框显示5个候选词
+  ;; (setq pyim-page-length 5)
+
+  ;; 让 Emacs 启动时自动加载 pyim 词库
+  (add-hook 'emacs-startup-hook
+            #'(lambda () (pyim-restart-1 t)))
+  :bind
+
+  (
+   ("M-j" . pyim-convert-string-at-point) ;与 pyim-probe-dynamic-english 配合
+  ;; ("M-j" . pyim-convert-code-at-point) ;与 pyim-probe-dynamic-english 配合
+   ("C-;" . pyim-delete-word-from-personal-buffer)))
+
+
+(column-number-mode)
+;; Enable line numbers for some modes
+(dolist (mode '(text-mode-hook
+                prog-mode-hook
+                conf-mode-hook))
+  (add-hook mode (lambda () (display-line-numbers-mode 1))))
+
+;; Override some modes which derive from the above
+(dolist (mode '(org-mode-hook))
+  (add-hook mode (lambda () (display-line-numbers-mode 0))))
+; Wrap text 
+(global-visual-line-mode t)
