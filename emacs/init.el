@@ -45,7 +45,7 @@
  '(custom-safe-themes
    '("00445e6f15d31e9afaa23ed0d765850e9cd5e929be5e8e63b114a3346236c44c" "285d1bf306091644fb49993341e0ad8bafe57130d9981b680c1dbd974475c5c7" "51ec7bfa54adf5fff5d466248ea6431097f5a18224788d0bd7eb1257a4f7b773" "2dc03dfb67fbcb7d9c487522c29b7582da20766c9998aaad5e5b63b5c27eec3f" "443e2c3c4dd44510f0ea8247b438e834188dc1c6fb80785d83ad3628eadf9294" default))
  '(package-selected-packages
-   '(org-superstar pyim command-log-mode move-lines evil-nerd-commenter general helpful which-key ivy evil magit use-package))
+   '(solarized-theme undo-tree org-superstar pyim command-log-mode move-lines evil-nerd-commenter general helpful which-key ivy evil magit use-package))
  '(pyim-dicts
    '((:name "lazy" :file "/Users/diz/.emacs.d/pyim/pyim-bigdict.pyim.gz")))
  '(warning-suppress-types '((use-package) (use-package) (use-package) (use-package))))
@@ -321,6 +321,7 @@
   (setq org-agenda-start-with-log-mode t)
   (setq org-log-done 'time)
   (setq org-log-into-drawer t)
+  (setq org-startup-indented t)
   :hook (org-mode . my-org-mode-setup)
   :config
 ;; Configure org mode to start with modes that more visual appealing
@@ -371,3 +372,10 @@
   (org-superstar-headline-bullets-list '("◉" "○" "✻" "✿"))
   :config
   (set-face-attribute 'org-superstar-item nil :height 1.0))
+
+(defun my/org-mode-hook ()
+  "Customize Org mode settings."
+  (setq-default line-spacing 0.2)
+  (setq-default org-blank-before-new-entry '((heading . auto)
+                                             (plain-list-item . auto))))
+(add-hook 'org-mode-hook #'my/org-mode-hook)
