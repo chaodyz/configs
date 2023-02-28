@@ -45,7 +45,7 @@
  '(custom-safe-themes
    '("00445e6f15d31e9afaa23ed0d765850e9cd5e929be5e8e63b114a3346236c44c" "285d1bf306091644fb49993341e0ad8bafe57130d9981b680c1dbd974475c5c7" "51ec7bfa54adf5fff5d466248ea6431097f5a18224788d0bd7eb1257a4f7b773" "2dc03dfb67fbcb7d9c487522c29b7582da20766c9998aaad5e5b63b5c27eec3f" "443e2c3c4dd44510f0ea8247b438e834188dc1c6fb80785d83ad3628eadf9294" default))
  '(package-selected-packages
-   '(solarized-theme undo-tree org-superstar pyim command-log-mode move-lines evil-nerd-commenter general helpful which-key ivy evil magit use-package))
+   '(org-superstar pyim command-log-mode move-lines evil-nerd-commenter general helpful which-key ivy evil magit use-package))
  '(pyim-dicts
    '((:name "lazy" :file "/Users/diz/.emacs.d/pyim/pyim-bigdict.pyim.gz")))
  '(warning-suppress-types '((use-package) (use-package) (use-package) (use-package))))
@@ -152,31 +152,25 @@
   (setq zenburn-use-variable-pitch 0)
   (setq zenburn-scale-org-headlines 0)
   (setq zenburn-scale-outline-headlines 0)
-  ;; (load-theme 'zenburn t)
   )
 
 (use-package solarized-theme
   :ensure t
   :config
   (setq solarized-high-contrast-mode-line 0)
-  ;; (load-theme 'solarized-light t)
   )
 
 ;; Load Theme by location's sunrise and sunset 
 (use-package circadian
+  :ensure t
   :config
   ;; Set Toronto as the location for sunrise and sunset times
   (setq calendar-latitude 43.6532
         calendar-longitude -79.3832
         calendar-location-name "Toronto, Canada")
-  ;; Define a function to set the theme based on the time of day
-  (defun my/circadian-setup ()
-    (if (eq (car (circadian-now)) 'day)
-        (load-theme 'solarized-light-high-contrast t)
-      (load-theme 'zenburn t)))
-  ;; Enable circadian mode
-  (circadian-setup)
-  (add-hook 'circadian-after-load-theme-hook #'my/circadian-setup))
+  (setq circadian-themes '((:sunrise . solarized-light-high-contrast)
+                           (:sunset  . zenburn)))
+  (circadian-setup))
 
 ;; Helpful
 (use-package helpful
