@@ -229,6 +229,11 @@
     "o s" 'org-schedule
     "o d" 'org-deadline
     )
+  ;; Key-pyim
+  (leader-key-def
+    "p" '(:ignore t:which-key "pyim")
+    "p c" 'pyim-punctuation-translate-at-point
+    )
   )
 
 
@@ -358,6 +363,7 @@
 (set-face-attribute 'org-column nil :background nil)
 (set-face-attribute 'org-column-title nil :background nil)
 
+;; headline bullet
 (use-package org-superstar
   :ensure t
   :hook (org-mode . org-superstar-mode)
@@ -367,9 +373,54 @@
   :config
   (set-face-attribute 'org-superstar-item nil :height 1.0))
 
+;; cosmetic function
 (defun my/org-mode-hook ()
   "Customize Org mode settings."
   (setq-default line-spacing 0.2)
   (setq-default org-blank-before-new-entry '((heading . auto)
                                              (plain-list-item . auto))))
 (add-hook 'org-mode-hook #'my/org-mode-hook)
+
+;; Helper emphasis (ChatGPT) 🤯
+(defun my-wrap-with-stars ()
+  "Wrap visual selection with *."
+  (interactive)
+  (let ((selection (buffer-substring-no-properties
+                    (region-beginning) (region-end))))
+    (delete-region (region-beginning) (region-end))
+    (insert (concat "*" selection "*"))))
+
+(defun my-wrap-with-tides ()
+  "Wrap visual selection with ~."
+  (interactive)
+  (let ((selection (buffer-substring-no-properties
+                    (region-beginning) (region-end))))
+    (delete-region (region-beginning) (region-end))
+    (insert (concat "~" selection "~"))))
+
+(defun my-wrap-with-equals ()
+  "Wrap visual selection with =."
+  (interactive)
+  (let ((selection (buffer-substring-no-properties
+                    (region-beginning) (region-end))))
+    (delete-region (region-beginning) (region-end))
+    (insert (concat "=" selection "="))))
+
+;; Bind the function to a key combination
+(define-key evil-visual-state-map (kbd "C-*") 'my-wrap-with-stars)
+(define-key evil-visual-state-map (kbd "C-~") 'my-wrap-with-tides)
+(define-key evil-visual-state-map (kbd "C-=") 'my-wrap-with-equals)
+
+;; Surround with ANY KEY (chatGPT)
+(defun surround-with-key (beg end key)
+  "Surround the region between BEG and END with KEY."
+  (interactive "r\nsSurround with: ")
+  (goto-char end)
+  (insert key)
+  (goto-char beg)
+  (insert key))
+
+(general-define-key
+ :states '(visual)
+ :keymaps 'override
+ "s" 'surround-with-key)
