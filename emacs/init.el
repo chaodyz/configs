@@ -1,7 +1,7 @@
 ;; Font 
 ;; Set font by different mode: (set-face-attribute 'default nil :font "FONT_NAME":height: FONT_SIZE MODE/BUFFER)
 (set-face-attribute 'default nil :font "Fira Code" :height 180)
-(set-face-attribute 'variable-pitch nil :family "Arial" :height 180 :weight 'normal)
+(set-face-attribute 'variable-pitch nil :family "Source Sans Pro" :height 180 :weight 'normal)
 (set-face-attribute 'fixed-pitch nil :font "Fira Code" :height 160)
 ;; 汉字字体设置为思源黑体
 (set-fontset-font t 'han (font-spec :family "Source Han Sans CN"))
@@ -44,8 +44,10 @@
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes
    '("00445e6f15d31e9afaa23ed0d765850e9cd5e929be5e8e63b114a3346236c44c" "285d1bf306091644fb49993341e0ad8bafe57130d9981b680c1dbd974475c5c7" "51ec7bfa54adf5fff5d466248ea6431097f5a18224788d0bd7eb1257a4f7b773" "2dc03dfb67fbcb7d9c487522c29b7582da20766c9998aaad5e5b63b5c27eec3f" "443e2c3c4dd44510f0ea8247b438e834188dc1c6fb80785d83ad3628eadf9294" default))
+ '(org-agenda-files
+   '("~/org/ukg/oneApp.org" "/Users/di.zhou/org/agenda/tasks.org"))
  '(package-selected-packages
-   '(org-superstar pyim command-log-mode move-lines evil-nerd-commenter general helpful which-key ivy evil magit use-package))
+   '(org-roam org-superstar pyim command-log-mode move-lines evil-nerd-commenter general helpful which-key ivy evil magit use-package))
  '(pyim-dicts
    '((:name "lazy" :file "/Users/diz/.emacs.d/pyim/pyim-bigdict.pyim.gz")))
  '(warning-suppress-types '((use-package) (use-package) (use-package) (use-package))))
@@ -206,12 +208,12 @@
 
 ;; Define some key bindings using the leader key
   (leader-key-def
-    "a" 'org-agenda
     "d" 'describe-thing-at-point
     "f" 'counsel-find-file
     "h" 'counsel-command-history
     "r" 'counsel-recentf
     "w" 'save-buffer
+    "q" #'delete-window
     "R" 'eval-last-sexp
     )
 
@@ -234,6 +236,21 @@
     "p" '(:ignore t:which-key "pyim")
     "p c" 'pyim-punctuation-translate-at-point
     )
+   ;; Window
+  (leader-key-def
+    "a" '(:ignore t:which-key "Window")
+    "a v" 'split-window-right
+    "a s" 'split-window-below
+    ;; window movement binding
+    "a w" #'other-window
+    "a h" #'evil-window-left
+    "a j" #'evil-window-down
+    "a k" #'evil-window-up
+    "a l" #'evil-window-right
+    "a H" #'evil-window-move-far-left
+    "a J" #'evil-window-move-very-bottom
+    "a K" #'evil-window-move-very-top
+    "a L" #'evil-window-move-far-right)
   )
 
 
@@ -335,10 +352,10 @@
   ;; Set faces for headings, lists, and other elements
   (custom-set-faces
   ;; Set font and size for headlines
-  '(org-level-1 ((t (:inherit outline-1 :height 1.3))))
-  '(org-level-2 ((t (:inherit outline-2 :height 1.2))))
-  '(org-level-3 ((t (:inherit outline-3 :height 1.2))))
-  '(org-level-4 ((t (:inherit outline-4 :height 1.05))))
+  '(org-level-1 ((t (:inherit outline-1 :height 1.15))))
+  '(org-level-2 ((t (:inherit outline-2 :height 1.12))))
+  '(org-level-3 ((t (:inherit outline-3 :height 1.09))))
+  '(org-level-4 ((t (:inherit outline-4 :height 1.06))))
   '(org-default ((t (:inherit default :height 1.0))))
   '(org-block ((t (:inherit fixed-pitch :height 0.9))))
   '(org-code ((t (:inherit (shadow fixed-pitch) :height 0.9))))
@@ -360,8 +377,7 @@
 (set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch)
 
 ;; Get rid of the background on column views
-(set-face-attribute 'org-column nil :background nil)
-(set-face-attribute 'org-column-title nil :background nil)
+(set-face-attribute 'org-column nil :background nil) (set-face-attribute 'org-column-title nil :background nil)
 
 ;; headline bullet
 (use-package org-superstar
@@ -369,7 +385,7 @@
   :hook (org-mode . org-superstar-mode)
   :custom
   (org-superstar-remove-leading-stars t)
-  (org-superstar-headline-bullets-list '("◉" "○" "✻" "✿"))
+  (org-superstar-headline-bullets-list '("☵" "○" "✻" "✿"))
   :config
   (set-face-attribute 'org-superstar-item nil :height 1.0))
 
@@ -424,3 +440,19 @@
  :states '(visual)
  :keymaps 'override
  "s" 'surround-with-key)
+
+(use-package org-roam
+  :ensure t
+  :init
+  (setq org-roam-v2-ack t)
+  :custom
+  (org-roam-directory "~/org/roam/")
+  (org-roam-db-location "~/org/roam/org-roam.db")
+  (org-roam-completion-everywhere t)
+  :bind (("C-c n f" . org-roam-node-find)
+         ("C-c n r" . org-roam-buffer-toggle)
+         ("C-c n i" . org-roam-node-insert)
+	 :map org-mode-map
+	 ("C-M-i" . completion-at-point))
+  :config
+  (org-roam-setup))
