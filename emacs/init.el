@@ -36,6 +36,7 @@
 ;; Load use package- a popular macro in Emacs that provides declarative way 
 ;; to config and load packages (eval-when-compile
 (require 'use-package)
+(setq use-package-always-ensure t)
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -47,7 +48,7 @@
  '(org-agenda-files
    '("~/org/ukg/oneApp.org" "/Users/di.zhou/org/agenda/tasks.org"))
  '(package-selected-packages
-   '(org-roam org-superstar pyim command-log-mode move-lines evil-nerd-commenter general helpful which-key ivy evil magit use-package))
+   '(evil-magit projectile org-roam org-superstar pyim command-log-mode move-lines evil-nerd-commenter general helpful which-key ivy evil magit use-package))
  '(pyim-dicts
    '((:name "lazy" :file "/Users/diz/.emacs.d/pyim/pyim-bigdict.pyim.gz")))
  '(warning-suppress-types '((use-package) (use-package) (use-package) (use-package))))
@@ -67,20 +68,13 @@
  '(org-link ((t (:inherit link :height 1.0)))))
 
 ;; ---------------------  Begin use-package
-;; Magit
-(use-package magit
-  :ensure t
-  :bind (("C-c g" . magit-status)))
 
-
-;; Evil
 (use-package undo-tree
   :ensure t
   :config
   (global-undo-tree-mode))
-
+;; Evil
 (use-package evil
-  :ensure t
   :init
   (setq evil-undo-system 'undo-tree)
   (setq evil-want-integration t)
@@ -89,10 +83,15 @@
   (setq evil-want-C-i-jump nil)
   :config
   (evil-mode 1)
- ;; Use visual line motions even outside of visual-line-mode buffers
+  (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state)
+  (define-key evil-insert-state-map (kbd "C-h") 'evil-delete-backward-char-and-join)
+
+  ;; Use visual line motions even outside of visual-line-mode buffers
   (evil-global-set-key 'motion "j" 'evil-next-visual-line)
   (evil-global-set-key 'motion "k" 'evil-previous-visual-line)
-  )
+
+  (evil-set-initial-state 'messages-buffer-mode 'normal)
+  (evil-set-initial-state 'dashboard-mode 'normal))
 
 (use-package evil-nerd-commenter
   :ensure t
@@ -100,6 +99,20 @@
   (evilnc-default-hotkeys))
 (define-key evil-normal-state-map "gc" 'evilnc-comment-or-uncomment-lines)
 
+(use-package evil-collection
+  :after evil
+  :config
+  (evil-collection-init))
+
+(use-package hydra)
+
+(defhydra hydra-text-scale (:timeout 4)
+  "scale text"
+  ("j" text-scale-increase "in")
+  ("k" text-scale-decrease "out")
+  ("q" nil "finished" :exit t))
+
+(global-set-key (kbd "C-c t") 'hydra-text-scale/body))
 ;; TODO: Try to mimic move lines action
 ;; keymap("x", "J", ":move '>+1<CR>gv-gv", opts)
 ;; keymap("x", "K", ":move '<-2<CR>gv-gv", opts)
@@ -251,7 +264,15 @@
     "a J" #'evil-window-move-very-bottom
     "a K" #'evil-window-move-very-top
     "a L" #'evil-window-move-far-right)
-  )
+
+  (leader-key-def
+            "g" '(:ignore t :which-key "Magit")
+            "g s" 'magit-status
+            "g b" 'magit-blame
+            "g l" 'magit-log-buffer-file
+            "g g" 'magit-dispatch
+            "g c" 'magit-commit-create)
+)
 
 
 ;; Which key
@@ -456,3 +477,32 @@
 	 ("C-M-i" . completion-at-point))
   :config
   (org-roam-setup))
+
+
+;; Projectile
+(use-package projectile
+  :ensure t
+  :init
+  (setq projectile-completion-system 'ivy)
+  :config
+  (projectile-mode 1)
+  (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+  (setq projectile-project-search-path '("~/projects"))
+  (setq projectile-switch-project-action #'projectile-dired))
+
+(use-package counsel-projectile
+  :ensure t
+  :config (conunsel-projectile-mode))
+
+;; Magit
+(use-package magit
+  :ensure t
+  :bind (("C-c g" . magit-status))
+  :config
+  (use-package evil-magit
+    :ensure t
+    :config
+    (setq evil-magit-state 'normal) ; set the initial state to normal
+    (add-hook 'magit-mode-hook 'evil-magit-init))
+  (setq magit-display-buffer-function 'magit-display-buffer-fullframe-status-v1)
+  )
