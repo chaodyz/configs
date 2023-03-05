@@ -48,7 +48,7 @@
  '(org-agenda-files
    '("~/org/ukg/oneApp.org" "/Users/di.zhou/org/agenda/tasks.org"))
  '(package-selected-packages
-   '(evil-magit projectile org-roam org-superstar pyim command-log-mode move-lines evil-nerd-commenter general helpful which-key ivy evil magit use-package))
+   '(ob-js evil-magit projectile org-roam org-superstar pyim command-log-mode move-lines evil-nerd-commenter general helpful which-key ivy evil magit use-package))
  '(pyim-dicts
    '((:name "lazy" :file "/Users/diz/.emacs.d/pyim/pyim-bigdict.pyim.gz")))
  '(warning-suppress-types '((use-package) (use-package) (use-package) (use-package))))
@@ -111,8 +111,7 @@
   ("j" text-scale-increase "in")
   ("k" text-scale-decrease "out")
   ("q" nil "finished" :exit t))
-
-(global-set-key (kbd "C-c t") 'hydra-text-scale/body))
+(global-set-key (kbd "C-c t") 'hydra-text-scale/body)
 ;; TODO: Try to mimic move lines action
 ;; keymap("x", "J", ":move '>+1<CR>gv-gv", opts)
 ;; keymap("x", "K", ":move '<-2<CR>gv-gv", opts)
@@ -354,7 +353,7 @@
 	org-hide-emphasis-markers t
         org-directory "~/org/"
         org-default-notes-file "~/org/index.org")
-  (setq org-agenda-files '("~/org/agenda"))
+  (setq org-agenda-files '("~/org"))
   (setq org-agenda-start-with-log-mode t)
   (setq org-log-done 'time)
   (setq org-log-into-drawer t)
@@ -467,8 +466,8 @@
   :init
   (setq org-roam-v2-ack t)
   :custom
-  (org-roam-directory "~/org/roam/")
-  (org-roam-db-location "~/org/roam/org-roam.db")
+  (org-roam-directory "~/org/")
+  (org-roam-db-location "~/org/org-roam.db")
   (org-roam-completion-everywhere t)
   :bind (("C-c n f" . org-roam-node-find)
          ("C-c n r" . org-roam-buffer-toggle)
