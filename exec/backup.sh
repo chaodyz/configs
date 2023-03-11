@@ -27,6 +27,8 @@ cp ~/.config/joplin/keymap.json  ~/projects/configs/keymap.json &&
 
 cp -rf ~/.config/nvim  ~/projects/configs/ &&
 
-cp ~/.emacs.d/init.el ~/projects/configs/emacs/init.el
+cp ~/.emacs.d/init.el ~/projects/configs/emacs/init.el &&
+
+cp ~/org/emacs.org ~/projects/configs/emacs/emacs.org
 
 echo "done"
