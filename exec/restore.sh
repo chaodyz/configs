@@ -22,7 +22,8 @@ cp      ~/projects/configs/starship.toml          ~/.config/starship.toml  &&
 cp      ~/projects/configs/alacritty.yml          ~/.config/alacritty/alacritty.yml  &&
 cp      ~/projects/configs/keymap.json            ~/.config/joplin/keymap.json &&
 rm -rf ~/.config/nvim/ &&
-cp -rf  ~/projects/configs/nvim                   ~/.config/
-cp      ~/projects/configs/emacs/init.el          ~/.emacs.d/init.el
+cp -rf  ~/projects/configs/nvim                   ~/.config/ &&
+cp      ~/projects/configs/emacs/init.el          ~/.emacs.d/init.el &&
+cp      ~/projects/configs/emacs/emacs.org        ~/org/emacs.org
 
 echo "done"
