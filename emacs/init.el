@@ -1,14 +1,16 @@
 ;; Font 
 ;; Set font by different mode: (set-face-attribute 'default nil :font "FONT_NAME":height: FONT_SIZE MODE/BUFFER)
-(set-face-attribute 'default nil :font "Fira Code" :height 180)
+  (set-face-attribute 'default nil :font "Fira Code" :height 180)
+  (set-face-attribute 'fixed-pitch nil :font "Fira Code" :height 160)
+  (set-face-attribute 'variable-pitch nil :family "Source Sans Pro" :height 180 :weight 'normal)
+
+;; 汉字－思源黑体
+  (set-fontset-font t 'han (font-spec :family "Source Han Sans CN"))
 (set-face-attribute 'variable-pitch nil :family "Source Sans Pro" :height 180 :weight 'normal)
-(set-face-attribute 'fixed-pitch nil :font "Fira Code" :height 160)
-;; 汉字字体设置为思源黑体
-(set-fontset-font t 'han (font-spec :family "Source Han Sans CN"))
 
 ;; Enable visible bell
-(setq visible-bell t)
-(setq ring-bell-function 'ignore)
+  (setq visible-bell t)
+  (setq ring-bell-function 'ignore)
 
 (setq inhibit-startup-message t)
 (scroll-bar-mode -1) ; Disable visible scrollbar
@@ -20,89 +22,70 @@
 (setq split-width-threshold 160) ; the minimum width of a window that Emacs should split horizontally instead of vertically. 
 (setq split-height-threshold 80)
 
-;; -----------------------------------------
-;; Initialize package.el
+    (column-number-mode)
+    ;; Enable line numbers for some modes
+    (dolist (mode '(text-mode-hook
+                    prog-mode-hook
+                    conf-mode-hook))
+    (add-hook mode (lambda () (display-line-numbers-mode 1))))
+
+    ;; Override some modes which derive from the above
+    (dolist (mode '(org-mode-hook))
+    (add-hook mode (lambda () (display-line-numbers-mode 0))))
+    ; Wrap text 
+    (global-visual-line-mode t)
+
 (require 'package)
 (setq package-archives '(("melpa" . "https://melpa.org/packages/")
                          ("melpa-stable" . "https://stable.melpa.org/packages/")
                          ("org" . "https://orgmode.org/elpa/")
                          ("elpa" . "https://elpa.gnu.org/packages/")))
 (package-initialize)
-
 (unless (package-installed-p 'use-package)
-  (package-refresh-contents)
-  (package-install 'use-package))
+(package-refresh-contents)
+(package-install 'use-package))
 
-;; Load use package- a popular macro in Emacs that provides declarative way 
-;; to config and load packages (eval-when-compile
 (require 'use-package)
 (setq use-package-always-ensure t)
-
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(custom-safe-themes
-   '("00445e6f15d31e9afaa23ed0d765850e9cd5e929be5e8e63b114a3346236c44c" "285d1bf306091644fb49993341e0ad8bafe57130d9981b680c1dbd974475c5c7" "51ec7bfa54adf5fff5d466248ea6431097f5a18224788d0bd7eb1257a4f7b773" "2dc03dfb67fbcb7d9c487522c29b7582da20766c9998aaad5e5b63b5c27eec3f" "443e2c3c4dd44510f0ea8247b438e834188dc1c6fb80785d83ad3628eadf9294" default))
- '(org-agenda-files
-   '("~/org/ukg/oneApp.org" "/Users/di.zhou/org/agenda/tasks.org"))
- '(package-selected-packages
-   '(org-inlinetask ob-js evil-magit projectile org-roam org-superstar pyim command-log-mode move-lines evil-nerd-commenter general helpful which-key ivy evil magit use-package))
- '(pyim-dicts
-   '((:name "lazy" :file "/Users/diz/.emacs.d/pyim/pyim-bigdict.pyim.gz")))
- '(warning-suppress-types '((use-package) (use-package) (use-package) (use-package))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(org-block ((t (:inherit fixed-pitch :height 0.9))))
- '(org-code ((t (:inherit (shadow fixed-pitch) :height 0.9))))
- '(org-default ((t (:inherit default :height 1.0))))
- '(org-ellipsis ((t (:inherit default :weight normal :height 1.0 :underline nil))))
- '(org-level-1 ((t (:inherit outline-1 :height 1.3))))
- '(org-level-2 ((t (:inherit outline-2 :height 1.2))))
- '(org-level-3 ((t (:inherit outline-3 :height 1.2))))
- '(org-level-4 ((t (:inherit outline-4 :height 1.05))))
- '(org-link ((t (:inherit link :height 1.0)))))
-
-;; ---------------------  Begin use-package
 
 (use-package undo-tree
   :ensure t
   :config
   (global-undo-tree-mode))
-;; Evil
+
 (use-package evil
-  :init
-  (setq evil-undo-system 'undo-tree)
-  (setq evil-want-integration t)
-  (setq evil-want-keybinding nil)
-  (setq evil-want-C-u-scroll t)
-  (setq evil-want-C-i-jump nil)
-  :config
-  (evil-mode 1)
-  (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state)
-  (define-key evil-insert-state-map (kbd "C-h") 'evil-delete-backward-char-and-join)
+      :init
+      (setq evil-undo-system 'undo-tree)
+      (setq evil-want-integration t)
+      (setq evil-want-keybinding nil)
+      (setq evil-want-C-u-scroll t)
+      (setq evil-want-C-i-jump nil)
+      :config
+      (evil-mode 1)
+      (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state)
+      (define-key evil-insert-state-map (kbd "C-h") 'evil-delete-backward-char-and-join)
 
-  ;; Use visual line motions even outside of visual-line-mode buffers
-  (evil-global-set-key 'motion "j" 'evil-next-visual-line)
-  (evil-global-set-key 'motion "k" 'evil-previous-visual-line)
+      ;; Use visual line motions even outside of visual-line-mode buffers
+      (evil-global-set-key 'motion "j" 'evil-next-visual-line)
+      (evil-global-set-key 'motion "k" 'evil-previous-visual-line)
 
-  (evil-set-initial-state 'messages-buffer-mode 'normal)
-  (evil-set-initial-state 'dashboard-mode 'normal))
+      (evil-set-initial-state 'messages-buffer-mode 'normal)
+      (evil-set-initial-state 'dashboard-mode 'normal))
 
-(use-package evil-nerd-commenter
-  :ensure t
-  :config
-  (evilnc-default-hotkeys))
-(define-key evil-normal-state-map "gc" 'evilnc-comment-or-uncomment-lines)
 
-(use-package evil-collection
-  :after evil
-  :config
-  (evil-collection-init))
+  (use-package evil-nerd-commenter
+    :ensure t
+    :config
+    (evilnc-default-hotkeys))
+  (define-key evil-normal-state-map "gc" 'evilnc-comment-or-uncomment-lines)
+
+  (use-package evil-collection
+    :after evil
+    :config
+    (evil-collection-init))
+
+;; Escape key to quit menu
+(global-set-key (kbd "<escape>") 'keyboard-escape-quit)
 
 (use-package hydra)
 
@@ -112,15 +95,12 @@
   ("k" text-scale-decrease "out")
   ("q" nil "finished" :exit t))
 (global-set-key (kbd "C-c t") 'hydra-text-scale/body)
+
 ;; TODO: Try to mimic move lines action
 ;; keymap("x", "J", ":move '>+1<CR>gv-gv", opts)
 ;; keymap("x", "K", ":move '<-2<CR>gv-gv", opts)
 ;; keymap("x", "<A-j>", ":move '>+1<CR>gv-gv", opts)
 ;; keymap("x", "<A-k>", ":move '<-2<CR>gv-gv", opts)
-;; -------------
-
-;; Escape key to quit menu
-(global-set-key (kbd "<escape>") 'keyboard-escape-quit)
 
 ;; Ivy, Ivy-rich, and counsel
 ;; Note: ivy-rich must be setup after Ivy and counsel
@@ -208,7 +188,6 @@
       (message "No symbol at point."))))
 (global-set-key (kbd "C-c d") 'describe-thing-at-point)
 
-
 ;; General
 (use-package general
   :ensure t
@@ -274,7 +253,6 @@
             "g c" 'magit-commit-create)
 )
 
-
 ;; Which key
 (use-package which-key
   :ensure t
@@ -283,7 +261,6 @@
   (which-key-mode)
   (setq which-key-idle-delay 0.3)
   (setq which-key-prefix-prefix "SPC"))
-
 
 ;; Comand log mode
 (use-package command-log-mode
@@ -332,203 +309,159 @@
   ;; ("M-j" . pyim-convert-code-at-point) ;与 pyim-probe-dynamic-english 配合
    ("C-;" . pyim-delete-word-from-personal-buffer)))
 
-
-(column-number-mode)
-;; Enable line numbers for some modes
-(dolist (mode '(text-mode-hook
-                prog-mode-hook
-                conf-mode-hook))
-  (add-hook mode (lambda () (display-line-numbers-mode 1))))
-
-;; Override some modes which derive from the above
-(dolist (mode '(org-mode-hook))
-  (add-hook mode (lambda () (display-line-numbers-mode 0))))
-; Wrap text 
-(global-visual-line-mode t)
-
 ;; Org Mode
-(use-package org
-  :ensure t
-  :init
-  (setq org-ellipsis " ▼"
-	org-hide-emphasis-markers t
-        org-directory "~/org/"
-        org-default-notes-file "~/org/index.org")
-  (setq org-agenda-files '("~/org"))
-  (setq org-agenda-start-with-log-mode t)
-  (setq org-log-done 'time)
-  (setq org-log-into-drawer t)
-  (setq org-startup-indented t)
-  :hook (org-mode . my-org-mode-setup)
-  :config
-;; Configure org mode to start with modes that more visual appealing
-;; - visual-line-mode: wraps lines at window width for easy reading and editing
-;; - variable-pitch-mode 1: sets the font face to a variable-width font for a more natural and aesthetically pleasing look
-  (defun my-org-mode-setup ()
-    "Setup visual line and variable pitch modes for Org mode."
-    (visual-line-mode)  
-    (variable-pitch-mode 1) 
-    )
-  ;; Other Org mode configurations here...
-  ;; Set faces for headings, lists, and other elements
-  (custom-set-faces
-  ;; Set font and size for headlines
-  '(org-level-1 ((t (:inherit outline-1 :height 1.15))))
-  '(org-level-2 ((t (:inherit outline-2 :height 1.12))))
-  '(org-level-3 ((t (:inherit outline-3 :height 1.09))))
-  '(org-level-4 ((t (:inherit outline-4 :height 1.06))))
-  '(org-default ((t (:inherit default :height 1.0))))
-  '(org-block ((t (:inherit fixed-pitch :height 0.9))))
-  '(org-code ((t (:inherit (shadow fixed-pitch) :height 0.9))))
-  '(org-link ((t (:inherit link :height 1.0))))
-  '(org-ellipsis ((t (:inherit default :weight normal :height 1.0 :underline nil)))))
+      (use-package org
+        :ensure t
+        :init
+        (setq org-ellipsis " ▼"
+              org-hide-emphasis-markers t
+              org-directory "~/org/"
+              org-default-notes-file "~/org/index.org")
+        (setq org-agenda-files '("~/org"))
+        (setq org-agenda-start-with-log-mode t)
+        (setq org-log-done 'time)
+        (setq org-log-into-drawer t)
+        (setq org-startup-indented t)
+        :hook (org-mode . my-org-mode-setup)
+        :config
+      ;; Configure org mode to start with modes that more visual appealing
+      ;; - visual-line-mode: wraps lines at window width for easy reading and editing
+      ;; - variable-pitch-mode 1: sets the font face to a variable-width font for a more natural and aesthetically pleasing look
+        (defun my-org-mode-setup ()
+          "Setup visual line and variable pitch modes for Org mode."
+          (visual-line-mode)  
+          (variable-pitch-mode 1) 
+          )
+        ;; Other Org mode configurations here...
+        ;; Set faces for headings, lists, and other elements
+        (custom-set-faces
+        ;; Set font and size for headlines
+        '(org-level-1 ((t (:inherit outline-1 :height 1.15))))
+        '(org-level-2 ((t (:inherit outline-2 :height 1.12))))
+        '(org-level-3 ((t (:inherit outline-3 :height 1.09))))
+        '(org-level-4 ((t (:inherit outline-4 :height 1.06))))
+        '(org-default ((t (:inherit default :height 1.0))))
+        '(org-block ((t (:inherit fixed-pitch :height 0.9))))
+        '(org-code ((t (:inherit (shadow fixed-pitch) :height 0.9))))
+        '(org-link ((t (:inherit link :height 1.0))))
+        '(org-ellipsis ((t (:inherit default :weight normal :height 1.0 :underline nil)))))
 
 
-    (setq org-todo-keywords
-    '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d!)")
-      (sequence "BACKLOG(b)" "PLAN(p)" "READY(r)" "ACTIVE(a)" "REVIEW(v)" "WAIT(w@/!)" "HOLD(h)" "|" "COMPLETED(c)" "CANC(k@)")))
-    ;; Configure custom agenda views
-    (setq org-agenda-custom-commands
-    '(("d" "Dashboard"
-	((agenda "" ((org-deadline-warning-days 7)))
-	(todo "NEXT"
-	    ((org-agenda-overriding-header "Next Tasks")))
-	(tags-todo "agenda/ACTIVE" ((org-agenda-overriding-header "Active Projects")))))
+          (setq org-todo-keywords
+          '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d!)")
+            (sequence "BACKLOG(b)" "PLAN(p)" "READY(r)" "ACTIVE(a)" "REVIEW(v)" "WAIT(w@/!)" "HOLD(h)" "|" "COMPLETED(c)" "CANC(k@)")))
+          ;; Configure custom agenda views
+          (setq org-agenda-custom-commands
+          '(("d" "Dashboard"
+              ((agenda "" ((org-deadline-warning-days 7)))
+              (todo "NEXT"
+                  ((org-agenda-overriding-header "Next Tasks")))
+              (tags-todo "agenda/ACTIVE" ((org-agenda-overriding-header "Active Projects")))))
 
-	("n" "Next Tasks"
-	((todo "NEXT"
-	    ((org-agenda-overriding-header "Next Tasks")))))
+              ("n" "Next Tasks"
+              ((todo "NEXT"
+                  ((org-agenda-overriding-header "Next Tasks")))))
 
-	("W" "Work Tasks" tags-todo "+work-email")
+              ("W" "Work Tasks" tags-todo "+work-email")
 
-	;; Low-effort next actions
-	("e" tags-todo "+TODO=\"NEXT\"+Effort<15&+Effort>0"
-	((org-agenda-overriding-header "Low Effort Tasks")
-	(org-agenda-max-todos 20)
-	(org-agenda-files org-agenda-files)))
+              ;; Low-effort next actions
+              ("e" tags-todo "+TODO=\"NEXT\"+Effort<15&+Effort>0"
+              ((org-agenda-overriding-header "Low Effort Tasks")
+              (org-agenda-max-todos 20)
+              (org-agenda-files org-agenda-files)))
 
-	("w" "Workflow Status"
-	((todo "WAIT"
-		((org-agenda-overriding-header "Waiting on External")
-		(org-agenda-files org-agenda-files)))
-	(todo "REVIEW"
-		((org-agenda-overriding-header "In Review")
-		(org-agenda-files org-agenda-files)))
-	(todo "PLAN"
-		((org-agenda-overriding-header "In Planning")
-		(org-agenda-todo-list-sublevels nil)
-		(org-agenda-files org-agenda-files)))
-	(todo "BACKLOG"
-		((org-agenda-overriding-header "Project Backlog")
-		(org-agenda-todo-list-sublevels nil)
-		(org-agenda-files org-agenda-files)))
-	(todo "READY"
-		((org-agenda-overriding-header "Ready for Work")
-		(org-agenda-files org-agenda-files)))
-	(todo "ACTIVE"
-		((org-agenda-overriding-header "Active Projects")
-		(org-agenda-files org-agenda-files)))
-	(todo "COMPLETED"
-		((org-agenda-overriding-header "Completed Projects")
-		(org-agenda-files org-agenda-files)))
-	(todo "CANC"
-		((org-agenda-overriding-header "Cancelled Projects")
-		(org-agenda-files org-agenda-files)))))))
+              ("w" "Workflow Status"
+              ((todo "WAIT"
+                      ((org-agenda-overriding-header "Waiting on External")
+                      (org-agenda-files org-agenda-files)))
+              (todo "REVIEW"
+                      ((org-agenda-overriding-header "In Review")
+                      (org-agenda-files org-agenda-files)))
+              (todo "PLAN"
+                      ((org-agenda-overriding-header "In Planning")
+                      (org-agenda-todo-list-sublevels nil)
+                      (org-agenda-files org-agenda-files)))
+              (todo "BACKLOG"
+                      ((org-agenda-overriding-header "Project Backlog")
+                      (org-agenda-todo-list-sublevels nil)
+                      (org-agenda-files org-agenda-files)))
+              (todo "READY"
+                      ((org-agenda-overriding-header "Ready for Work")
+                      (org-agenda-files org-agenda-files)))
+              (todo "ACTIVE"
+                      ((org-agenda-overriding-header "Active Projects")
+                      (org-agenda-files org-agenda-files)))
+              (todo "COMPLETED"
+                      ((org-agenda-overriding-header "Completed Projects")
+                      (org-agenda-files org-agenda-files)))
+              (todo "CANC"
+                      ((org-agenda-overriding-header "Cancelled Projects")
+                      (org-agenda-files org-agenda-files)))))))
 
-  (setq org-capture-templates
-    `(("t" "Tasks / Projects")
-      ("tt" "Task" entry (file+olp "~/org/tasks.org" "Inbox")
-           "* TODO %?\n  %U\n  %a\n  %i" :empty-lines 1)
+        (setq org-capture-templates
+          `(("t" "Tasks / Projects")
+            ("tt" "Task" entry (file+olp "~/org/tasks.org" "Inbox")
+                 "* TODO %?\n  %U\n  %a\n  %i" :empty-lines 1)
 
-      ("j" "Journal Entries")
-      ("jj" "Journal" entry
-           (file+olp+datetree "~/org/journal.org")
-           "\n* %<%I:%M %p> - Journal :journal:\n\n%?\n\n"
-           ;; ,(dw/read-file-as-string "~/Notes/Templates/Daily.org")
-           :clock-in :clock-resume
-           :empty-lines 1)
-      ("jm" "Meeting" entry
-           (file+olp+datetree "~/org/journal.org")
-           "* %<%I:%M %p> - %a :meetings:\n\n%?\n\n"
-           :clock-in :clock-resume
-           :empty-lines 1)
+            ("j" "Journal Entries")
+            ("jj" "Journal" entry
+                 (file+olp+datetree "~/org/journal.org")
+                 "\n* %<%I:%M %p> - Journal :journal:\n\n%?\n\n"
+                 ;; ,(dw/read-file-as-string "~/Notes/Templates/Daily.org")
+                 :clock-in :clock-resume
+                 :empty-lines 1)
+            ("jm" "Meeting" entry
+                 (file+olp+datetree "~/org/journal.org")
+                 "* %<%I:%M %p> - %a :meetings:\n\n%?\n\n"
+                 :clock-in :clock-resume
+                 :empty-lines 1)
 
-      ("w" "Workflows")
-      ("we" "Checking Email" entry (file+olp+datetree "~/org/journal.org")
-           "* Checking Email :email:\n\n%?" :clock-in :clock-resume :empty-lines 1)
+            ("w" "Workflows")
+            ("we" "Checking Email" entry (file+olp+datetree "~/org/journal.org")
+                 "* Checking Email :email:\n\n%?" :clock-in :clock-resume :empty-lines 1)
 
-      ("m" "Metrics Capture")
-      ("mw" "Weight" table-line (file+headline "~/org/metrics.org" "Weight")
-       "| %U | %^{Weight} | %^{Notes} |" :kill-buffer t)))
+            ("m" "Metrics Capture")
+            ("mw" "Weight" table-line (file+headline "~/org/metrics.org" "Weight")
+             "| %U | %^{Weight} | %^{Notes} |" :kill-buffer t)))
 
-)
+      )
 
-;; Make sure org-indent face is available
-(require 'org-indent)
-;; Ensure that anything that should be fixed-pitch in Org files appears that way
-(set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch)
-(set-face-attribute 'org-table nil  :inherit 'fixed-pitch)
-(set-face-attribute 'org-formula nil  :inherit 'fixed-pitch)
-(set-face-attribute 'org-code nil   :inherit '(shadow fixed-pitch))
-(set-face-attribute 'org-indent nil :inherit '(org-hide fixed-pitch))
-(set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
-(set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
-(set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
-(set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch)
+    ;; Make sure org-indent face is available
+    (require 'org-indent)
+    ;; Ensure that anything that should be fixed-pitch in Org files appears that way
+    (set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch)
+    (set-face-attribute 'org-table nil  :inherit 'fixed-pitch)
+    (set-face-attribute 'org-formula nil  :inherit 'fixed-pitch)
+    (set-face-attribute 'org-code nil   :inherit '(shadow fixed-pitch))
+    (set-face-attribute 'org-indent nil :inherit '(org-hide fixed-pitch))
+    (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
+    (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
+    (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
+    (set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch)
 
-;; Get rid of the background on column views
-(set-face-attribute 'org-column nil :background nil) (set-face-attribute 'org-column-title nil :background nil)
+    ;; Get rid of the background on column views
+    (set-face-attribute 'org-column nil :background nil) (set-face-attribute 'org-column-title nil :background nil)
 
-;; headline bullet
-(use-package org-superstar
-  :ensure t
-  :hook (org-mode . org-superstar-mode)
-  :custom
-  (org-superstar-remove-leading-stars t)
-  (org-superstar-headline-bullets-list '("☵" "○" "✻" "✿"))
-  :config
-  (set-face-attribute 'org-superstar-item nil :height 1.0))
+    ;; headline bullet
+    (use-package org-superstar
+      :ensure t
+      :hook (org-mode . org-superstar-mode)
+      :custom
+      (org-superstar-remove-leading-stars t)
+      (org-superstar-headline-bullets-list '("☵" "○" "✻" "✿"))
+      :config
+      (set-face-attribute 'org-superstar-item nil :height 1.0))
 
-;; cosmetic function
-(defun my/org-mode-hook ()
-  "Customize Org mode settings."
-  (setq-default line-spacing 0.2)
-  (setq-default org-blank-before-new-entry '((heading . auto)
-                                             (plain-list-item . auto))))
-(add-hook 'org-mode-hook #'my/org-mode-hook)
+    ;; cosmetic function
+    (defun my/org-mode-hook ()
+      "Customize Org mode settings."
+      (setq-default line-spacing 0.2)
+      (setq-default org-blank-before-new-entry '((heading . auto)
+                                                 (plain-list-item . auto))))
+    (add-hook 'org-mode-hook #'my/org-mode-hook)
 
-
-(use-package org-babel
-  :ensure nil ; already built-in
-  :defer t ; lazy loading
-  :config
-  ;; Set default languages for org-babel blocks
-  (org-babel-do-load-languages
-   'org-babel-load-languages
-   '((emacs-lisp . t)
-     (python . t)
-     (shell . t)
-     (js . t)
-     (typescript . t)
-     (css . t)))
-  ;; Enable syntax highlighting for code blocks
-  (setq org-src-fontify-natively t))
-
-;; (use-package ob-js
-;;   :after org
-;;   :config
-;;   ;; Add support for Node.js
-;;   (setq org-babel-js-cmd "node"))
-
-(use-package org-tempo
-  :ensure nil
-  :after org
-  :config
-  (add-to-list 'org-structure-template-alist '("sh" . "src shell"))
-  (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp")))
-
-;; create a task from non-heading text, such as a sentence or paragraph.
-(use-package org-inlinetask)
+  ;; create a task from non-heading text, such as a sentence or paragraph.
+(require 'org-inlinetask)
 
 ;; Helper emphasis (ChatGPT) 🤯
 (defun my-wrap-with-stars ()
@@ -574,6 +507,35 @@
  :keymaps 'override
  "s" 'surround-with-key)
 
+(use-package org-babel
+  :ensure nil ; already built-in
+  :defer t ; lazy loading
+  :config
+  ;; Set default languages for org-babel blocks
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((emacs-lisp . t)
+     (python . t)
+     (shell . t)
+     (js . t)
+     (typescript . t)
+     (css . t)))
+  ;; Enable syntax highlighting for code blocks
+  (setq org-src-fontify-natively t))
+
+;; (use-package ob-js
+;;   :after org
+;;   :config
+;;   ;; Add support for Node.js
+;;   (setq org-babel-js-cmd "node"))
+
+(use-package org-tempo
+  :ensure nil
+  :after org
+  :config
+  (add-to-list 'org-structure-template-alist '("sh" . "src shell"))
+  (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp")))
+
 (use-package org-roam
   :ensure t
   :init
@@ -590,7 +552,6 @@
   :config
   (org-roam-setup))
 
-
 ;; Projectile
 (use-package projectile
   :ensure t
@@ -604,7 +565,7 @@
 
 (use-package counsel-projectile
   :ensure t
-  :config (conunsel-projectile-mode))
+  :config (counsel-projectile-mode))
 
 ;; Magit
 (use-package magit
