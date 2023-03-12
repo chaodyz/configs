@@ -578,3 +578,21 @@
     (add-hook 'magit-mode-hook 'evil-magit-init))
   (setq magit-display-buffer-function 'magit-display-buffer-fullframe-status-v1)
   )
+
+(setq gc-cons-threshold 100000000)
+(setq read-process-output-max (* 1024 1024)) ;; 1mb
+
+;; Perf
+(use-package lsp-mode
+    :init
+    :hook (typescript-mode . lsp-deferred)
+    :commands (lsp lsp-deferred))
+
+  (use-package lsp-ui :commands lsp-ui-mode)
+  ;; if you are ivy user
+  (use-package lsp-ivy :commands lsp-ivy-workspace-symbol)
+  (use-package lsp-treemacs :commands lsp-treemacs-errors-list)
+
+  ;; ;; optionally if you want to use debugger
+  ;; (use-package dap-mode)
+  ;; ;; (use-package dap-LANGUAGE) to load the dap adapter for your language
