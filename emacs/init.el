@@ -582,17 +582,54 @@
 (setq gc-cons-threshold 100000000)
 (setq read-process-output-max (* 1024 1024)) ;; 1mb
 
-;; Perf
+(defun efs/lsp-mode-setup ()
+  (setq lsp-headerline-breadcrumb-segments '(path-up-to-project file symbols))
+  (lsp-headerline-breadcrumb-mode))
+
 (use-package lsp-mode
-    :init
-    :hook (typescript-mode . lsp-deferred)
-    :commands (lsp lsp-deferred))
+  :commands (lsp lsp-deferred)
+  :hook (lsp-mode . efs/lsp-mode-setup)
+  :init
+  (setq lsp-keymap-prefix "C-c l")  ;; Or 'C-l', 's-l'
+  :config
+  (lsp-enable-which-key-integration t))
 
-  (use-package lsp-ui :commands lsp-ui-mode)
-  ;; if you are ivy user
-  (use-package lsp-ivy :commands lsp-ivy-workspace-symbol)
-  (use-package lsp-treemacs :commands lsp-treemacs-errors-list)
 
-  ;; ;; optionally if you want to use debugger
-  ;; (use-package dap-mode)
-  ;; ;; (use-package dap-LANGUAGE) to load the dap adapter for your language
+(use-package lsp-ui
+  :hook (lsp-mode . lsp-ui-mode)
+  ;; :custom
+  ;; (lsp-ui-doc-enable t)
+  ;; (lsp-ui-doc-show-with-cursor t)
+  ;; (lsp-ui-doc-position 'bottom)
+  )
+
+(use-package lsp-treemacs
+  :after lsp)
+
+(use-package lsp-ivy :commands lsp-ivy-workspace-symbol)
+(use-package lsp-treemacs
+  :commands lsp-treemacs-errors-list
+  :after lsp)
+
+(use-package typescript-mode
+  :mode "\\.ts\\'"
+  :hook (typescript-mode . lsp-deferred)
+  :config
+  (setq typescript-indent-level 2))
+
+(use-package company
+  :after lsp-mode
+  :hook (lsp-mode . company-mode)
+  :bind (:map company-active-map
+              ("<tab>" . company-complete-selection))
+  (:map lsp-mode-map
+        ("<tab>" . company-indent-or-complete-common))
+  :custom
+  (company-minimum-prefix-length 1)
+  (company-idle-delay 0.0))
+
+(use-package company-box
+  :hook (company-mode . company-box-mode))
+
+;;lsp-find-references
+;;lsp-find-definition
