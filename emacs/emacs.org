@@ -85,34 +85,35 @@ Basic setup including rebind vim like C-u/i for page scroll, =evil-nerd-commente
 
   (use-package evil
     :init
-  (setq evil-undo-system 'undo-tree)
-  (setq evil-want-integration t)
-  (setq evil-want-keybinding nil)
-  (setq evil-want-C-u-scroll t)
-  (setq evil-want-C-i-jump nil)
-  :config
-  (evil-mode 1)
-  (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state)
-  (define-key evil-insert-state-map (kbd "C-h") 'evil-delete-backward-char-and-join)
+    (setq evil-undo-system 'undo-tree)
+    (setq evil-want-integration t)
+    (setq evil-want-keybinding nil)
+    (setq evil-want-C-u-scroll t)
+    (setq evil-want-C-i-jump nil)
+    :config
+    (evil-mode 1)
+    (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state)
+    (define-key evil-insert-state-map (kbd "C-h") 'evil-delete-backward-char-and-join)
 
-  ;; Use visual line motions even outside of visual-line-mode buffers
-  (evil-global-set-key 'motion "j" 'evil-next-visual-line)
-  (evil-global-set-key 'motion "k" 'evil-previous-visual-line)
+    ;; Use visual line motions even outside of visual-line-mode buffers
+    (evil-global-set-key 'motion "j" 'evil-next-visual-line)
+    (evil-global-set-key 'motion "k" 'evil-previous-visual-line)
 
-  (evil-set-initial-state 'messages-buffer-mode 'normal)
-  (evil-set-initial-state 'dashboard-mode 'normal))
+    (evil-set-initial-state 'messages-buffer-mode 'normal)
+    (evil-set-initial-state 'dashboard-mode 'normal)
+    )
 
 
   (use-package evil-nerd-commenter
-  :ensure t
-  :config
-  (evilnc-default-hotkeys))
+    :ensure t
+    :config
+    (evilnc-default-hotkeys))
   (define-key evil-normal-state-map "gc" 'evilnc-comment-or-uncomment-lines)
 
   (use-package evil-collection
-  :after evil
-  :config
-  (evil-collection-init))
+    :after evil
+    :config
+    (evil-collection-init))
 
   ;; Escape key to quit menu
   (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
@@ -180,9 +181,6 @@ Basic setup including rebind vim like C-u/i for page scroll, =evil-nerd-commente
             ("C-c f" . counsel-recentf))
      :config
      (setq ivy-initial-inputs-alist nil))
-
-   (global-set-key (kbd "C-M-j") 'counsel-switch-buffer)
-
  #+end_src
 * Theme
 #+begin_src emacs-lisp
@@ -253,11 +251,12 @@ Basic setup including rebind vim like C-u/i for page scroll, =evil-nerd-commente
       :prefix "SPC"
       :non-normal-prefix "M-SPC")
 
-  ;; Define some key bindings using the leader key
+    ;; Define some key bindings using the leader key
     (leader-key-def
       "d" 'describe-thing-at-point
       "f" 'counsel-find-file
       "h" 'counsel-command-history
+      "p" 'projectile-command-map
       "r" 'counsel-recentf
       "w" 'save-buffer
       "q" #'delete-window
@@ -266,27 +265,29 @@ Basic setup including rebind vim like C-u/i for page scroll, =evil-nerd-commente
 
     ;; Key-Buffer
     (leader-key-def
-      "b" '(:ignore t:which-key "Buffer")
+      "b" '(:ignore t:which-key " Buffer...")
       "b l" 'counsel-ibuffer
       "b c" 'kill-buffer
       "b w" 'save-buffer 
       )
-     ;; Key-Org
+
+    ;; Key-Org
     (leader-key-def
-      "o" '(:ignore t:which-key "Org")
+      "o" '(:ignore t :which-key " Org...")
       "o a" 'org-agenda
       "o s" 'org-schedule
       "o d" 'org-deadline
       "o c" 'org-capture
+      "o t" '(org-babel-tangle :which-key "Org Tangle")
+      "o r" '(:ignore t :which-key " Org Roam")
+      "o rf" '(org-roam-node-find :which-key "Find a Node")
+      "o ri" '(org-roam-node-insert :which-key "Insert a Node")
+      "o rr" '(org-roam-buffer-toggle :which-key "Toggle Org Roam Buffer")
       )
-    ;; Key-pyim
+
+    ;; Window
     (leader-key-def
-      "p" '(:ignore t:which-key "pyim")
-      "p c" 'pyim-punctuation-translate-at-point
-      )
-     ;; Window
-    (leader-key-def
-      "a" '(:ignore t:which-key "Window")
+      "a" '(:ignore t :which-key " Window...")
       "a v" 'split-window-right
       "a s" 'split-window-below
       ;; window movement binding
@@ -301,14 +302,15 @@ Basic setup including rebind vim like C-u/i for page scroll, =evil-nerd-commente
       "a L" #'evil-window-move-far-right)
 
     (leader-key-def
-              "g" '(:ignore t :which-key "Magit")
-              "g s" 'magit-status
-              "g b" 'magit-blame
-              "g l" 'magit-log-buffer-file
-              "g g" 'magit-dispatch
-              "g c" 'magit-commit-create)
-  )
+      "g" '(:ignore t :which-key " Magit...")
+      "g s" 'magit-status
+      "g b" 'magit-blame
+      "g l" 'magit-log-buffer-file
+      "g g" 'magit-dispatch
+      "g c" 'magit-commit-create)
 
+
+    )
   ;; Which key
   (use-package which-key
     :ensure t
@@ -316,7 +318,9 @@ Basic setup including rebind vim like C-u/i for page scroll, =evil-nerd-commente
     :config
     (which-key-mode)
     (setq which-key-idle-delay 0.3)
-    (setq which-key-prefix-prefix "SPC"))
+    (setq which-key-prefix-prefix "SPC")
+    (setq which-key-allow-evil-operators t)
+    )
 
 #+end_src
 
@@ -371,7 +375,6 @@ Basic setup including rebind vim like C-u/i for page scroll, =evil-nerd-commente
 
     (
      ("M-j" . pyim-convert-string-at-point) ;与 pyim-probe-dynamic-english 配合
-    ;; ("M-j" . pyim-convert-code-at-point) ;与 pyim-probe-dynamic-english 配合
      ("C-;" . pyim-delete-word-from-personal-buffer)))
 
 #+end_src
@@ -623,11 +626,8 @@ Roam
     (org-roam-directory "~/org/")
     (org-roam-db-location "~/org/org-roam.db")
     (org-roam-completion-everywhere t)
-    :bind (("C-c n f" . org-roam-node-find)
-           ("C-c n r" . org-roam-buffer-toggle)
-           ("C-c n i" . org-roam-node-insert)
-           :map org-mode-map
-           ("C-M-i" . completion-at-point))
+    :bind (:map org-mode-map
+                ("C-M-i" . completion-at-point))
     :config
     (org-roam-setup))
 #+end_src
@@ -677,6 +677,10 @@ refer to the official perf doc https://emacs-lsp.github.io/lsp-mode/page/perform
 #+end_src
 
 #+begin_src emacs-lisp
+
+  (with-eval-after-load 'lsp-mode
+    (add-hook 'lsp-mode-hook #'lsp-enable-which-key-integration))
+
   (defun efs/lsp-mode-setup ()
     (setq lsp-headerline-breadcrumb-segments '(path-up-to-project file symbols))
     (lsp-headerline-breadcrumb-mode))
@@ -685,10 +689,9 @@ refer to the official perf doc https://emacs-lsp.github.io/lsp-mode/page/perform
     :commands (lsp lsp-deferred)
     :hook (lsp-mode . efs/lsp-mode-setup)
     :init
-    (setq lsp-keymap-prefix "C-c l")  ;; Or 'C-l', 's-l'
+    (setq lsp-keymap-prefix "C-c l")  
     :config
     (lsp-enable-which-key-integration t))
-
 
   (use-package lsp-ui
     :hook (lsp-mode . lsp-ui-mode)
@@ -726,8 +729,17 @@ refer to the official perf doc https://emacs-lsp.github.io/lsp-mode/page/perform
   (use-package company-box
     :hook (company-mode . company-box-mode))
 
-  ;;lsp-find-references
-  ;;lsp-find-definition
+#+end_src
+
+* Shell
+Term
+#+begin_src emacs-lisp
+  (use-package term
+    :config
+    (setq explicit-shell-file-name "bash"))
+
+  (use-package eterm-256color
+    :hook (term-mode . eterm-256color-mode))
 #+end_src
 
 *  TODO organize all the configs by using org-babel
