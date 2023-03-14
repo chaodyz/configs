@@ -56,18 +56,21 @@ Font were set in a way in a coding environment it will use =fixed-pitch,= when i
    Load use package- a popular macro in Emacs that provides declarative way  to config and load packages (eval-when-compile).
 #+begin_src emacs-lisp
 
-  (require 'package)
-  (setq package-archives '(("melpa" . "https://melpa.org/packages/")
-                          ("melpa-stable" . "https://stable.melpa.org/packages/")
-                          ("org" . "https://orgmode.org/elpa/")
-                          ("elpa" . "https://elpa.gnu.org/packages/")))
-  (package-initialize)
-  (unless (package-installed-p 'use-package)
-  (package-refresh-contents)
-  (package-install 'use-package))
+    (require 'package)
+    (setq package-archives '(("melpa" . "https://melpa.org/packages/")
+                             ("melpa-stable" . "https://stable.melpa.org/packages/")
+                             ("org" . "https://orgmode.org/elpa/")
+                             ("elpa" . "https://elpa.gnu.org/packages/")))
+    (package-initialize)
+    (unless (package-installed-p 'use-package)
+        (package-refresh-contents)
+        (package-install 'use-package))
 
-  (require 'use-package)
-  (setq use-package-always-ensure t)
+  ;; ensures that the Emacs package archive is up-to-date before installing any new packages, by refreshing the package list if necessary.
+    (unless package-archive-contents (package-refresh-contents))
+
+    (require 'use-package)
+    (setq use-package-always-ensure t)
 #+end_src
 
 * Text editing experience
@@ -83,40 +86,40 @@ The undo tree  sets =C-r= to be the same as Vim
 Basic setup including rebind vim like C-u/i for page scroll, =evil-nerd-commenter= : vim commentary parity, the  =evil-collection= ensures evil mode works well in dired, terminal etc. 
 #+begin_src emacs-lisp
 
-  (use-package evil
-    :init
-    (setq evil-undo-system 'undo-tree)
-    (setq evil-want-integration t)
-    (setq evil-want-keybinding nil)
-    (setq evil-want-C-u-scroll t)
-    (setq evil-want-C-i-jump nil)
-    :config
-    (evil-mode 1)
-    (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state)
-    (define-key evil-insert-state-map (kbd "C-h") 'evil-delete-backward-char-and-join)
+    (use-package evil
+      :init
+      (setq evil-undo-system 'undo-tree)
+      (setq evil-want-integration t)
+      (setq evil-want-keybinding nil)
+      (setq evil-want-C-u-scroll t)
+      (setq evil-want-C-i-jump nil)
+      :config
+      (evil-mode 1)
+      (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state)
+      (define-key evil-insert-state-map (kbd "C-h") 'evil-delete-backward-char-and-join)
 
-    ;; Use visual line motions even outside of visual-line-mode buffers
-    (evil-global-set-key 'motion "j" 'evil-next-visual-line)
-    (evil-global-set-key 'motion "k" 'evil-previous-visual-line)
+      ;; Use visual line motions even outside of visual-line-mode buffers
+      (evil-global-set-key 'motion "j" 'evil-next-visual-line)
+      (evil-global-set-key 'motion "k" 'evil-previous-visual-line)
 
-    (evil-set-initial-state 'messages-buffer-mode 'normal)
-    (evil-set-initial-state 'dashboard-mode 'normal)
-    )
+      (evil-set-initial-state 'messages-buffer-mode 'normal)
+      (evil-set-initial-state 'dashboard-mode 'normal)
+      )
 
 
-  (use-package evil-nerd-commenter
-    :ensure t
-    :config
-    (evilnc-default-hotkeys))
-  (define-key evil-normal-state-map "gc" 'evilnc-comment-or-uncomment-lines)
+    (use-package evil-nerd-commenter
+      ;; :config
+      ;; (evilnc-default-hotkeys)
+      )
+    (define-key evil-normal-state-map "gc" 'evilnc-comment-or-uncomment-lines)
 
-  (use-package evil-collection
-    :after evil
-    :config
-    (evil-collection-init))
+    (use-package evil-collection
+      :after evil
+      :config
+      (evil-collection-init))
 
-  ;; Escape key to quit menu
-  (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
+    ;; Escape key to quit menu
+    (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
 #+end_src
 ** Hydra 
 
@@ -677,57 +680,46 @@ refer to the official perf doc https://emacs-lsp.github.io/lsp-mode/page/perform
 #+end_src
 
 #+begin_src emacs-lisp
+    ;; (use-package lsp-mode
+    ;;   :defer t
+    ;;   :hook (
+    ;;          (typescript-mode . lsp)
+    ;;          (lsp-mode . (lambda ()
+    ;;                       (let ((lsp-keymap-prefix "C-c l"))
+    ;;                         (lsp-enable-which-key-integration)))))
+    ;;   :commands lsp
+    ;;   :config
+    ;;   (define-key lsp-mode-map (kbd "C-c l") lsp-command-map)
+    ;;   (setq lsp-prefer-flymake nil) ;; Use lsp-ui and flycheck instead of flymake
+    ;;   )
 
-  (with-eval-after-load 'lsp-mode
-    (add-hook 'lsp-mode-hook #'lsp-enable-which-key-integration))
 
-  (defun efs/lsp-mode-setup ()
-    (setq lsp-headerline-breadcrumb-segments '(path-up-to-project file symbols))
-    (lsp-headerline-breadcrumb-mode))
+    ;;   (use-package lsp-ui
+    ;;     :hook (lsp-mode . lsp-ui-mode)
+    ;;     )
 
-  (use-package lsp-mode
-    :commands (lsp lsp-deferred)
-    :hook (lsp-mode . efs/lsp-mode-setup)
-    :init
-    (setq lsp-keymap-prefix "C-c l")  
+    ;;   (use-package lsp-ivy :commands lsp-ivy-workspace-symbol)
+    ;;   (use-package lsp-treemacs :commands lsp-treemacs-errors-list)
+    ;;   (use-package dap-mode)
+    ;;   (use-package company-lsp
+    ;;     :after lsp-mode
+    ;;     :config
+    ;;     (push 'company-lsp company-backends)
+    ;;     )
+  (use-package eglot
+    :ensure t)
+
+  (use-package tree-sitter
     :config
-    (lsp-enable-which-key-integration t))
-
-  (use-package lsp-ui
-    :hook (lsp-mode . lsp-ui-mode)
-    ;; :custom
-    ;; (lsp-ui-doc-enable t)
-    ;; (lsp-ui-doc-show-with-cursor t)
-    ;; (lsp-ui-doc-position 'bottom)
+    (global-tree-sitter-mode)
     )
 
-  (use-package lsp-treemacs
-    :after lsp)
-
-  (use-package lsp-ivy :commands lsp-ivy-workspace-symbol)
-  (use-package lsp-treemacs
-    :commands lsp-treemacs-errors-list
-    :after lsp)
-
-  (use-package typescript-mode
-    :mode "\\.ts\\'"
-    :hook (typescript-mode . lsp-deferred)
+  (use-package tree-sitter-langs
+    :after tree-sitter
+    :hook (typescript-mode . tree-sitter-mode)
     :config
-    (setq typescript-indent-level 2))
-
-  (use-package company
-    :after lsp-mode
-    :hook (lsp-mode . company-mode)
-    :bind (:map company-active-map
-                ("<tab>" . company-complete-selection))
-    (:map lsp-mode-map
-          ("<tab>" . company-indent-or-complete-common))
-    :custom
-    (company-minimum-prefix-length 1)
-    (company-idle-delay 0.0))
-
-  (use-package company-box
-    :hook (company-mode . company-box-mode))
+    (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode)
+    )
 
 #+end_src
 
@@ -753,5 +745,6 @@ vterm
   (setq vterm-max-scrollback 10000))
 
 #+end_src
+
 *  TODO organize all the configs by using org-babel
 SCHEDULED: <2023-04-04 Tue>

@@ -36,17 +36,20 @@
 (global-visual-line-mode t)
 
 (require 'package)
-(setq package-archives '(("melpa" . "https://melpa.org/packages/")
-                        ("melpa-stable" . "https://stable.melpa.org/packages/")
-                        ("org" . "https://orgmode.org/elpa/")
-                        ("elpa" . "https://elpa.gnu.org/packages/")))
-(package-initialize)
-(unless (package-installed-p 'use-package)
-(package-refresh-contents)
-(package-install 'use-package))
+  (setq package-archives '(("melpa" . "https://melpa.org/packages/")
+                           ("melpa-stable" . "https://stable.melpa.org/packages/")
+                           ("org" . "https://orgmode.org/elpa/")
+                           ("elpa" . "https://elpa.gnu.org/packages/")))
+  (package-initialize)
+  (unless (package-installed-p 'use-package)
+      (package-refresh-contents)
+      (package-install 'use-package))
 
-(require 'use-package)
-(setq use-package-always-ensure t)
+;; ensures that the Emacs package archive is up-to-date before installing any new packages, by refreshing the package list if necessary.
+  (unless package-archive-contents (package-refresh-contents))
+
+  (require 'use-package)
+  (setq use-package-always-ensure t)
 
 (use-package undo-tree
     :ensure t
@@ -75,9 +78,9 @@
 
 
 (use-package evil-nerd-commenter
-  :ensure t
-  :config
-  (evilnc-default-hotkeys))
+  ;; :config
+  ;; (evilnc-default-hotkeys)
+  )
 (define-key evil-normal-state-map "gc" 'evilnc-comment-or-uncomment-lines)
 
 (use-package evil-collection
@@ -583,56 +586,46 @@
 (setq gc-cons-threshold 100000000)
 (setq read-process-output-max (* 1024 1024)) ;; 1mb
 
-(with-eval-after-load 'lsp-mode
-  (add-hook 'lsp-mode-hook #'lsp-enable-which-key-integration))
+;; (use-package lsp-mode
+  ;;   :defer t
+  ;;   :hook (
+  ;;          (typescript-mode . lsp)
+  ;;          (lsp-mode . (lambda ()
+  ;;                       (let ((lsp-keymap-prefix "C-c l"))
+  ;;                         (lsp-enable-which-key-integration)))))
+  ;;   :commands lsp
+  ;;   :config
+  ;;   (define-key lsp-mode-map (kbd "C-c l") lsp-command-map)
+  ;;   (setq lsp-prefer-flymake nil) ;; Use lsp-ui and flycheck instead of flymake
+  ;;   )
 
-(defun efs/lsp-mode-setup ()
-  (setq lsp-headerline-breadcrumb-segments '(path-up-to-project file symbols))
-  (lsp-headerline-breadcrumb-mode))
 
-(use-package lsp-mode
-  :commands (lsp lsp-deferred)
-  :hook (lsp-mode . efs/lsp-mode-setup)
-  :init
-  (setq lsp-keymap-prefix "C-c l")  
+  ;;   (use-package lsp-ui
+  ;;     :hook (lsp-mode . lsp-ui-mode)
+  ;;     )
+
+  ;;   (use-package lsp-ivy :commands lsp-ivy-workspace-symbol)
+  ;;   (use-package lsp-treemacs :commands lsp-treemacs-errors-list)
+  ;;   (use-package dap-mode)
+  ;;   (use-package company-lsp
+  ;;     :after lsp-mode
+  ;;     :config
+  ;;     (push 'company-lsp company-backends)
+  ;;     )
+(use-package eglot
+  :ensure t)
+
+(use-package tree-sitter
   :config
-  (lsp-enable-which-key-integration t))
-
-(use-package lsp-ui
-  :hook (lsp-mode . lsp-ui-mode)
-  ;; :custom
-  ;; (lsp-ui-doc-enable t)
-  ;; (lsp-ui-doc-show-with-cursor t)
-  ;; (lsp-ui-doc-position 'bottom)
+  (global-tree-sitter-mode)
   )
 
-(use-package lsp-treemacs
-  :after lsp)
-
-(use-package lsp-ivy :commands lsp-ivy-workspace-symbol)
-(use-package lsp-treemacs
-  :commands lsp-treemacs-errors-list
-  :after lsp)
-
-(use-package typescript-mode
-  :mode "\\.ts\\'"
-  :hook (typescript-mode . lsp-deferred)
+(use-package tree-sitter-langs
+  :after tree-sitter
+  :hook (typescript-mode . tree-sitter-mode)
   :config
-  (setq typescript-indent-level 2))
-
-(use-package company
-  :after lsp-mode
-  :hook (lsp-mode . company-mode)
-  :bind (:map company-active-map
-              ("<tab>" . company-complete-selection))
-  (:map lsp-mode-map
-        ("<tab>" . company-indent-or-complete-common))
-  :custom
-  (company-minimum-prefix-length 1)
-  (company-idle-delay 0.0))
-
-(use-package company-box
-  :hook (company-mode . company-box-mode))
+  (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode)
+  )
 
 (use-package term
   :config
