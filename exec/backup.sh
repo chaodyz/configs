@@ -4,8 +4,9 @@ echo "Backing up"
 
 # Platform specific 
 if [ "$(uname)" == "Darwin" ]; then
-    # Do something under Mac OS X platform        
-    cp ~/.bash_profile ~/projects/configs/.bash_profile
+    # when its macos we copy both bashrc and profile
+    cp ~/.bash_profile ~/projects/configs/.bash_profile &&
+    cp ~/.bashrc ~/projects/configs/.bashrc
 
 elif  [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
     # Do something under GNU/Linux platform

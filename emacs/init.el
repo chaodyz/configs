@@ -1,7 +1,7 @@
 ;; Font 
 ;; Set font by different mode: (set-face-attribute 'default nil :font "FONT_NAME":height: FONT_SIZE MODE/BUFFER)
-(set-face-attribute 'default nil :font "Fira Code" :height 180)
-(set-face-attribute 'fixed-pitch nil :font "Fira Code" :height 160)
+(set-face-attribute 'default nil :font "FiraCode Nerd Font Mono" :height 180)
+(set-face-attribute 'fixed-pitch nil :font "FiraCode Nerd Font Mono" :height 160)
 (set-face-attribute 'variable-pitch nil :family "Source Sans Pro" :height 180 :weight 'normal)
 
 ;; 汉字－思源黑体
@@ -640,3 +640,10 @@
 
 (use-package eterm-256color
   :hook (term-mode . eterm-256color-mode))
+
+(use-package vterm
+  :commands vterm
+  :config
+  (setq term-prompt-regexp "^[^#$%>\n]*[#$%>] *")  ;; Set this to match your custom shell prompt
+  (setq vterm-shell "bash")                       ;; Set this to customize the shell to launch
+  (setq vterm-max-scrollback 10000))

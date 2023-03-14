@@ -5,7 +5,8 @@ echo "Restoring"
 # Platform specific
 if [ "$(uname)" == "Darwin" ]; then
    # Do something under Mac OS X platform       
-   cp ~/projects/configs/.bash_profile       ~/.bash_profile
+   cp ~/projects/configs/.bash_profile       ~/.bash_profile &&
+   cp ~/projects/configs/.bashrc      ~/.bashrc
 
 elif  [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
    # Do something under GNU/Linux platform

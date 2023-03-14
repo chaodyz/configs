@@ -1,17 +1,9 @@
-#
-# ~/.bashrc
-#
-
-# If not running interactively, don't do anything
-[[ $- != *i* ]] && return
-
-# comment out for starship
-# PS1='[\u@\h \W]\$ '
-
+# ~/.bashrc If not running interactively, don't do anything [[ $- != *i* ]] && return comment out for starship PS1='[\u@\h \W]\$ '
 ### EXPORT
-# export TERM="xterm-256color"                      # getting proper colors
+export TERM_PROGRAM=emacs
+export TERM="xterm-256color"                      # getting proper colors
 export HISTCONTROL=ignoredups:erasedups           # no duplicate entries
-
+# export TERMINFO=/usr/share/terminfo
 ### SET VI MODE ###
 set -o vi
 bind -m vi-command 'Control-l: clear-screen'
@@ -34,65 +26,6 @@ shopt -s checkwinsize # checks term size when bash regains control
 #ignore upper and lowercase when TAB completion
 bind "set completion-ignore-case on"
 
-### ARCHIVE EXTRACTION
-# usage: ex <file>
-ex ()
-{
-  if [ -f "$1" ] ; then
-    case $1 in
-      *.tar.bz2)   tar xjf $1   ;;
-      *.tar.gz)    tar xzf $1   ;;
-      *.bz2)       bunzip2 $1   ;;
-      *.rar)       unrar x $1   ;;
-      *.gz)        gunzip $1    ;;
-      *.tar)       tar xf $1    ;;
-      *.tbz2)      tar xjf $1   ;;
-      *.tgz)       tar xzf $1   ;;
-      *.zip)       unzip $1     ;;
-      *.Z)         uncompress $1;;
-      *.7z)        7z x $1      ;;
-      *.deb)       ar x $1      ;;
-      *.tar.xz)    tar xf $1    ;;
-      *.tar.zst)   unzstd $1    ;;
-      *)           echo "'$1' cannot be extracted via ex()" ;;
-    esac
-  else
-    echo "'$1' is not a valid file"
-  fi
-}
-
-# navigation
-up () {
-  local d=""
-  local limit="$1"
-
-  # Default to limit of 1
-  if [ -z "$limit" ] || [ "$limit" -le 0 ]; then
-    limit=1
-  fi
-
-  for ((i=1;i<=limit;i++)); do
-    d="../$d"
-  done
-
-  # perform cd. Show error if cd fails
-  if ! cd "$d"; then
-    echo "Couldn't go up $limit dirs.";
-  fi
-}
-
-# pacman and yay
-alias pacsyu='sudo pacman -Syyu'                 # update only standard pkgs
-alias yaysua='yay -Sua --noconfirm'              # update only AUR pkgs (yay)
-alias yaysyu='yay -Syu --noconfirm'              # update standard pkgs and AUR pkgs (yay)
-alias parsua='paru -Sua --noconfirm'             # update only AUR pkgs (paru)
-alias parsyu='paru -Syu --noconfirm'             # update standard pkgs and AUR pkgs (paru)
-alias unlock='sudo rm /var/lib/pacman/db.lck'    # remove pacman lock
-alias cleanup='sudo pacman -Rns $(pacman -Qtdq)'  # remove orphaned packages
-
-# get error messages from journalctl
-alias jctl="journalctl -p 3 -xb"
-
 # Colorize grep output (good for log files)
 alias grep='grep --color=auto'
 alias egrep='egrep --color=auto'
@@ -105,44 +38,65 @@ alias rm='rm -i'
 
 # adding flags
 alias df='df -h'                          # human-readable sizes
-
 # system shortcut
-alias bt="bluetoothctl"
-alias alsa="alsamixer"
-alias c="clear"
-alias ls='ls --color=auto'
-alias ll='ls -l --color=auto'
-alias la='ls -a --color=auto'
-alias lla='ls -a -l --color=auto'
-alias sysmd-on='systemctl list-unit-files --state=enabled'
+alias ls='ls -G'
+## Use a long listing format ##
+alias ll='ls -la -G'
+## Show hidden files ##
+alias l.='ls -d .* -G'
 
+# alias updatedb = 'sudo /usr/libexec/locate.updatedb'
+alias updatedb='sudo /usr/libexec/locate.updatedb'
 # vim
 alias vim="nvim"
-alias v="nvim"
 
-# Git
-alias gb='git branch'
-alias gc='git checkout'
+alias k='kubectl'
+alias wc-run='cd /Users/$USER/Projects/ultipro-app&&npm run start:engaging-developing-web'
+alias wc-test='cd /Users/$USER/Projects/ultipro-app&&npm run test:engaging-developing-web:watch'
+alias wc-cypress='cd /Users/$USER/Projects/ultipro-app&&npm run test:engaging-developing-web:cypress'
+alias wc-local='cd /Users/$USER/Projects/ed-localization&&npm start'
+alias mock-tms="cd /Users/$USER/Projects/mock-tms&&nodemon"
+alias wc-format="cd /Users/$USER/Projects/ultipro-app&&nx format:write&&nx affected:lint"
 
-### PATH
-if [ -d "$HOME/.bin" ] ;
-  then PATH="$HOME/.bin:$PATH"
-fi
+alias gc="git checkout"
+alias gp="git pull"
+alias gpp="git push"
+alias gf="git fetch"
+alias gcc="git commit"
 
-if [ -d "$HOME/.local/bin" ] ;
-  then PATH="$HOME/.local/bin:$PATH"
-fi
+# emacs 
+export PATH="/Users/$USER/.emacs.d/bin/doom:$PATH"
+export PATH="/opt/homebrew/Cellar/emacs-mac/emacs-28.2-mac-9.1/bin/:$PATH"
 
-if [ -d "$HOME/Applications" ] ;
-  then PATH="$HOME/Applications:$PATH"
-fi
+export PATH=/opt/homebrew/bin:$PATH
+export PATH=/opt/homebrew/sbin:$PATH
 
-# fnm
-export PATH=/home/diz/.fnm:$PATH
-eval "`fnm env`"
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+# python version manager
+export PATH="$(pyenv root)/shims:${PATH}"
 
-# Cargo
-export PATH=/home/diz/.cargo/bin:$PATH
+export M2_HOME=/opt/apache-maven-3.8.4
+export NODE_OPTIONS=--max_old_space_size=8192
+# export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_321.jdk/Contents/Home
+JAVA_HOME=/Library/Java/JavaVirtualMachines/zulu-11.jdk/Contents/Home/
+export ANDROID_SDK_ROOT=/Users/$USER/Library/Android/sdk
+export ANDROID_HOME=/Users/$USER/Library/Android/sdk
+export GRADLE_HOME=/usr/local/opt/gradle@7
+export PATH=$ANDROID_HOME/emulator:$ANDROID_HOME/tools:$PATH
+export PATH=$GRADLE_HOME/bin:$PATH
+export PATH="~/.local/bin:$JAVA_HOME/bin:$M2_HOME/bin:$PATH"
+. "$HOME/.cargo/env"
 
 eval "$(starship init bash)"
+eval "$(fnm env --use-on-cd)"
 
+[ -s "/Users/$USER/.jabba/jabba.sh" ] && source "/Users/$USER/.jabba/jabba.sh"
+# export JAVA_HOME=/Library/Java/JavaVirtualMachines/zulu-8.jdk/Contents/Home
+
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f '/Users/$USER/dev/google-cloud-sdk/path.bash.inc' ]; then . '/Users/$USER/dev/google-cloud-sdk/path.bash.inc'; fi
+
+# The next line enables shell command completion for gcloud.
+if [ -f '/Users/$USER/dev/google-cloud-sdk/completion.bash.inc' ]; then . '/Users/$USER/dev/google-cloud-sdk/completion.bash.inc'; fi

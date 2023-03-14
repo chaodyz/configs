@@ -8,8 +8,8 @@ Font were set in a way in a coding environment it will use =fixed-pitch,= when i
 #+begin_src emacs-lisp
   ;; Font 
   ;; Set font by different mode: (set-face-attribute 'default nil :font "FONT_NAME":height: FONT_SIZE MODE/BUFFER)
-  (set-face-attribute 'default nil :font "Fira Code" :height 180)
-  (set-face-attribute 'fixed-pitch nil :font "Fira Code" :height 160)
+  (set-face-attribute 'default nil :font "FiraCode Nerd Font Mono" :height 180)
+  (set-face-attribute 'fixed-pitch nil :font "FiraCode Nerd Font Mono" :height 160)
   (set-face-attribute 'variable-pitch nil :family "Source Sans Pro" :height 180 :weight 'normal)
 #+end_src
 
@@ -737,10 +737,21 @@ Term
   (use-package term
     :config
     (setq explicit-shell-file-name "bash"))
-
+  
   (use-package eterm-256color
     :hook (term-mode . eterm-256color-mode))
+
 #+end_src
 
+vterm
+#+begin_src emacs-lisp
+(use-package vterm
+  :commands vterm
+  :config
+  (setq term-prompt-regexp "^[^#$%>\n]*[#$%>] *")  ;; Set this to match your custom shell prompt
+  (setq vterm-shell "bash")                       ;; Set this to customize the shell to launch
+  (setq vterm-max-scrollback 10000))
+
+#+end_src
 *  TODO organize all the configs by using org-babel
 SCHEDULED: <2023-04-04 Tue>
