@@ -586,34 +586,34 @@
 (setq gc-cons-threshold 100000000)
 (setq read-process-output-max (* 1024 1024)) ;; 1mb
 
-;; (use-package lsp-mode
-  ;;   :defer t
-  ;;   :hook (
-  ;;          (typescript-mode . lsp)
-  ;;          (lsp-mode . (lambda ()
-  ;;                       (let ((lsp-keymap-prefix "C-c l"))
-  ;;                         (lsp-enable-which-key-integration)))))
-  ;;   :commands lsp
-  ;;   :config
-  ;;   (define-key lsp-mode-map (kbd "C-c l") lsp-command-map)
-  ;;   (setq lsp-prefer-flymake nil) ;; Use lsp-ui and flycheck instead of flymake
-  ;;   )
+(use-package flycheck
+  :ensure t
+  :init (global-flycheck-mode))
+
+;; Enable syntax checker
+(add-hook 'after-init-hook #'global-flycheck-mode)
+
+(use-package lsp-mode
+  :defer t
+  :hook (
+         (typescript-mode . lsp)
+         (lsp-mode . (lambda ()
+                       (let ((lsp-keymap-prefix "C-c l"))
+                         (lsp-enable-which-key-integration)))))
+  :commands lsp
+  :config
+  (define-key lsp-mode-map (kbd "C-c l") lsp-command-map)
+  (setq lsp-prefer-flymake nil) ;; Use lsp-ui and flycheck instead of flymake
+  )
 
 
-  ;;   (use-package lsp-ui
-  ;;     :hook (lsp-mode . lsp-ui-mode)
-  ;;     )
+(use-package lsp-ui
+  :hook (lsp-mode . lsp-ui-mode)
+  )
 
-  ;;   (use-package lsp-ivy :commands lsp-ivy-workspace-symbol)
-  ;;   (use-package lsp-treemacs :commands lsp-treemacs-errors-list)
-  ;;   (use-package dap-mode)
-  ;;   (use-package company-lsp
-  ;;     :after lsp-mode
-  ;;     :config
-  ;;     (push 'company-lsp company-backends)
-  ;;     )
-(use-package eglot
-  :ensure t)
+(use-package lsp-ivy :commands lsp-ivy-workspace-symbol)
+(use-package lsp-treemacs :commands lsp-treemacs-errors-list)
+
 
 (use-package tree-sitter
   :config
@@ -640,3 +640,6 @@
   (setq term-prompt-regexp "^[^#$%>\n]*[#$%>] *")  ;; Set this to match your custom shell prompt
   (setq vterm-shell "bash")                       ;; Set this to customize the shell to launch
   (setq vterm-max-scrollback 10000))
+
+(use-package restart-emacs
+  :bind ("C-c x r" . restart-emacs))

@@ -82,6 +82,7 @@ The undo tree  sets =C-r= to be the same as Vim
       :config
   (global-undo-tree-mode))
 #+end_src
+
 ** Evil mode
 Basic setup including rebind vim like C-u/i for page scroll, =evil-nerd-commenter= : vim commentary parity, the  =evil-collection= ensures evil mode works well in dired, terminal etc. 
 #+begin_src emacs-lisp
@@ -679,35 +680,39 @@ refer to the official perf doc https://emacs-lsp.github.io/lsp-mode/page/perform
   (setq read-process-output-max (* 1024 1024)) ;; 1mb
 #+end_src
 
+*LSP*
+Syntax check
 #+begin_src emacs-lisp
-    ;; (use-package lsp-mode
-    ;;   :defer t
-    ;;   :hook (
-    ;;          (typescript-mode . lsp)
-    ;;          (lsp-mode . (lambda ()
-    ;;                       (let ((lsp-keymap-prefix "C-c l"))
-    ;;                         (lsp-enable-which-key-integration)))))
-    ;;   :commands lsp
-    ;;   :config
-    ;;   (define-key lsp-mode-map (kbd "C-c l") lsp-command-map)
-    ;;   (setq lsp-prefer-flymake nil) ;; Use lsp-ui and flycheck instead of flymake
-    ;;   )
+  (use-package flycheck
+    :ensure t
+    :init (global-flycheck-mode))
+
+  ;; Enable syntax checker
+  (add-hook 'after-init-hook #'global-flycheck-mode)
+#+end_src
+
+#+begin_src emacs-lisp
+  (use-package lsp-mode
+    :defer t
+    :hook (
+           (typescript-mode . lsp)
+           (lsp-mode . (lambda ()
+                         (let ((lsp-keymap-prefix "C-c l"))
+                           (lsp-enable-which-key-integration)))))
+    :commands lsp
+    :config
+    (define-key lsp-mode-map (kbd "C-c l") lsp-command-map)
+    (setq lsp-prefer-flymake nil) ;; Use lsp-ui and flycheck instead of flymake
+    )
 
 
-    ;;   (use-package lsp-ui
-    ;;     :hook (lsp-mode . lsp-ui-mode)
-    ;;     )
+  (use-package lsp-ui
+    :hook (lsp-mode . lsp-ui-mode)
+    )
 
-    ;;   (use-package lsp-ivy :commands lsp-ivy-workspace-symbol)
-    ;;   (use-package lsp-treemacs :commands lsp-treemacs-errors-list)
-    ;;   (use-package dap-mode)
-    ;;   (use-package company-lsp
-    ;;     :after lsp-mode
-    ;;     :config
-    ;;     (push 'company-lsp company-backends)
-    ;;     )
-  (use-package eglot
-    :ensure t)
+  (use-package lsp-ivy :commands lsp-ivy-workspace-symbol)
+  (use-package lsp-treemacs :commands lsp-treemacs-errors-list)
+
 
   (use-package tree-sitter
     :config
@@ -744,6 +749,13 @@ vterm
   (setq vterm-shell "bash")                       ;; Set this to customize the shell to launch
   (setq vterm-max-scrollback 10000))
 
+#+end_src
+
+* MISC
+Restart emacs
+#+begin_src emacs-lisp
+(use-package restart-emacs
+  :bind ("C-c x r" . restart-emacs))
 #+end_src
 
 *  TODO organize all the configs by using org-babel
