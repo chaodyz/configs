@@ -208,7 +208,8 @@
     "r" 'counsel-recentf
     "w" 'save-buffer
     "q" #'delete-window
-    "R" 'eval-last-sexp
+    "R" 'restart-emacs
+
     )
 
   ;; Key-Buffer
@@ -643,3 +644,33 @@
 
 (use-package restart-emacs
   :bind ("C-c x r" . restart-emacs))
+
+(load-file "~/.emacs.d/lisp/joplin-mode.el")
+
+;;++ Joplin mode (on top of Markdown).
+(autoload 'joplin-mode "joplin-mode"
+   "Major mode for editing Joplin files" t)
+; Note that joplin-mode will step down if it is not joplin data.
+(add-to-list 'auto-mode-alist '("/[a-f0-9]\\{32\\}\\.md\\'" . joplin-mode))
+;;--
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   '(evil-magit zenburn-theme which-key-posframe vterm use-package undo-tree typescript-mode tree-sitter-langs solarized-theme restart-emacs pyim org-superstar org-roam org-bullets magit lsp-ui lsp-treemacs lsp-ivy helpful general flycheck evil-nerd-commenter evil-collection eterm-256color emacsql-sqlite eglot doom-themes counsel-projectile company-box command-log-mode circadian all-the-icons-ivy-rich)))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(org-block ((t (:inherit fixed-pitch :height 0.9))))
+ '(org-code ((t (:inherit (shadow fixed-pitch) :height 0.9))))
+ '(org-default ((t (:inherit default :height 1.0))))
+ '(org-ellipsis ((t (:inherit default :weight normal :height 1.0 :underline nil))))
+ '(org-level-1 ((t (:inherit outline-1 :height 1.15))))
+ '(org-level-2 ((t (:inherit outline-2 :height 1.12))))
+ '(org-level-3 ((t (:inherit outline-3 :height 1.09))))
+ '(org-level-4 ((t (:inherit outline-4 :height 1.06))))
+ '(org-link ((t (:inherit link :height 1.0)))))

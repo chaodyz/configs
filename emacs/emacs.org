@@ -264,7 +264,8 @@ Basic setup including rebind vim like C-u/i for page scroll, =evil-nerd-commente
       "r" 'counsel-recentf
       "w" 'save-buffer
       "q" #'delete-window
-      "R" 'eval-last-sexp
+      "R" 'restart-emacs
+
       )
 
     ;; Key-Buffer
@@ -728,6 +729,14 @@ Syntax check
 
 #+end_src
 
+*Typescript*
+need to ensure language server and typescript server are installed
+#+begin_src shell
+  npm install -g @angular/language-service@latest
+  npm install -g typescript
+#+end_src
+
+
 * Shell
 Term
 #+begin_src emacs-lisp
@@ -752,11 +761,33 @@ vterm
 #+end_src
 
 * MISC
-Restart emacs
+*Restart emacs*
+
 #+begin_src emacs-lisp
-(use-package restart-emacs
-  :bind ("C-c x r" . restart-emacs))
+  (use-package restart-emacs
+    :bind ("C-c x r" . restart-emacs))
+;; also bind SPC-R in general
 #+end_src
+
+*Joplin Mode*
+
+1. download [[https://discourse.joplinapp.org/t/note-for-emacs-users/623][HERE]]  and load major mode file
+
+#+begin_src emacs-lisp
+(load-file "~/.emacs.d/lisp/joplin-mode.el")
+#+end_src
+
+2. declare the mode and load 
+
+#+begin_src emacs-lisp
+;;++ Joplin mode (on top of Markdown).
+(autoload 'joplin-mode "joplin-mode"
+   "Major mode for editing Joplin files" t)
+; Note that joplin-mode will step down if it is not joplin data.
+(add-to-list 'auto-mode-alist '("/[a-f0-9]\\{32\\}\\.md\\'" . joplin-mode))
+;;--
+#+end_src
+
 
 *  TODO organize all the configs by using org-babel
 SCHEDULED: <2023-04-04 Tue>
