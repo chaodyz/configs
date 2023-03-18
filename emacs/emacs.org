@@ -345,15 +345,38 @@ Basic setup including rebind vim like C-u/i for page scroll, =evil-nerd-commente
 
 #+end_src
 * 拼音 
+** 导入词库
+*** 懒人词库
+http://tumashu.github.io/pyim-bigdict/pyim-bigdict.pyim.gz
+*** 搜狗词库
+这里选用pyim官方推荐的工具来转换搜狗词库。
+1. 首先在搜狗官网下载想要的专业词库 https://pinyin.sogou.com/dict/
+2. 转化工具  https://github.com/E-Neo/scel2pyim
+
+#+begin_src shell
+  $ brew install gcc
+  $ git clone git@github.com:E-Neo/scel2pyim.git
+  $ gcc -o scel2pyim scel2pyim.c
+  $ ./scel2pyim NAME.scel NAME.pyim
+#+end_src
+
+*** 导入词库
+#+begin_src emacs-lisp
+
+  (setq pyim-dicts
+        '((:name "懒人包" :file "~/eSync/pyim/懒人包.gz")
+          (:name "搜狗－饮食大全（官方推荐）" :file "~/eSync/pyim/搜狗-饮食大全（官方推荐）.pyim")))
+
+#+end_src
+
+** Config
 #+begin_src emacs-lisp
 
   ;; 拼音
   (use-package pyim
-    :ensure nil
     :config
     ;; 激活 basedict 拼音词库
     (use-package pyim-basedict
-      :ensure nil
       :config (pyim-basedict-enable))
     ;; 设置 pyim 探针设置，这是 pyim 高级功能设置，可以实现 *无痛* 中英文切换 :-)
     ;; 我自己使用的中英文动态切换规则是：

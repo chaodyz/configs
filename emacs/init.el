@@ -282,13 +282,15 @@
 (use-package command-log-mode
   :ensure t)
 
+(setq pyim-dicts
+      '((:name "懒人包" :file "~/eSync/pyim/懒人包.gz")
+        (:name "搜狗－饮食大全（官方推荐）" :file "~/eSync/pyim/搜狗-饮食大全（官方推荐）.pyim")))
+
 ;; 拼音
 (use-package pyim
-  :ensure nil
   :config
   ;; 激活 basedict 拼音词库
   (use-package pyim-basedict
-    :ensure nil
     :config (pyim-basedict-enable))
   ;; 设置 pyim 探针设置，这是 pyim 高级功能设置，可以实现 *无痛* 中英文切换 :-)
   ;; 我自己使用的中英文动态切换规则是：

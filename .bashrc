@@ -59,10 +59,6 @@ alias mock-tms="cd /Users/$USER/Projects/mock-tms&&nodemon"
 alias wc-format="cd /Users/$USER/Projects/ultipro-app&&nx format:write&&nx affected:lint"
 
 alias gc="git checkout"
-alias gp="git pull"
-alias gpp="git push"
-alias gf="git fetch"
-alias gcc="git commit"
 
 # emacs 
 export PATH="/Users/$USER/.emacs.d/bin/doom:$PATH"
