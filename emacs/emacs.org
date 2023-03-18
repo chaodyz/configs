@@ -263,14 +263,14 @@ Basic setup including rebind vim like C-u/i for page scroll, =evil-nerd-commente
       "p" 'projectile-command-map
       "r" 'counsel-recentf
       "w" 'save-buffer
-      "q" #'delete-window
+      "q" 'delete-window
       "R" 'restart-emacs
-
+      "e" 'neotree-toggle :which-key " Neotree"
       )
 
     ;; Key-Buffer
     (leader-key-def
-      "b" '(:ignore t:which-key " Buffer...")
+      "b" '(:ignore t :which-key " Buffer...")
       "b l" 'counsel-ibuffer
       "b c" 'kill-buffer
       "b w" 'save-buffer 
@@ -314,7 +314,14 @@ Basic setup including rebind vim like C-u/i for page scroll, =evil-nerd-commente
       "g g" 'magit-dispatch
       "g c" 'magit-commit-create)
 
-
+    (leader-key-def
+      "l" '(:ignore t :which-key " LSP...")
+      "l r" 'lsp-find-references
+      "l d" 'lsp-find-definition
+      "l i" 'lsp-find-implementation
+      "l D" 'lsp-find-declaration
+      "l e" 'lsp-treemacs-errors-list
+      )
     )
   ;; Which key
   (use-package which-key
@@ -692,6 +699,7 @@ Syntax check
   (add-hook 'after-init-hook #'global-flycheck-mode)
 #+end_src
 
+LSP 
 #+begin_src emacs-lisp
   (use-package lsp-mode
     :defer t
@@ -704,16 +712,28 @@ Syntax check
     :config
     (define-key lsp-mode-map (kbd "C-c l") lsp-command-map)
     (setq lsp-prefer-flymake nil) ;; Use lsp-ui and flycheck instead of flymake
+    (setq lsp-modeline-diagnostics-enable t)
     )
+  ;; Display global errors 
+  (with-eval-after-load 'lsp-mode
+    ;; :global/:workspace/:file
+    (setq lsp-modeline-diagnostics-scope :workspace))
+#+end_src
 
+LSP UI
+#+begin_src emacs-lisp
 
+  (use-package lsp-ivy :commands lsp-ivy-workspace-symbol)
   (use-package lsp-ui
     :hook (lsp-mode . lsp-ui-mode)
     )
 
-  (use-package lsp-ivy :commands lsp-ivy-workspace-symbol)
   (use-package lsp-treemacs :commands lsp-treemacs-errors-list)
 
+#+end_src
+
+Treesitter
+#+begin_src emacs-lisp
 
   (use-package tree-sitter
     :config
@@ -727,6 +747,7 @@ Syntax check
     (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode)
     )
 
+
 #+end_src
 
 *Typescript*
@@ -734,6 +755,12 @@ need to ensure language server and typescript server are installed
 #+begin_src shell
   npm install -g @angular/language-service@latest
   npm install -g typescript
+#+end_src
+
+
+Neotree
+#+begin_src emacs-lisp
+  (use-package neotree)
 #+end_src
 
 

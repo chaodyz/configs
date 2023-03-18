@@ -207,14 +207,14 @@
     "p" 'projectile-command-map
     "r" 'counsel-recentf
     "w" 'save-buffer
-    "q" #'delete-window
+    "q" 'delete-window
     "R" 'restart-emacs
-
+    "e" 'neotree-toggle :which-key " Neotree"
     )
 
   ;; Key-Buffer
   (leader-key-def
-    "b" '(:ignore t:which-key " Buffer...")
+    "b" '(:ignore t :which-key " Buffer...")
     "b l" 'counsel-ibuffer
     "b c" 'kill-buffer
     "b w" 'save-buffer 
@@ -258,7 +258,14 @@
     "g g" 'magit-dispatch
     "g c" 'magit-commit-create)
 
-
+  (leader-key-def
+    "l" '(:ignore t :which-key " LSP...")
+    "l r" 'lsp-find-references
+    "l d" 'lsp-find-definition
+    "l i" 'lsp-find-implementation
+    "l D" 'lsp-find-declaration
+    "l e" 'lsp-treemacs-errors-list
+    )
   )
 ;; Which key
 (use-package which-key
@@ -605,16 +612,19 @@
   :config
   (define-key lsp-mode-map (kbd "C-c l") lsp-command-map)
   (setq lsp-prefer-flymake nil) ;; Use lsp-ui and flycheck instead of flymake
+  (setq lsp-modeline-diagnostics-enable t)
   )
+;; Display global errors 
+(with-eval-after-load 'lsp-mode
+  ;; :global/:workspace/:file
+  (setq lsp-modeline-diagnostics-scope :workspace))
 
-
+(use-package lsp-ivy :commands lsp-ivy-workspace-symbol)
 (use-package lsp-ui
   :hook (lsp-mode . lsp-ui-mode)
   )
 
-(use-package lsp-ivy :commands lsp-ivy-workspace-symbol)
 (use-package lsp-treemacs :commands lsp-treemacs-errors-list)
-
 
 (use-package tree-sitter
   :config
@@ -627,6 +637,8 @@
   :config
   (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode)
   )
+
+(use-package neotree)
 
 (use-package term
   :config
@@ -643,7 +655,8 @@
   (setq vterm-max-scrollback 10000))
 
 (use-package restart-emacs
-  :bind ("C-c x r" . restart-emacs))
+    :bind ("C-c x r" . restart-emacs))
+;; also bind SPC-R in general
 
 (load-file "~/.emacs.d/lisp/joplin-mode.el")
 
@@ -653,24 +666,3 @@
 ; Note that joplin-mode will step down if it is not joplin data.
 (add-to-list 'auto-mode-alist '("/[a-f0-9]\\{32\\}\\.md\\'" . joplin-mode))
 ;;--
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(package-selected-packages
-   '(evil-magit zenburn-theme which-key-posframe vterm use-package undo-tree typescript-mode tree-sitter-langs solarized-theme restart-emacs pyim org-superstar org-roam org-bullets magit lsp-ui lsp-treemacs lsp-ivy helpful general flycheck evil-nerd-commenter evil-collection eterm-256color emacsql-sqlite eglot doom-themes counsel-projectile company-box command-log-mode circadian all-the-icons-ivy-rich)))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(org-block ((t (:inherit fixed-pitch :height 0.9))))
- '(org-code ((t (:inherit (shadow fixed-pitch) :height 0.9))))
- '(org-default ((t (:inherit default :height 1.0))))
- '(org-ellipsis ((t (:inherit default :weight normal :height 1.0 :underline nil))))
- '(org-level-1 ((t (:inherit outline-1 :height 1.15))))
- '(org-level-2 ((t (:inherit outline-2 :height 1.12))))
- '(org-level-3 ((t (:inherit outline-3 :height 1.09))))
- '(org-level-4 ((t (:inherit outline-4 :height 1.06))))
- '(org-link ((t (:inherit link :height 1.0)))))
