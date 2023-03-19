@@ -137,6 +137,9 @@ Basic setup including rebind vim like C-u/i for page scroll, =evil-nerd-commente
 
 #+end_src
 **  TODO other experiments
+:PROPERTIES:
+:ID:       533D8377-75CF-41D4-9E2C-A27BC86583ED
+:END:
 #+begin_src emacs-lisp
 
   ;; TODO: Try to mimic move lines action
@@ -354,15 +357,17 @@ Basic setup including rebind vim like C-u/i for page scroll, =evil-nerd-commente
   (leader-key-def
     "o" '(:ignore t :which-key " Org...")
     "o a" 'org-agenda
-    "o s" 'org-schedule
-    "o d" 'org-deadline
+    "o b" '(org-babel-tangle :which-key "Org Babel Tangle")
     "o c" 'org-capture
+    "o d" 'org-deadline
+    "o s" 'org-schedule
     "o o" 'org-open-at-point
-    "o t" '(org-babel-tangle :which-key "Org Tangle")
+    "o t" '(counsel-org-tag :which-key "Set Org Tag")
     "o r" '(:ignore t :which-key " Org Roam")
     "o rf" '(org-roam-node-find :which-key "Find a Node")
     "o ri" '(org-roam-node-insert :which-key "Insert a Node")
     "o rr" '(org-roam-buffer-toggle :which-key "Toggle Org Roam Buffer")
+    "o it" '(org-toggle-inline-images :which-key "Toggle inline image")
     )
 #+end_src
 * Command log mode
@@ -442,25 +447,29 @@ http://tumashu.github.io/pyim-bigdict/pyim-bigdict.pyim.gz
 * Org Mode
 ** Main 
 #+begin_src emacs-lisp :noweb yes
-  (use-package org
-    :ensure t
-    :init
-    (setq org-ellipsis " ▼"
-          org-hide-emphasis-markers t
-          org-directory "~/eSync/org/"
-          org-default-notes-file "~/eSync/org/index.org")
-    (setq org-agenda-files '("~/eSync/org")) 
-    (setq org-agenda-start-with-log-mode t)
-    (setq org-log-done 'time)
-    (setq org-log-into-drawer t)
-    (setq org-startup-indented t)
-    :hook (org-mode . my-org-mode-setup)
-    :config
-    <<org-visual>>
-    <<org-custom-agenda>>
-    <<org-custom-capture>>
-    <<org-custom-todo>>
-    )
+    (use-package org
+      :ensure t
+      :init
+      (setq org-ellipsis " ▼"
+            org-hide-emphasis-markers t
+            org-directory "~/eSync/org/"
+            org-default-notes-file "~/eSync/org/index.org")
+      (setq org-agenda-files '("~/eSync/org" "~/eSync/org/roam")) 
+      ;; Set to the name of the file where new notes will be stored
+      (setq org-mobile-inbox-for-pull "~/eSync/org/flagged.org")
+      ;; Set to <your Dropbox root directory>/MobileOrg.
+      (setq org-mobile-directory "~/Dropbox/Apps/MobileOrg")
+      (setq org-agenda-start-with-log-mode t)
+      (setq org-log-done 'time)
+      (setq org-log-into-drawer t)
+      (setq org-startup-indented t)
+      :hook (org-mode . my-org-mode-setup)
+      :config
+      <<org-visual>>
+      <<org-custom-agenda>>
+      <<org-custom-capture>>
+      <<org-custom-todo>>
+      )
 #+end_src
 ** Visual
 #+name:org-visual
@@ -512,7 +521,7 @@ http://tumashu.github.io/pyim-bigdict/pyim-bigdict.pyim.gz
           ("W" "Work Tasks" tags-todo "+work-email")
 
           ;; Low-effort next actions
-          ("e" tags-todo "+TODO=\"NEXT\"+Effort<15&+Effort>0"
+          ("e" tags-todo "+TODO=\"NEXT\"+Effort<40&+Effort>0"
            ((org-agenda-overriding-header "Low Effort Tasks")
             (org-agenda-max-todos 20)
             (org-agenda-files org-agenda-files)))
@@ -550,128 +559,136 @@ http://tumashu.github.io/pyim-bigdict/pyim-bigdict.pyim.gz
 #+begin_src emacs-lisp
     (setq org-capture-templates
           `(("t" "Tasks / Projects")
-            ("tt" "Task" entry (file+olp "~/org/tasks.org" "Inbox")
+            ("tt" "Task" entry (file+olp "~/eSync/org/tasks.org" "Inbox")
              "* TODO %?\n  %U\n  %a\n  %i" :empty-lines 1)
 
             ("j" "Journal Entries")
             ("jj" "Journal" entry
-             (file+olp+datetree "~/org/journal.org")
+             (file+olp+datetree "~/eSync/org/journal.org")
              "\n* %<%I:%M %p> - Journal :journal:\n\n%?\n\n"
              ;; ,(dw/read-file-as-string "~/Notes/Templates/Daily.org")
              :clock-in :clock-resume
              :empty-lines 1)
             ("jm" "Meeting" entry
-             (file+olp+datetree "~/org/journal.org")
+             (file+olp+datetree "~/eSync/org/journal.org")
              "* %<%I:%M %p> - %a :meetings:\n\n%?\n\n"
              :clock-in :clock-resume
              :empty-lines 1)
 
             ("w" "Workflows")
-            ("we" "Checking Email" entry (file+olp+datetree "~/org/journal.org")
+            ("we" "Checking Email" entry (file+olp+datetree "~/eSync/org/journal.org")
              "* Checking Email :email:\n\n%?" :clock-in :clock-resume :empty-lines 1)
 
             ("m" "Metrics Capture")
-            ("mw" "Weight" table-line (file+headline "~/org/metrics.org" "Weight")
+            ("mw" "Weight" table-line (file+headline "~/eSync/org/metrics.org" "Weight")
              "| %U | %^{Weight} | %^{Notes} |" :kill-buffer t)))
 #+end_src
 ** TODO organize this block
+:PROPERTIES:
+:ID:       855F0833-66EB-4BFC-8331-F882C70EAA68
+:END:
 #+begin_src emacs-lisp
-  ;; Make sure org-indent face is `available
-  (require 'org-indent)
-  ;; Ensure that anything that should be fixed-pitch in Org files appears that way
-  (set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch)
-  (set-face-attribute 'org-table nil  :inherit 'fixed-pitch)
-  (set-face-attribute 'org-formula nil  :inherit 'fixed-pitch)
-  (set-face-attribute 'org-code nil   :inherit '(shadow fixed-pitch))
-  (set-face-attribute 'org-indent nil :inherit '(org-hide fixed-pitch))
-  (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
-  (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
-  (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
-  (set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch)
+    ;; Make sure org-indent face is `available
+    (require 'org-indent)
+    ;; Ensure that anything that should be fixed-pitch in Org files appears that way
+    (set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch)
+    (set-face-attribute 'org-table nil  :inherit 'fixed-pitch)
+    (set-face-attribute 'org-formula nil  :inherit 'fixed-pitch)
+    (set-face-attribute 'org-code nil   :inherit '(shadow fixed-pitch))
+    (set-face-attribute 'org-indent nil :inherit '(org-hide fixed-pitch))
+    (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
+    (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
+    (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
+    (set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch)
 
-  ;; Get rid of the background on column views
-  (set-face-attribute 'org-column nil :background nil) (set-face-attribute 'org-column-title nil :background nil)
+    ;; Get rid of the background on column views
+    (set-face-attribute 'org-column nil :background nil) (set-face-attribute 'org-column-title nil :background nil)
 
-  ;; headline bullet
-  (use-package org-superstar
-    :ensure t
-    :hook (org-mode . org-superstar-mode)
-    :custom
-    (org-superstar-remove-leading-stars t)
-    (org-superstar-headline-bullets-list '("☵" "○" "✻" "✿"))
-    :config
-    (set-face-attribute 'org-superstar-item nil :height 1.0))
+    ;; headline bullet
+    (use-package org-superstar
+      :ensure t
+      :hook (org-mode . org-superstar-mode)
+      :custom
+      (org-superstar-remove-leading-stars t)
+      (org-superstar-headline-bullets-list '("☵" "○" "✻" "✿"))
+      :config
+      (set-face-attribute 'org-superstar-item nil :height 1.0))
 
-  ;; cosmetic function
-  (defun my/org-mode-hook ()
-    "Customize Org mode settings."
-    (setq-default line-spacing 0.2)
-    (setq-default org-blank-before-new-entry '((heading . auto)
-                                               (plain-list-item . auto))))
-  (add-hook 'org-mode-hook #'my/org-mode-hook)
+    ;; cosmetic function
+    (defun my/org-mode-hook ()
+      "Customize Org mode settings."
+      (setq-default line-spacing 0.2)
+      (setq-default org-blank-before-new-entry '((heading . auto)
+                                                 (plain-list-item . auto))))
+    (add-hook 'org-mode-hook #'my/org-mode-hook)
 
-  ;; create a task from non-heading text, such as a sentence or paragraph.
-  (require 'org-inlinetask)
+    ;; create a task from non-heading text, such as a sentence or paragraph.
+    (require 'org-inlinetask)
 
-  ;; Helper emphasis (ChatGPT) 🤯
-  (defun my-wrap-with-stars ()
-    "Wrap visual selection with *."
-    (interactive)
-    (let ((selection (buffer-substring-no-properties
-                      (region-beginning) (region-end))))
-      (delete-region (region-beginning) (region-end))
-      (insert (concat "*" selection "*"))))
+    ;; Helper emphasis (ChatGPT) 🤯
+    (defun my-wrap-with-stars ()
+      "Wrap visual selection with *."
+      (interactive)
+      (let ((selection (buffer-substring-no-properties
+                        (region-beginning) (region-end))))
+        (delete-region (region-beginning) (region-end))
+        (insert (concat "*" selection "*"))))
 
-  (defun my-wrap-with-tides ()
-    "Wrap visual selection with ~."
-    (interactive)
-    (let ((selection (buffer-substring-no-properties
-                      (region-beginning) (region-end))))
-      (delete-region (region-beginning) (region-end))
-      (insert (concat "~" selection "~"))))
+    (defun my-wrap-with-tides ()
+      "Wrap visual selection with ~."
+      (interactive)
+      (let ((selection (buffer-substring-no-properties
+                        (region-beginning) (region-end))))
+        (delete-region (region-beginning) (region-end))
+        (insert (concat "~" selection "~"))))
 
-  (defun my-wrap-with-equals ()
-    "Wrap visual selection with =."
-    (interactive)
-    (let ((selection (buffer-substring-no-properties
-                      (region-beginning) (region-end))))
-      (delete-region (region-beginning) (region-end))
-      (insert (concat "=" selection "="))))
+    (defun my-wrap-with-equals ()
+      "Wrap visual selection with =."
+      (interactive)
+      (let ((selection (buffer-substring-no-properties
+                        (region-beginning) (region-end))))
+        (delete-region (region-beginning) (region-end))
+        (insert (concat "=" selection "="))))
 
-  ;; Bind the function to a key combination
-  (define-key evil-visual-state-map (kbd "C-*") 'my-wrap-with-stars)
-  (define-key evil-visual-state-map (kbd "C-~") 'my-wrap-with-tides)
-  (define-key evil-visual-state-map (kbd "C-=") 'my-wrap-with-equals)
+    ;; Bind the function to a key combination
+    (define-key evil-visual-state-map (kbd "C-*") 'my-wrap-with-stars)
+    (define-key evil-visual-state-map (kbd "C-~") 'my-wrap-with-tides)
+    (define-key evil-visual-state-map (kbd "C-=") 'my-wrap-with-equals)
 
-  ;; Surround with ANY KEY (chatGPT)
-  (defun surround-with-key (beg end key)
-    "Surround the region between BEG and END with KEY."
-    (interactive "r\nsSurround with: ")
-    (goto-char end)
-    (insert key)
-    (goto-char beg)
-    (insert key))
+    ;; Surround with ANY KEY (chatGPT)
+    (defun surround-with-key (beg end key)
+      "Surround the region between BEG and END with KEY."
+      (interactive "r\nsSurround with: ")
+      (goto-char end)
+      (insert key)
+      (goto-char beg)
+      (insert key))
 
-  (general-define-key
-   :states '(visual)
-   :keymaps 'override
-   "s" 'surround-with-key)
+    (general-define-key
+     :states '(visual)
+     :keymaps 'override
+     "s" 'surround-with-key)
+
+  (add-hook 'org-mode-hook 'company-mode)
+(setq org-image-actual-width nil)
+
+
 
 #+end_src
 
-*** Images
-#+begin_src emacs-lisp
-      (use-package org-download
-        :custom
-        (org-download-method 'directory)
-        (org-download-image-dir "~/eSync/org/pictures")
-        (org-download-heading-lvl nil)
-        :config
-        (setq-default org-download-image-org-width 300)
-        (setq-default org-download-image-html-width 300)
-        (add-hook 'dired-mode-hook 'org-download-enable)
-        )
-#+end_src
+# *** Images
+# #+begin_src emacs-lisp
+#       (use-package org-download
+#         :custom
+#         (org-download-method 'directory)
+#         (org-download-image-dir "~/eSync/org/pictures")
+#         (org-download-heading-lvl nil)
+#         :config
+#         (setq-default org-download-image-org-width 300)
+#         (setq-default org-download-image-html-width 300)
+#         (add-hook 'dired-mode-hook 'org-download-enable)
+#         )
+# #+end_src
 ** Babel
 #+begin_src emacs-lisp
 
@@ -897,7 +914,6 @@ set backup file to a specific directory.
 #+begin_src emacs-lisp
   (setq backup-directory-alist '(("." . "~/eSync/backups")))
 #+end_src 
-
 * Yaml mode 
 #+begin_src emacs-lisp
 (use-package yaml-mode
@@ -911,3 +927,6 @@ set backup file to a specific directory.
 
 *  TODO organize all the configs by using org-babel
 SCHEDULED: <2023-04-04 Tue>
+:PROPERTIES:
+:ID:       72AB6EE7-6241-463E-B035-A519B3D00F51
+:END:
