@@ -190,37 +190,47 @@
       (message "No symbol at point."))))
 (global-set-key (kbd "C-c d") 'describe-thing-at-point)
 
-;; General
 (use-package general
   :ensure t
+  :requires which-key
   :config
   (general-create-definer leader-key-def
     :states '(normal visual insert emacs)
     :prefix "SPC"
     :non-normal-prefix "M-SPC")
-
-  ;; Define some key bindings using the leader key
   (leader-key-def
     "d" 'describe-thing-at-point
     "f" 'counsel-find-file
     "h" 'counsel-command-history
     "p" 'projectile-command-map
+    "q" 'delete-window
     "r" 'counsel-recentf
     "w" 'save-buffer
-    "q" 'delete-window
     "R" 'restart-emacs
     "e" 'neotree-toggle :which-key " Neotree"
+    "v" 'vterm :which-key " Vterm"
     )
-
-  ;; Key-Buffer
   (leader-key-def
     "b" '(:ignore t :which-key " Buffer...")
     "b l" 'counsel-ibuffer
     "b c" 'kill-buffer
     "b w" 'save-buffer 
     )
-
-  ;; Key-Org
+  (leader-key-def
+    "a" '(:ignore t :which-key " Window...")
+    "a v" #'split-window-right
+    "a s" #'split-window-below
+    "a w" #'other-window
+    "a o" #'delete-other-windows
+    "a h" #'evil-window-left
+    "a j" #'evil-window-down
+    "a k" #'evil-window-up
+    "a l" #'evil-window-right
+    "a H" #'evil-window-move-far-left
+    "a J" #'evil-window-move-very-bottom
+    "a K" #'evil-window-move-very-top
+    "a L" #'evil-window-move-far-right)
+  
   (leader-key-def
     "o" '(:ignore t :which-key " Org...")
     "o a" 'org-agenda
@@ -234,23 +244,6 @@
     "o ri" '(org-roam-node-insert :which-key "Insert a Node")
     "o rr" '(org-roam-buffer-toggle :which-key "Toggle Org Roam Buffer")
     )
-
-  ;; Window
-  (leader-key-def
-    "a" '(:ignore t :which-key " Window...")
-    "a v" 'split-window-right
-    "a s" 'split-window-below
-    ;; window movement binding
-    "a w" #'other-window
-    "a h" #'evil-window-left
-    "a j" #'evil-window-down
-    "a k" #'evil-window-up
-    "a l" #'evil-window-right
-    "a H" #'evil-window-move-far-left
-    "a J" #'evil-window-move-very-bottom
-    "a K" #'evil-window-move-very-top
-    "a L" #'evil-window-move-far-right)
-
   (leader-key-def
     "g" '(:ignore t :which-key " Magit...")
     "g s" 'magit-status
@@ -258,16 +251,8 @@
     "g l" 'magit-log-buffer-file
     "g g" 'magit-dispatch
     "g c" 'magit-commit-create)
-
-  (leader-key-def
-    "l" '(:ignore t :which-key " LSP...")
-    "l r" 'lsp-find-references
-    "l d" 'lsp-find-definition
-    "l i" 'lsp-find-implementation
-    "l D" 'lsp-find-declaration
-    "l e" 'lsp-treemacs-errors-list
-    )
   )
+
 ;; Which key
 (use-package which-key
   :ensure t
@@ -277,6 +262,77 @@
   (setq which-key-idle-delay 0.3)
   (setq which-key-prefix-prefix "SPC")
   (setq which-key-allow-evil-operators t)
+  )
+
+(general-create-definer leader-key-def
+  :states '(normal visual insert emacs)
+  :prefix "SPC"
+  :non-normal-prefix "M-SPC")
+
+(leader-key-def
+  "d" 'describe-thing-at-point
+  "f" 'counsel-find-file
+  "h" 'counsel-command-history
+  "p" 'projectile-command-map
+  "q" 'delete-window
+  "r" 'counsel-recentf
+  "w" 'save-buffer
+  "R" 'restart-emacs
+  "e" 'neotree-toggle :which-key " Neotree"
+  "v" 'vterm :which-key " Vterm"
+  )
+
+(leader-key-def
+  "b" '(:ignore t :which-key " Buffer...")
+  "b l" 'counsel-ibuffer
+  "b c" 'kill-buffer
+  "b w" 'save-buffer 
+  )
+
+(leader-key-def
+  "a" '(:ignore t :which-key " Window...")
+  "a v" #'split-window-right
+  "a s" #'split-window-below
+  "a w" #'other-window
+  "a o" #'delete-other-windows
+  "a h" #'evil-window-left
+  "a j" #'evil-window-down
+  "a k" #'evil-window-up
+  "a l" #'evil-window-right
+  "a H" #'evil-window-move-far-left
+  "a J" #'evil-window-move-very-bottom
+  "a K" #'evil-window-move-very-top
+  "a L" #'evil-window-move-far-right)
+
+(leader-key-def
+  "g" '(:ignore t :which-key " Magit...")
+  "g s" 'magit-status
+  "g b" 'magit-blame
+  "g l" 'magit-log-buffer-file
+  "g g" 'magit-dispatch
+  "g c" 'magit-commit-create)
+
+(leader-key-def
+  "l" '(:ignore t :which-key " LSP...")
+  "l r" 'lsp-find-references
+  "l d" 'lsp-find-definition
+  "l i" 'lsp-find-implementation
+  "l D" 'lsp-find-declaration
+  "l e" 'lsp-treemacs-errors-list
+  )
+
+(leader-key-def
+  "o" '(:ignore t :which-key " Org...")
+  "o a" 'org-agenda
+  "o s" 'org-schedule
+  "o d" 'org-deadline
+  "o c" 'org-capture
+  "o o" 'org-open-at-point
+  "o t" '(org-babel-tangle :which-key "Org Tangle")
+  "o r" '(:ignore t :which-key " Org Roam")
+  "o rf" '(org-roam-node-find :which-key "Find a Node")
+  "o ri" '(org-roam-node-insert :which-key "Insert a Node")
+  "o rr" '(org-roam-buffer-toggle :which-key "Toggle Org Roam Buffer")
   )
 
 ;; Comand log mode
@@ -327,7 +383,6 @@
    ("M-j" . pyim-convert-string-at-point) ;与 pyim-probe-dynamic-english 配合
    ("C-;" . pyim-delete-word-from-personal-buffer)))
 
-;; Org Mode
 (use-package org
   :ensure t
   :init
@@ -350,7 +405,6 @@
     (visual-line-mode)  
     (variable-pitch-mode 1) 
     )
-  ;; Other Org mode configurations here...
   ;; Set faces for headings, lists, and other elements
   (custom-set-faces
    ;; Set font and size for headlines
@@ -363,11 +417,6 @@
    '(org-code ((t (:inherit (shadow fixed-pitch) :height 0.9))))
    '(org-link ((t (:inherit link :height 1.0))))
    '(org-ellipsis ((t (:inherit default :weight normal :height 1.0 :underline nil)))))
-
-
-  (setq org-todo-keywords
-        '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d!)")
-          (sequence "BACKLOG(b)" "PLAN(p)" "READY(r)" "ACTIVE(a)" "REVIEW(v)" "WAIT(w@/!)" "HOLD(h)" "|" "COMPLETED(c)" "CANC(k@)")))
   ;; Configure custom agenda views
   (setq org-agenda-custom-commands
         '(("d" "Dashboard"
@@ -375,19 +424,19 @@
             (todo "NEXT"
                   ((org-agenda-overriding-header "Next Tasks")))
             (tags-todo "agenda/ACTIVE" ((org-agenda-overriding-header "Active Projects")))))
-
+  
           ("n" "Next Tasks"
            ((todo "NEXT"
                   ((org-agenda-overriding-header "Next Tasks")))))
-
+  
           ("W" "Work Tasks" tags-todo "+work-email")
-
+  
           ;; Low-effort next actions
           ("e" tags-todo "+TODO=\"NEXT\"+Effort<15&+Effort>0"
            ((org-agenda-overriding-header "Low Effort Tasks")
             (org-agenda-max-todos 20)
             (org-agenda-files org-agenda-files)))
-
+  
           ("w" "Workflow Status"
            ((todo "WAIT"
                   ((org-agenda-overriding-header "Waiting on External")
@@ -415,12 +464,11 @@
             (todo "CANC"
                   ((org-agenda-overriding-header "Cancelled Projects")
                    (org-agenda-files org-agenda-files)))))))
-
   (setq org-capture-templates
         `(("t" "Tasks / Projects")
           ("tt" "Task" entry (file+olp "~/org/tasks.org" "Inbox")
            "* TODO %?\n  %U\n  %a\n  %i" :empty-lines 1)
-
+  
           ("j" "Journal Entries")
           ("jj" "Journal" entry
            (file+olp+datetree "~/org/journal.org")
@@ -433,17 +481,119 @@
            "* %<%I:%M %p> - %a :meetings:\n\n%?\n\n"
            :clock-in :clock-resume
            :empty-lines 1)
-
+  
           ("w" "Workflows")
           ("we" "Checking Email" entry (file+olp+datetree "~/org/journal.org")
            "* Checking Email :email:\n\n%?" :clock-in :clock-resume :empty-lines 1)
-
+  
           ("m" "Metrics Capture")
           ("mw" "Weight" table-line (file+headline "~/org/metrics.org" "Weight")
            "| %U | %^{Weight} | %^{Notes} |" :kill-buffer t)))
+  (setq org-todo-keywords
+        '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d!)")
+          (sequence "BACKLOG(b)" "PLAN(p)" "READY(r)" "ACTIVE(a)" "REVIEW(v)" "WAIT(w@/!)" "HOLD(h)" "|" "COMPLETED(c)" "CANC(k@)")))
   )
 
-;; Make sure org-indent face is available
+;; Configure org mode to start with modes that more visual appealing
+;; - visual-line-mode: wraps lines at window width for easy reading and editing
+;; - variable-pitch-mode 1: sets the font face to a variable-width font for a more natural and aesthetically pleasing look
+(defun my-org-mode-setup ()
+  "Setup visual line and variable pitch modes for Org mode."
+  (visual-line-mode)  
+  (variable-pitch-mode 1) 
+  )
+;; Set faces for headings, lists, and other elements
+(custom-set-faces
+ ;; Set font and size for headlines
+ '(org-level-1 ((t (:inherit outline-1 :height 1.15))))
+ '(org-level-2 ((t (:inherit outline-2 :height 1.12))))
+ '(org-level-3 ((t (:inherit outline-3 :height 1.09))))
+ '(org-level-4 ((t (:inherit outline-4 :height 1.06))))
+ '(org-default ((t (:inherit default :height 1.0))))
+ '(org-block ((t (:inherit fixed-pitch :height 0.9))))
+ '(org-code ((t (:inherit (shadow fixed-pitch) :height 0.9))))
+ '(org-link ((t (:inherit link :height 1.0))))
+ '(org-ellipsis ((t (:inherit default :weight normal :height 1.0 :underline nil)))))
+
+(setq org-todo-keywords
+      '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d!)")
+        (sequence "BACKLOG(b)" "PLAN(p)" "READY(r)" "ACTIVE(a)" "REVIEW(v)" "WAIT(w@/!)" "HOLD(h)" "|" "COMPLETED(c)" "CANC(k@)")))
+
+;; Configure custom agenda views
+(setq org-agenda-custom-commands
+      '(("d" "Dashboard"
+         ((agenda "" ((org-deadline-warning-days 7)))
+          (todo "NEXT"
+                ((org-agenda-overriding-header "Next Tasks")))
+          (tags-todo "agenda/ACTIVE" ((org-agenda-overriding-header "Active Projects")))))
+
+        ("n" "Next Tasks"
+         ((todo "NEXT"
+                ((org-agenda-overriding-header "Next Tasks")))))
+
+        ("W" "Work Tasks" tags-todo "+work-email")
+
+        ;; Low-effort next actions
+        ("e" tags-todo "+TODO=\"NEXT\"+Effort<15&+Effort>0"
+         ((org-agenda-overriding-header "Low Effort Tasks")
+          (org-agenda-max-todos 20)
+          (org-agenda-files org-agenda-files)))
+
+        ("w" "Workflow Status"
+         ((todo "WAIT"
+                ((org-agenda-overriding-header "Waiting on External")
+                 (org-agenda-files org-agenda-files)))
+          (todo "REVIEW"
+                ((org-agenda-overriding-header "In Review")
+                 (org-agenda-files org-agenda-files)))
+          (todo "PLAN"
+                ((org-agenda-overriding-header "In Planning")
+                 (org-agenda-todo-list-sublevels nil)
+                 (org-agenda-files org-agenda-files)))
+          (todo "BACKLOG"
+                ((org-agenda-overriding-header "Project Backlog")
+                 (org-agenda-todo-list-sublevels nil)
+                 (org-agenda-files org-agenda-files)))
+          (todo "READY"
+                ((org-agenda-overriding-header "Ready for Work")
+                 (org-agenda-files org-agenda-files)))
+          (todo "ACTIVE"
+                ((org-agenda-overriding-header "Active Projects")
+                 (org-agenda-files org-agenda-files)))
+          (todo "COMPLETED"
+                ((org-agenda-overriding-header "Completed Projects")
+                 (org-agenda-files org-agenda-files)))
+          (todo "CANC"
+                ((org-agenda-overriding-header "Cancelled Projects")
+                 (org-agenda-files org-agenda-files)))))))
+
+(setq org-capture-templates
+      `(("t" "Tasks / Projects")
+        ("tt" "Task" entry (file+olp "~/org/tasks.org" "Inbox")
+         "* TODO %?\n  %U\n  %a\n  %i" :empty-lines 1)
+
+        ("j" "Journal Entries")
+        ("jj" "Journal" entry
+         (file+olp+datetree "~/org/journal.org")
+         "\n* %<%I:%M %p> - Journal :journal:\n\n%?\n\n"
+         ;; ,(dw/read-file-as-string "~/Notes/Templates/Daily.org")
+         :clock-in :clock-resume
+         :empty-lines 1)
+        ("jm" "Meeting" entry
+         (file+olp+datetree "~/org/journal.org")
+         "* %<%I:%M %p> - %a :meetings:\n\n%?\n\n"
+         :clock-in :clock-resume
+         :empty-lines 1)
+
+        ("w" "Workflows")
+        ("we" "Checking Email" entry (file+olp+datetree "~/org/journal.org")
+         "* Checking Email :email:\n\n%?" :clock-in :clock-resume :empty-lines 1)
+
+        ("m" "Metrics Capture")
+        ("mw" "Weight" table-line (file+headline "~/org/metrics.org" "Weight")
+         "| %U | %^{Weight} | %^{Notes} |" :kill-buffer t)))
+
+;; Make sure org-indent face is `available
 (require 'org-indent)
 ;; Ensure that anything that should be fixed-pitch in Org files appears that way
 (set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch)
@@ -690,24 +840,3 @@
   (add-hook 'yaml-mode-hook
             '(lambda ()
                (define-key yaml-mode-map "\C-m" 'newline-and-indent))))
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(package-selected-packages
-   '(evil-magit zenburn-theme yaml-mode which-key-posframe vterm use-package undo-tree typescript-mode tree-sitter-langs solarized-theme restart-emacs pyim-basedict pyim org-superstar org-roam org-download org-bullets neotree magit lsp-ui lsp-treemacs lsp-ivy helpful general flycheck evil-nerd-commenter evil-collection eterm-256color emacsql-sqlite eglot doom-themes counsel-projectile company-box command-log-mode cnfonts circadian all-the-icons-ivy-rich)))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(org-block ((t (:inherit fixed-pitch :height 0.9))))
- '(org-code ((t (:inherit (shadow fixed-pitch) :height 0.9))))
- '(org-default ((t (:inherit default :height 1.0))))
- '(org-ellipsis ((t (:inherit default :weight normal :height 1.0 :underline nil))))
- '(org-level-1 ((t (:inherit outline-1 :height 1.15))))
- '(org-level-2 ((t (:inherit outline-2 :height 1.12))))
- '(org-level-3 ((t (:inherit outline-3 :height 1.09))))
- '(org-level-4 ((t (:inherit outline-4 :height 1.06))))
- '(org-link ((t (:inherit link :height 1.0)))))
