@@ -30,6 +30,7 @@ cp -rf ~/.config/nvim  ~/projects/configs/ &&
 
 cp ~/.emacs.d/init.el ~/projects/configs/emacs/init.el &&
 
-cp ~/org/emacs.org ~/projects/configs/emacs/emacs.org
+# backup org files
+cp ~/eSync/org/emacs.org ~/projects/configs/emacs/emacs.org
 
 echo "done"

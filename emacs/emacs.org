@@ -1,6 +1,27 @@
 #+title: Tangel Configuration
 #+PROPERTY: header-args:emacs-lisp :tangle ~/.emacs.d/init.el
 
+* Setup package.el 
+   Load use package- a popular macro in Emacs that provides declarative way  to config and load packages (eval-when-compile).
+#+begin_src emacs-lisp
+
+    (require 'package)
+    (setq package-archives '(("melpa" . "https://melpa.org/packages/")
+                             ("melpa-stable" . "https://stable.melpa.org/packages/")
+                             ("org" . "https://orgmode.org/elpa/")
+                             ("elpa" . "https://elpa.gnu.org/packages/")))
+    (package-initialize)
+    (unless (package-installed-p 'use-package)
+        (package-refresh-contents)
+        (package-install 'use-package))
+
+  ;; ensures that the Emacs package archive is up-to-date before installing any new packages, by refreshing the package list if necessary.
+    (unless package-archive-contents (package-refresh-contents))
+
+    (require 'use-package)
+    (setq use-package-always-ensure t)
+#+end_src
+
 * Basic UI configureation
 ** Font Configuration
 Font were set in a way in a coding environment it will use =fixed-pitch,= when its in org mode, it uses =variable-pitch= font
@@ -19,6 +40,7 @@ Font were set in a way in a coding environment it will use =fixed-pitch,= when i
   (set-fontset-font t 'han (font-spec :family "Source Han Sans CN"))
   (set-face-attribute 'variable-pitch nil :family "Source Sans Pro" :height 180 :weight 'normal)
 #+end_src
+
 ** Others
 #+begin_src emacs-lisp
   ;; Enable visible bell
@@ -51,27 +73,6 @@ Font were set in a way in a coding environment it will use =fixed-pitch,= when i
 
 #+RESULTS:
 : t
-
-* Setup package.el 
-   Load use package- a popular macro in Emacs that provides declarative way  to config and load packages (eval-when-compile).
-#+begin_src emacs-lisp
-
-    (require 'package)
-    (setq package-archives '(("melpa" . "https://melpa.org/packages/")
-                             ("melpa-stable" . "https://stable.melpa.org/packages/")
-                             ("org" . "https://orgmode.org/elpa/")
-                             ("elpa" . "https://elpa.gnu.org/packages/")))
-    (package-initialize)
-    (unless (package-installed-p 'use-package)
-        (package-refresh-contents)
-        (package-install 'use-package))
-
-  ;; ensures that the Emacs package archive is up-to-date before installing any new packages, by refreshing the package list if necessary.
-    (unless package-archive-contents (package-refresh-contents))
-
-    (require 'use-package)
-    (setq use-package-always-ensure t)
-#+end_src
 
 * Text editing experience
 ** undo-tree
@@ -283,6 +284,7 @@ Basic setup including rebind vim like C-u/i for page scroll, =evil-nerd-commente
       "o s" 'org-schedule
       "o d" 'org-deadline
       "o c" 'org-capture
+      "o o" 'org-open-at-point
       "o t" '(org-babel-tangle :which-key "Org Tangle")
       "o r" '(:ignore t :which-key " Org Roam")
       "o rf" '(org-roam-node-find :which-key "Find a Node")
@@ -362,16 +364,13 @@ http://tumashu.github.io/pyim-bigdict/pyim-bigdict.pyim.gz
 
 *** 导入词库
 #+begin_src emacs-lisp
-
   (setq pyim-dicts
-        '((:name "懒人包" :file "~/eSync/pyim/懒人包.gz")
-          (:name "搜狗－饮食大全（官方推荐）" :file "~/eSync/pyim/搜狗-饮食大全（官方推荐）.pyim")))
-
+        '((:name "懒人包" :file "~/eSync/pyim/lazy.gz")
+          (:name "搜狗－饮食大全（官方推荐）" :file "~/eSync/pyim/food.pyim")))
 #+end_src
 
 ** Config
 #+begin_src emacs-lisp
-
   ;; 拼音
   (use-package pyim
     :config
@@ -414,18 +413,17 @@ http://tumashu.github.io/pyim-bigdict/pyim-bigdict.pyim.gz
 
 #+end_src
 * Org Mode
-
+** Basic
 #+begin_src emacs-lisp
-
   ;; Org Mode
   (use-package org
     :ensure t
     :init
     (setq org-ellipsis " ▼"
           org-hide-emphasis-markers t
-          org-directory "~/org/"
-          org-default-notes-file "~/org/index.org")
-    (setq org-agenda-files '("~/org"))
+          org-directory "~/eSync/org/"
+          org-default-notes-file "~/eSync/org/index.org")
+    (setq org-agenda-files '("~/eSync/org")) 
     (setq org-agenda-start-with-log-mode t)
     (setq org-log-done 'time)
     (setq org-log-into-drawer t)
@@ -616,7 +614,20 @@ http://tumashu.github.io/pyim-bigdict/pyim-bigdict.pyim.gz
 
 #+end_src
 
-Babel
+*** Images
+#+begin_src emacs-lisp
+      (use-package org-download
+        :custom
+        (org-download-method 'directory)
+        (org-download-image-dir "~/eSync/org/pictures")
+        (org-download-heading-lvl nil)
+        :config
+        (setq-default org-download-image-org-width 300)
+        (setq-default org-download-image-html-width 300)
+        (add-hook 'dired-mode-hook 'org-download-enable)
+        )
+#+end_src
+** Babel
 #+begin_src emacs-lisp
 
   (use-package org-babel
@@ -650,7 +661,7 @@ Babel
 
 #+end_src
 
-Roam
+** Roam
 #+begin_src emacs-lisp
 
   (use-package org-roam
@@ -658,8 +669,8 @@ Roam
     :init
     (setq org-roam-v2-ack t)
     :custom
-    (org-roam-directory "~/org/")
-    (org-roam-db-location "~/org/org-roam.db")
+    (org-roam-directory "~/eSync/org/roam/")
+    (org-roam-db-location "~/eSync/org/roam/org-roam.db")
     (org-roam-completion-everywhere t)
     :bind (:map org-mode-map
                 ("C-M-i" . completion-at-point))
@@ -820,7 +831,6 @@ vterm
 #+end_src
 
 *Joplin Mode*
-
 1. download [[https://discourse.joplinapp.org/t/note-for-emacs-users/623][HERE]]  and load major mode file
 
 #+begin_src emacs-lisp
@@ -828,7 +838,6 @@ vterm
 #+end_src
 
 2. declare the mode and load 
-
 #+begin_src emacs-lisp
 ;;++ Joplin mode (on top of Markdown).
 (autoload 'joplin-mode "joplin-mode"
@@ -838,6 +847,24 @@ vterm
 ;;--
 #+end_src
 
+3. handle potential issue
+issue https://discourse.joplinapp.org/t/note-for-emacs-users/623
+
+set backup file to a specific directory.
+#+begin_src emacs-lisp
+  (setq backup-directory-alist '(("." . "~/eSync/backups")))
+#+end_src 
+
+* Yaml mode 
+#+begin_src emacs-lisp
+(use-package yaml-mode
+  :mode (("\\.yml\\'" . yaml-mode)
+         ("\\.yaml\\'" . yaml-mode))
+  :config
+  (add-hook 'yaml-mode-hook
+            '(lambda ()
+               (define-key yaml-mode-map "\C-m" 'newline-and-indent))))
+#+end_src
 
 *  TODO organize all the configs by using org-babel
 SCHEDULED: <2023-04-04 Tue>

@@ -1,3 +1,19 @@
+(require 'package)
+  (setq package-archives '(("melpa" . "https://melpa.org/packages/")
+                           ("melpa-stable" . "https://stable.melpa.org/packages/")
+                           ("org" . "https://orgmode.org/elpa/")
+                           ("elpa" . "https://elpa.gnu.org/packages/")))
+  (package-initialize)
+  (unless (package-installed-p 'use-package)
+      (package-refresh-contents)
+      (package-install 'use-package))
+
+;; ensures that the Emacs package archive is up-to-date before installing any new packages, by refreshing the package list if necessary.
+  (unless package-archive-contents (package-refresh-contents))
+
+  (require 'use-package)
+  (setq use-package-always-ensure t)
+
 ;; Font 
 ;; Set font by different mode: (set-face-attribute 'default nil :font "FONT_NAME":height: FONT_SIZE MODE/BUFFER)
 (set-face-attribute 'default nil :font "FiraCode Nerd Font Mono" :height 180)
@@ -34,22 +50,6 @@
 (add-hook mode (lambda () (display-line-numbers-mode 0))))
 ; Wrap text 
 (global-visual-line-mode t)
-
-(require 'package)
-  (setq package-archives '(("melpa" . "https://melpa.org/packages/")
-                           ("melpa-stable" . "https://stable.melpa.org/packages/")
-                           ("org" . "https://orgmode.org/elpa/")
-                           ("elpa" . "https://elpa.gnu.org/packages/")))
-  (package-initialize)
-  (unless (package-installed-p 'use-package)
-      (package-refresh-contents)
-      (package-install 'use-package))
-
-;; ensures that the Emacs package archive is up-to-date before installing any new packages, by refreshing the package list if necessary.
-  (unless package-archive-contents (package-refresh-contents))
-
-  (require 'use-package)
-  (setq use-package-always-ensure t)
 
 (use-package undo-tree
     :ensure t
@@ -227,6 +227,7 @@
     "o s" 'org-schedule
     "o d" 'org-deadline
     "o c" 'org-capture
+    "o o" 'org-open-at-point
     "o t" '(org-babel-tangle :which-key "Org Tangle")
     "o r" '(:ignore t :which-key " Org Roam")
     "o rf" '(org-roam-node-find :which-key "Find a Node")
@@ -283,8 +284,8 @@
   :ensure t)
 
 (setq pyim-dicts
-      '((:name "懒人包" :file "~/eSync/pyim/懒人包.gz")
-        (:name "搜狗－饮食大全（官方推荐）" :file "~/eSync/pyim/搜狗-饮食大全（官方推荐）.pyim")))
+      '((:name "懒人包" :file "~/eSync/pyim/lazy.gz")
+        (:name "搜狗－饮食大全（官方推荐）" :file "~/eSync/pyim/food.pyim")))
 
 ;; 拼音
 (use-package pyim
@@ -332,9 +333,9 @@
   :init
   (setq org-ellipsis " ▼"
         org-hide-emphasis-markers t
-        org-directory "~/org/"
-        org-default-notes-file "~/org/index.org")
-  (setq org-agenda-files '("~/org"))
+        org-directory "~/eSync/org/"
+        org-default-notes-file "~/eSync/org/index.org")
+  (setq org-agenda-files '("~/eSync/org")) 
   (setq org-agenda-start-with-log-mode t)
   (setq org-log-done 'time)
   (setq org-log-into-drawer t)
@@ -523,6 +524,17 @@
  :keymaps 'override
  "s" 'surround-with-key)
 
+(use-package org-download
+  :custom
+  (org-download-method 'directory)
+  (org-download-image-dir "~/eSync/org/pictures")
+  (org-download-heading-lvl nil)
+  :config
+  (setq-default org-download-image-org-width 300)
+  (setq-default org-download-image-html-width 300)
+  (add-hook 'dired-mode-hook 'org-download-enable)
+  )
+
 (use-package org-babel
   :ensure nil ; already built-in
   :defer t ; lazy loading
@@ -557,8 +569,8 @@
   :init
   (setq org-roam-v2-ack t)
   :custom
-  (org-roam-directory "~/org/")
-  (org-roam-db-location "~/org/org-roam.db")
+  (org-roam-directory "~/eSync/org/roam/")
+  (org-roam-db-location "~/eSync/org/roam/org-roam.db")
   (org-roam-completion-everywhere t)
   :bind (:map org-mode-map
               ("C-M-i" . completion-at-point))
@@ -668,3 +680,34 @@
 ; Note that joplin-mode will step down if it is not joplin data.
 (add-to-list 'auto-mode-alist '("/[a-f0-9]\\{32\\}\\.md\\'" . joplin-mode))
 ;;--
+
+(setq backup-directory-alist '(("." . "~/eSync/backups")))
+
+(use-package yaml-mode
+  :mode (("\\.yml\\'" . yaml-mode)
+         ("\\.yaml\\'" . yaml-mode))
+  :config
+  (add-hook 'yaml-mode-hook
+            '(lambda ()
+               (define-key yaml-mode-map "\C-m" 'newline-and-indent))))
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   '(evil-magit zenburn-theme yaml-mode which-key-posframe vterm use-package undo-tree typescript-mode tree-sitter-langs solarized-theme restart-emacs pyim-basedict pyim org-superstar org-roam org-download org-bullets neotree magit lsp-ui lsp-treemacs lsp-ivy helpful general flycheck evil-nerd-commenter evil-collection eterm-256color emacsql-sqlite eglot doom-themes counsel-projectile company-box command-log-mode cnfonts circadian all-the-icons-ivy-rich)))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(org-block ((t (:inherit fixed-pitch :height 0.9))))
+ '(org-code ((t (:inherit (shadow fixed-pitch) :height 0.9))))
+ '(org-default ((t (:inherit default :height 1.0))))
+ '(org-ellipsis ((t (:inherit default :weight normal :height 1.0 :underline nil))))
+ '(org-level-1 ((t (:inherit outline-1 :height 1.15))))
+ '(org-level-2 ((t (:inherit outline-2 :height 1.12))))
+ '(org-level-3 ((t (:inherit outline-3 :height 1.09))))
+ '(org-level-4 ((t (:inherit outline-4 :height 1.06))))
+ '(org-link ((t (:inherit link :height 1.0)))))
