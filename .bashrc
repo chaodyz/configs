@@ -11,8 +11,13 @@ bind -m vi-insert 'Control-l: clear-screen'
 bind '"\e[A": history-search-backward'
 bind '"\e[B": history-search-forward'
 
-### AUTO COMPLETE NAME
-complete -cf sudo
+# vim and nvim
+alias vim="nvim"
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+### AUTO COMPLETE NAME complete -cf sudo
 
 ### SHOPT
 shopt -s autocd # change to named directory
@@ -45,54 +50,135 @@ alias ll='ls -la -G'
 ## Show hidden files ##
 alias l.='ls -d .* -G'
 
-# alias updatedb = 'sudo /usr/libexec/locate.updatedb'
-alias updatedb='sudo /usr/libexec/locate.updatedb'
-# vim
-alias vim="nvim"
-
-alias k='kubectl'
-alias wc-run='cd /Users/$USER/Projects/ultipro-app&&npm run start:engaging-developing-web'
-alias wc-test='cd /Users/$USER/Projects/ultipro-app&&npm run test:engaging-developing-web:watch'
-alias wc-cypress='cd /Users/$USER/Projects/ultipro-app&&npm run test:engaging-developing-web:cypress'
-alias wc-local='cd /Users/$USER/Projects/ed-localization&&npm start'
-alias mock-tms="cd /Users/$USER/Projects/mock-tms&&nodemon"
-alias wc-format="cd /Users/$USER/Projects/ultipro-app&&nx format:write&&nx affected:lint"
-
+# Git
 alias gc="git checkout"
 
-# emacs 
-export PATH="/Users/$USER/.emacs.d/bin/doom:$PATH"
-export PATH="/opt/homebrew/Cellar/emacs-mac/emacs-28.2-mac-9.1/bin/:$PATH"
+if [[ "$OSTYPE" == "linux-gnu" ]]; then
+    #----Archlinux ----------------------
+    #  (\(\  
+    #  (-.-)
+    # o_(")(")
+    # 1. Check if the operating system is Linux
 
-export PATH=/opt/homebrew/bin:$PATH
-export PATH=/opt/homebrew/sbin:$PATH
+    echo "Running on Linux"
+    echo "            ."
+    echo "         .   :   ."
+    echo "     '.   .  :  .   .'"
+    echo "  ._   '._.-'''-._.'   _."
+    echo "    '-..'         '..-' "
+    echo " --._ /.==.     .==.\ _.--"
+    echo "     ;/_o__\\   /_o__\\;"
+    echo "-----|'     ) (     '|-----"
+    echo "    _: \\_) (\\_/) (_/ ;_"
+    echo " --'  \\  '._.=._.'  /  '--"
+    echo "   _.-''.  '._.'  .''-._"
+    echo "  '    .''.(_).''.    '"
+    echo " .'   '  :  '   '."
+    echo "        '    :   '"
+    echo "             '"
+    
+    # shortcut
+    alias joplin='~/.joplin/Joplin.AppImage'
+    alias wifi='nmtui'
+    # 'bluetoothctl'
+    # sound ctl 'alsamixer'
 
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-# python version manager
-export PATH="$(pyenv root)/shims:${PATH}"
+    alias updatedb='sudo /usr/libexec/locate.updatedb'
+    export PATH="/opt/cmake/3.27.4/bin:$PATH"
 
-export M2_HOME=/opt/apache-maven-3.8.4
-export NODE_OPTIONS=--max_old_space_size=8192
-# export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_321.jdk/Contents/Home
-JAVA_HOME=/Library/Java/JavaVirtualMachines/zulu-11.jdk/Contents/Home/
-export ANDROID_SDK_ROOT=/Users/$USER/Library/Android/sdk
-export ANDROID_HOME=/Users/$USER/Library/Android/sdk
-export GRADLE_HOME=/usr/local/opt/gradle@7
-export PATH=$ANDROID_HOME/emulator:$ANDROID_HOME/tools:$PATH
-export PATH=$GRADLE_HOME/bin:$PATH
-export PATH="~/.local/bin:$JAVA_HOME/bin:$M2_HOME/bin:$PATH"
-. "$HOME/.cargo/env"
+    # Execute keyswap on Bash load
+    echo "xmodmap ~/.Xmodmap"
+    #   .--.
+    #  |o_o |
+    #  |:_/ |
+    # //   \ \
+    # (|     | )
+    # /'\_   _/`\
+    # \___)=(___/
+    # -------------------------------
+fi
+
+if [[ "$OSTYPE" == "darwin*" ]]; then
+    # -------------------------------
+    #  /\_/\  
+    # ( o.o ) 
+    #  > ^ <
+    # Mac
+    # Check if the operating system is Linux
+    echo "Running on MacOS"
+    current_user="$USER"
+    
+    # MacOS common
+    export PATH=/opt/homebrew/bin:$PATH
+    export PATH=/opt/homebrew/sbin:$PATH
+    export PATH="~/.local/bin:$PATH"
+    export PATH="/data/data/com.termux/files/usr/bin:$PATH"
+    
+    # Personal
+    if [[current_user== "diz" ]]; then
+	export PATH =$HOME/.cargo/env:$PATH
+	echo "你好，祝你好运！"
+	echo "    *  / \\_ *  / \\_      _  *        *   /'__        *"
+	echo "      /    \\  /    \\,   ((        .    _/  /  \\  *'."
+	echo " .   /\\/\\  /\\/ :' __ \\_  \`          _^/  ^/    \`--."
+	echo "    /    \\/  \\  _/  \\-'\      *    /.' ^_   \\_   .\\'  *"
+	echo "  /\\  .-   \`. \\/     \\ /==~=-=~=-=-;.  _/ \\ -. \`_/   \\"
+	echo " /  \`-.__ ^   / .-'.--\\ =-=~_=-=~=^/  _ \`--./ .-'  \`-"
+	echo "/        \`.  / /       \`.~-^=-=~=^=.-'      '-._ \`._"
+    else
+	# Work Machine
+	echo "Bienvenue Di, bon journey!"
+	echo "              |    |    |               "
+	echo "             )_)  )_)  )_)              "
+	echo "            )___))___))___)\            "
+	echo "           )____)____)_____)\\          "
+	echo "         _____|____|____|____\\\__      "
+	echo "---------\\                   /---------"
+	echo "  ^^^^^ ^^^^^^^^^^^^^^^^^^^^^          "
+	echo "    ^^^^      ^^^^     ^^^    ^^        "
+	echo "         ^^^^      ^^^^                "
+	alias k='kubectl'
+	# Life work crafting team
+	alias wc-run='cd /Users/$USER/Projects/ultipro-app&&npm run start:engaging-developing-web'
+	alias wc-test='cd /Users/$USER/Projects/ultipro-app&&npm run test:engaging-developing-web:watch'
+	alias wc-cypress='cd /Users/$USER/Projects/ultipro-app&&npm run test:engaging-developing-web:cypress'
+	alias wc-local='cd /Users/$USER/Projects/ed-localization&&npm start'
+	alias mock-tms="cd /Users/$USER/Projects/mock-tms&&nodemon"
+	alias wc-format="cd /Users/$USER/Projects/ultipro-app&&nx format:write&&nx affected:lint"
+	
+	export NODE_OPTIONS=--max_old_space_size=8192
+	# python version manager
+	export PATH="$(pyenv root)/shims:${PATH}"
+
+	export M2_HOME=/opt/apache-maven-3.8.4
+	# export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_321.jdk/Contents/Home
+	# export JAVA_HOME=/Library/Java/JavaVirtualMachines/zulu-8.jdk/Contents/Home
+	exprot JAVA_HOME=/Library/Java/JavaVirtualMachines/zulu-11.jdk/Contents/Home/
+	export ANDROID_SDK_ROOT=/Users/$USER/Library/Android/sdk
+	export ANDROID_HOME=/Users/$USER/Library/Android/sdk
+	export GRADLE_HOME=/usr/local/opt/gradle@7
+	export PATH=$ANDROID_HOME/emulator:$ANDROID_HOME/tools:$PATH
+	export PATH=$GRADLE_HOME/bin:$PATH
+	export PATH=$JAVA_HOME/bin:$M2_HOME/bin:$PATH 
+
+	eval "$(fnm env --use-on-cd)"
+	[ -s "/Users/$USER/.jabba/jabba.sh" ] && source "/Users/$USER/.jabba/jabba.sh"
+	# The next line updates PATH for the Google Cloud SDK.
+	if [ -f '/Users/$USER/dev/google-cloud-sdk/path.bash.inc' ]; then . '/Users/$USER/dev/google-cloud-sdk/path.bash.inc'; fi
+
+	# The next line enables shell command completion for gcloud.
+	if [ -f '/Users/$USER/dev/google-cloud-sdk/completion.bash.inc' ]; then . '/Users/$USER/dev/google-cloud-sdk/completion.bash.inc'; fi
+    fi #end of macos 
+    #  c(._.)o
+    #   /)_")
+    #    / \
+    #------------------------------------------
+fi
 
 eval "$(starship init bash)"
-eval "$(fnm env --use-on-cd)"
 
-[ -s "/Users/$USER/.jabba/jabba.sh" ] && source "/Users/$USER/.jabba/jabba.sh"
-# export JAVA_HOME=/Library/Java/JavaVirtualMachines/zulu-8.jdk/Contents/Home
 
-# The next line updates PATH for the Google Cloud SDK.
-if [ -f '/Users/$USER/dev/google-cloud-sdk/path.bash.inc' ]; then . '/Users/$USER/dev/google-cloud-sdk/path.bash.inc'; fi
 
-# The next line enables shell command completion for gcloud.
-if [ -f '/Users/$USER/dev/google-cloud-sdk/completion.bash.inc' ]; then . '/Users/$USER/dev/google-cloud-sdk/completion.bash.inc'; fi
+
+
+

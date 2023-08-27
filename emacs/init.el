@@ -512,16 +512,19 @@
   )
 ;; Set faces for headings, lists, and other elements
 (custom-set-faces
- ;; Set font and size for headlines
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(org-block ((t (:inherit fixed-pitch :height 0.9))))
+ '(org-code ((t (:inherit (shadow fixed-pitch) :height 0.9))))
+ '(org-default ((t (:inherit default :height 1.0))))
+ '(org-ellipsis ((t (:inherit default :weight normal :height 1.0 :underline nil))))
  '(org-level-1 ((t (:inherit outline-1 :height 1.15))))
  '(org-level-2 ((t (:inherit outline-2 :height 1.12))))
  '(org-level-3 ((t (:inherit outline-3 :height 1.09))))
  '(org-level-4 ((t (:inherit outline-4 :height 1.06))))
- '(org-default ((t (:inherit default :height 1.0))))
- '(org-block ((t (:inherit fixed-pitch :height 0.9))))
- '(org-code ((t (:inherit (shadow fixed-pitch) :height 0.9))))
- '(org-link ((t (:inherit link :height 1.0))))
- '(org-ellipsis ((t (:inherit default :weight normal :height 1.0 :underline nil)))))
+ '(org-link ((t (:inherit link :height 1.0)))))
 
 (setq org-todo-keywords
       '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d!)")
@@ -602,88 +605,90 @@
          "| %U | %^{Weight} | %^{Notes} |" :kill-buffer t)))
 
 ;; Make sure org-indent face is `available
-    (require 'org-indent)
-    ;; Ensure that anything that should be fixed-pitch in Org files appears that way
-    (set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch)
-    (set-face-attribute 'org-table nil  :inherit 'fixed-pitch)
-    (set-face-attribute 'org-formula nil  :inherit 'fixed-pitch)
-    (set-face-attribute 'org-code nil   :inherit '(shadow fixed-pitch))
-    (set-face-attribute 'org-indent nil :inherit '(org-hide fixed-pitch))
-    (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
-    (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
-    (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
-    (set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch)
+(require 'org-indent)
+;; Ensure that anything that should be fixed-pitch in Org files appears that way
+(set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch)
+(set-face-attribute 'org-table nil  :inherit 'fixed-pitch)
+(set-face-attribute 'org-formula nil  :inherit 'fixed-pitch)
+(set-face-attribute 'org-code nil   :inherit '(shadow fixed-pitch))
+(set-face-attribute 'org-indent nil :inherit '(org-hide fixed-pitch))
+(set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
+(set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
+(set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
+(set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch)
 
-    ;; Get rid of the background on column views
-    (set-face-attribute 'org-column nil :background nil) (set-face-attribute 'org-column-title nil :background nil)
+;; Get rid of the background on column views
+(set-face-attribute 'org-column nil :background nil) (set-face-attribute 'org-column-title nil :background nil)
 
-    ;; headline bullet
-    (use-package org-superstar
-      :ensure t
-      :hook (org-mode . org-superstar-mode)
-      :custom
-      (org-superstar-remove-leading-stars t)
-      (org-superstar-headline-bullets-list '("☵" "○" "✻" "✿"))
-      :config
-      (set-face-attribute 'org-superstar-item nil :height 1.0))
 
-    ;; cosmetic function
-    (defun my/org-mode-hook ()
-      "Customize Org mode settings."
-      (setq-default line-spacing 0.2)
-      (setq-default org-blank-before-new-entry '((heading . auto)
-                                                 (plain-list-item . auto))))
-    (add-hook 'org-mode-hook #'my/org-mode-hook)
+;; cosmetic function
+(defun my/org-mode-hook ()
+  "Customize Org mode settings."
+  (setq-default line-spacing 0.2)
+  (setq-default org-blank-before-new-entry '((heading . auto)
+                                             (plain-list-item . auto))))
+(add-hook 'org-mode-hook #'my/org-mode-hook)
 
-    ;; create a task from non-heading text, such as a sentence or paragraph.
-    (require 'org-inlinetask)
+;; create a task from non-heading text, such as a sentence or paragraph.
+(require 'org-inlinetask)
 
-    ;; Helper emphasis (ChatGPT) 🤯
-    (defun my-wrap-with-stars ()
-      "Wrap visual selection with *."
-      (interactive)
-      (let ((selection (buffer-substring-no-properties
-                        (region-beginning) (region-end))))
-        (delete-region (region-beginning) (region-end))
-        (insert (concat "*" selection "*"))))
+;; Helper emphasis (ChatGPT) 🤯
+(defun my-wrap-with-stars ()
+  "Wrap visual selection with *."
+  (interactive)
+  (let ((selection (buffer-substring-no-properties
+                    (region-beginning) (region-end))))
+    (delete-region (region-beginning) (region-end))
+    (insert (concat "*" selection "*"))))
 
-    (defun my-wrap-with-tides ()
-      "Wrap visual selection with ~."
-      (interactive)
-      (let ((selection (buffer-substring-no-properties
-                        (region-beginning) (region-end))))
-        (delete-region (region-beginning) (region-end))
-        (insert (concat "~" selection "~"))))
+(defun my-wrap-with-tides ()
+  "Wrap visual selection with ~."
+  (interactive)
+  (let ((selection (buffer-substring-no-properties
+                    (region-beginning) (region-end))))
+    (delete-region (region-beginning) (region-end))
+    (insert (concat "~" selection "~"))))
 
-    (defun my-wrap-with-equals ()
-      "Wrap visual selection with =."
-      (interactive)
-      (let ((selection (buffer-substring-no-properties
-                        (region-beginning) (region-end))))
-        (delete-region (region-beginning) (region-end))
-        (insert (concat "=" selection "="))))
+(defun my-wrap-with-equals ()
+  "Wrap visual selection with =."
+  (interactive)
+  (let ((selection (buffer-substring-no-properties
+                    (region-beginning) (region-end))))
+    (delete-region (region-beginning) (region-end))
+    (insert (concat "=" selection "="))))
 
-    ;; Bind the function to a key combination
-    (define-key evil-visual-state-map (kbd "C-*") 'my-wrap-with-stars)
-    (define-key evil-visual-state-map (kbd "C-~") 'my-wrap-with-tides)
-    (define-key evil-visual-state-map (kbd "C-=") 'my-wrap-with-equals)
+;; Bind the function to a key combination
+(define-key evil-visual-state-map (kbd "C-*") 'my-wrap-with-stars)
+(define-key evil-visual-state-map (kbd "C-~") 'my-wrap-with-tides)
+(define-key evil-visual-state-map (kbd "C-=") 'my-wrap-with-equals)
 
-    ;; Surround with ANY KEY (chatGPT)
-    (defun surround-with-key (beg end key)
-      "Surround the region between BEG and END with KEY."
-      (interactive "r\nsSurround with: ")
-      (goto-char end)
-      (insert key)
-      (goto-char beg)
-      (insert key))
+;; Surround with ANY KEY (chatGPT)
+(defun surround-with-key (beg end key)
+  "Surround the region between BEG and END with KEY."
+  (interactive "r\nsSurround with: ")
+  (goto-char end)
+  (insert key)
+  (goto-char beg)
+  (insert key))
 
-    (general-define-key
-     :states '(visual)
-     :keymaps 'override
-     "s" 'surround-with-key)
+(general-define-key
+ :states '(visual)
+ :keymaps 'override
+ "s" 'surround-with-key)
 
-  (add-hook 'org-mode-hook 'company-mode)
+(add-hook 'org-mode-hook 'company-mode)
 (setq org-image-actual-width nil)
+
+
+;; headline bullet
+(use-package org-superstar
+  :ensure t
+  :hook (org-mode . org-superstar-mode)
+  :custom
+  (org-superstar-remove-leading-stars t)
+  (org-superstar-headline-bullets-list '("☵" "○" "✻" "✿"))
+  :config
+  (set-face-attribute 'org-superstar-item nil :height 1.0))
 
 (use-package org-babel
   :ensure nil ; already built-in
@@ -840,3 +845,10 @@
   (add-hook 'yaml-mode-hook
             '(lambda ()
                (define-key yaml-mode-map "\C-m" 'newline-and-indent))))
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   '(evil-magit zenburn-theme yaml-mode which-key vterm undo-tree tree-sitter-langs solarized-theme restart-emacs pyim-basedict pyim org-superstar org-roam neotree magit lsp-ui lsp-treemacs lsp-ivy ivy-rich helpful general flycheck evil-nerd-commenter evil-collection eterm-256color counsel-projectile command-log-mode circadian)))
