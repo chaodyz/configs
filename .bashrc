@@ -60,7 +60,7 @@ if [[ "$OSTYPE" == "linux-gnu" ]]; then
     # o_(")(")
     # 1. Check if the operating system is Linux
 
-    echo "Running on Linux"
+    #echo "Running on Linux"
     echo "            ."
     echo "         .   :   ."
     echo "     '.   .  :  .   .'"
@@ -98,15 +98,14 @@ if [[ "$OSTYPE" == "linux-gnu" ]]; then
     # -------------------------------
 fi
 
-if [[ "$OSTYPE" == "darwin*" ]]; then
+if [[ "$OSTYPE" == "darwin"* ]]; then
     # -------------------------------
     #  /\_/\  
     # ( o.o ) 
     #  > ^ <
     # Mac
     # Check if the operating system is Linux
-    echo "Running on MacOS"
-    current_user="$USER"
+    #echo "Running on MacOS"
     
     # MacOS common
     export PATH=/opt/homebrew/bin:$PATH
@@ -115,8 +114,8 @@ if [[ "$OSTYPE" == "darwin*" ]]; then
     export PATH="/data/data/com.termux/files/usr/bin:$PATH"
     
     # Personal
-    if [[current_user== "diz" ]]; then
-	export PATH =$HOME/.cargo/env:$PATH
+    if [[ $USER == "diz" ]]; then
+	export PATH=$HOME/.cargo/env:$PATH
 	echo "你好，祝你好运！"
 	echo "    *  / \\_ *  / \\_      _  *        *   /'__        *"
 	echo "      /    \\  /    \\,   ((        .    _/  /  \\  *'."
