@@ -1,4 +1,4 @@
-# ~/.bashrc If not running interactively, don't do anything [[ $- != *i* ]] && return comment out for starship PS1='[\u@\h \W]\$ '
+# ~/.bashrc 
 ### EXPORT
 export TERM_PROGRAM=emacs
 export TERM="xterm-256color"                      # getting proper colors
@@ -82,12 +82,8 @@ if [[ "$OSTYPE" == "linux-gnu" ]]; then
     alias wifi='nmtui'
     # 'bluetoothctl'
     # sound ctl 'alsamixer'
-
-    alias updatedb='sudo /usr/libexec/locate.updatedb'
     export PATH="/opt/cmake/3.27.4/bin:$PATH"
 
-    # Execute keyswap on Bash load
-    echo "xmodmap ~/.Xmodmap"
     #   .--.
     #  |o_o |
     #  |:_/ |
@@ -112,6 +108,9 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
     export PATH=/opt/homebrew/sbin:$PATH
     export PATH="~/.local/bin:$PATH"
     export PATH="/data/data/com.termux/files/usr/bin:$PATH"
+
+    # assume i have installed 'locate' for macos
+    alias updatedb='sudo /usr/libexec/locate.updatedb'
     
     # Personal
     if [[ $USER == "diz" ]]; then
@@ -174,10 +173,7 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
     #------------------------------------------
 fi
 
-eval "$(starship init bash)"
-
-
-
+ eval "$(starship init bash)"
 
 
 
