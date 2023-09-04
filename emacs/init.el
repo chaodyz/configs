@@ -620,6 +620,15 @@
 ;; Get rid of the background on column views
 (set-face-attribute 'org-column nil :background nil) (set-face-attribute 'org-column-title nil :background nil)
 
+;; headline bullet
+(use-package org-superstar
+  :ensure t
+  :hook (org-mode . org-superstar-mode)
+  :custom
+  (org-superstar-remove-leading-stars t)
+  (org-superstar-headline-bullets-list '("☵" "○" "✻" "✿"))
+  :config
+  (set-face-attribute 'org-superstar-item nil :height 1.0))
 
 ;; cosmetic function
 (defun my/org-mode-hook ()
@@ -678,17 +687,6 @@
 
 (add-hook 'org-mode-hook 'company-mode)
 (setq org-image-actual-width nil)
-
-
-;; headline bullet
-(use-package org-superstar
-  :ensure t
-  :hook (org-mode . org-superstar-mode)
-  :custom
-  (org-superstar-remove-leading-stars t)
-  (org-superstar-headline-bullets-list '("☵" "○" "✻" "✿"))
-  :config
-  (set-face-attribute 'org-superstar-item nil :height 1.0))
 
 (use-package org-babel
   :ensure nil ; already built-in
@@ -760,54 +758,59 @@
   (setq magit-display-buffer-function 'magit-display-buffer-fullframe-status-v1)
   )
 
-(setq gc-cons-threshold 100000000)
-(setq read-process-output-max (* 1024 1024)) ;; 1mb
-
-(use-package flycheck
+(use-package treesit-auto
   :ensure t
-  :init (global-flycheck-mode))
-
-;; Enable syntax checker
-(add-hook 'after-init-hook #'global-flycheck-mode)
-
-(use-package lsp-mode
-  :defer t
-  :hook (
-         (typescript-mode . lsp)
-         (lsp-mode . (lambda ()
-                       (let ((lsp-keymap-prefix "C-c l"))
-                         (lsp-enable-which-key-integration)))))
-  :commands lsp
   :config
-  (define-key lsp-mode-map (kbd "C-c l") lsp-command-map)
-  (setq lsp-prefer-flymake nil) ;; Use lsp-ui and flycheck instead of flymake
-  (setq lsp-modeline-diagnostics-enable t)
-  )
-;; Display global errors 
-(with-eval-after-load 'lsp-mode
-  ;; :global/:workspace/:file
-  (setq lsp-modeline-diagnostics-scope :workspace))
+  (global-treesit-auto-mode))
 
-(use-package lsp-ivy :commands lsp-ivy-workspace-symbol)
-(use-package lsp-ui
-  :hook (lsp-mode . lsp-ui-mode)
-  )
+;; (setq gc-cons-threshold 100000000)
+;; (setq read-process-output-max (* 1024 1024)) ;; 1mb
 
-(use-package lsp-treemacs :commands lsp-treemacs-errors-list)
+;; (use-package flycheck
+;;   :ensure t
+;;   :init (global-flycheck-mode))
 
-(use-package tree-sitter
-  :config
-  (global-tree-sitter-mode)
-  )
+;; ;; Enable syntax checker
+;; (add-hook 'after-init-hook #'global-flycheck-mode)
 
-(use-package tree-sitter-langs
-  :after tree-sitter
-  :hook (typescript-mode . tree-sitter-mode)
-  :config
-  (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode)
-  )
+;; (use-package lsp-mode
+;;   :defer t
+;;   :hook (
+;;          (typescript-mode . lsp)
+;;          (lsp-mode . (lambda ()
+;;                        (let ((lsp-keymap-prefix "C-c l"))
+;;                          (lsp-enable-which-key-integration)))))
+;;   :commands lsp
+;;   :config
+;;   (define-key lsp-mode-map (kbd "C-c l") lsp-command-map)
+;;   (setq lsp-prefer-flymake nil) ;; Use lsp-ui and flycheck instead of flymake
+;;   (setq lsp-modeline-diagnostics-enable t)
+;;   )
+;; ;; Display global errors 
+;; (with-eval-after-load 'lsp-mode
+;;   ;; :global/:workspace/:file
+;;   (setq lsp-modeline-diagnostics-scope :workspace))
 
-(use-package neotree)
+;; (use-package lsp-ivy :commands lsp-ivy-workspace-symbol)
+;; (use-package lsp-ui
+;;   :hook (lsp-mode . lsp-ui-mode)
+;;   )
+
+;; (use-package lsp-treemacs :commands lsp-treemacs-errors-list)
+
+;; (use-package tree-sitter
+;;   :config
+;;   (global-tree-sitter-mode)
+;;   )
+
+;; (use-package tree-sitter-langs
+;;   :after tree-sitter
+;;   :hook (typescript-mode . tree-sitter-mode)
+;;   :config
+;;   (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode)
+;;   )
+
+;; (use-package neotree)
 
 (use-package term
   :config
@@ -851,4 +854,4 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(evil-magit zenburn-theme yaml-mode which-key vterm undo-tree tree-sitter-langs solarized-theme restart-emacs pyim-basedict pyim org-superstar org-roam neotree magit lsp-ui lsp-treemacs lsp-ivy ivy-rich helpful general flycheck evil-nerd-commenter evil-collection eterm-256color counsel-projectile command-log-mode circadian)))
+   '(evil-magit treesit-auto zenburn-theme yaml-mode which-key vterm undo-tree tree-sitter-langs solarized-theme restart-emacs pyim-basedict pyim org-superstar org-roam neotree magit lsp-ui lsp-treemacs lsp-ivy ivy-rich helpful general flycheck evil-nerd-commenter evil-collection eterm-256color counsel-projectile command-log-mode circadian)))

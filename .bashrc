@@ -80,6 +80,7 @@ if [[ "$OSTYPE" == "linux-gnu" ]]; then
     # shortcut
     alias joplin='~/.joplin/Joplin.AppImage'
     alias wifi='nmtui'
+    alias vpn='wg-quick up se-mma-wg-001' # Call wireguard config to connect to Malmo, Sweden
     # 'bluetoothctl'
     # sound ctl 'alsamixer'
     export PATH="/opt/cmake/3.27.4/bin:$PATH"
