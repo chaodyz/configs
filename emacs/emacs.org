@@ -776,11 +776,26 @@ http://tumashu.github.io/pyim-bigdict/pyim-bigdict.pyim.gz
 #+end_src
 * Treesitter
 
+** Use treesit-auto
+https://github.com/renzmann/treesit-auto
+
+treesit auto is a tool to help treesiter to find the missing major mode. In order to work with format like tsx, we also need some manually tweaks.
+
+here author shared his thought about how emacs-treesit-auto is created
+https://robbmann.io/posts/emacs-treesit-auto/
+
 #+begin_src emacs-lisp
-  (use-package treesit-auto
-    :ensure t
-    :config
-    (global-treesit-auto-mode))
+    (use-package treesit-auto
+      :ensure t
+      :config
+      (setq treesit-auto-install 'prompt)  ;; if grammar is missing, will prompt for installation
+      (global-treesit-auto-mode))
+#+end_src
+
+
+#+begin_src emacs-lisp
+  (use-package lua-mode
+    :ensure t)
 #+end_src
 * LSP
 *Performance*

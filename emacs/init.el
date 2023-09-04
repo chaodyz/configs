@@ -761,7 +761,11 @@
 (use-package treesit-auto
   :ensure t
   :config
+  (setq treesit-auto-install 'prompt)  ;; if grammar is missing, will prompt for installation
   (global-treesit-auto-mode))
+
+(use-package lua-mode
+  :ensure t)
 
 ;; (setq gc-cons-threshold 100000000)
 ;; (setq read-process-output-max (* 1024 1024)) ;; 1mb
@@ -854,4 +858,8 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
+<<<<<<< HEAD
    '(evil-magit treesit-auto zenburn-theme yaml-mode which-key vterm undo-tree tree-sitter-langs solarized-theme restart-emacs pyim-basedict pyim org-superstar org-roam neotree magit lsp-ui lsp-treemacs lsp-ivy ivy-rich helpful general flycheck evil-nerd-commenter evil-collection eterm-256color counsel-projectile command-log-mode circadian)))
+=======
+   '(evil-magit zenburn-theme yaml-mode which-key vterm undo-tree treesit-auto tree-sitter-langs solarized-theme restart-emacs pyim-basedict pyim org-superstar org-roam neotree magit lua-mode lsp-ui lsp-treemacs lsp-ivy ivy-rich helpful general flycheck evil-nerd-commenter evil-collection eterm-256color counsel-projectile command-log-mode circadian)))
+>>>>>>> 5a284ca (chore(emacs): comment out lsp)
