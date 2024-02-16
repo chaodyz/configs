@@ -22,7 +22,7 @@ function backup_action() {
 	
 	cp ~/.config/starship.toml  ~/projects/configs/starship.toml &&
 	
-	cp ~/.config/alacritty/alacritty.yml  ~/projects/configs/alacritty.yml &&
+	cp ~/.config/alacritty/alacritty.toml  ~/projects/configs/alacritty.toml &&
 
 	cp ~/.config/joplin/keymap.json  ~/projects/configs/keymap.json &&
 

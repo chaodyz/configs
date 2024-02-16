@@ -20,7 +20,7 @@ function restore_action() {
 
     cp      ~/projects/configs/.tmux.conf             ~/.tmux.conf  &&
 	cp      ~/projects/configs/starship.toml          ~/.config/starship.toml  &&
-	cp      ~/projects/configs/alacritty.yml          ~/.config/alacritty/alacritty.yml  &&
+	cp      ~/projects/configs/alacritty.toml         ~/.config/alacritty/alacritty.toml  &&
 	cp      ~/projects/configs/keymap.json            ~/.config/joplin/keymap.json &&
 	rm -rf ~/.config/nvim/ &&
 	cp -rf  ~/projects/configs/nvim                   ~/.config/ &&

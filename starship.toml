@@ -1,3 +1,6 @@
+# Set whatever time out in ms
+command_timeout = 500
+
 # Inserts a blank line between shell prompts
 add_newline = true
 

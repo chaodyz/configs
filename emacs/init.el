@@ -845,6 +845,11 @@
 
 (setq backup-directory-alist '(("." . "~/eSync/backups")))
 
+(use-package company
+  :ensure t
+  :config
+  (global-company-mode 1))
+
 (use-package yaml-mode
   :mode (("\\.yml\\'" . yaml-mode)
          ("\\.yaml\\'" . yaml-mode))
@@ -858,8 +863,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-<<<<<<< HEAD
-   '(evil-magit treesit-auto zenburn-theme yaml-mode which-key vterm undo-tree tree-sitter-langs solarized-theme restart-emacs pyim-basedict pyim org-superstar org-roam neotree magit lsp-ui lsp-treemacs lsp-ivy ivy-rich helpful general flycheck evil-nerd-commenter evil-collection eterm-256color counsel-projectile command-log-mode circadian)))
-=======
-   '(evil-magit zenburn-theme yaml-mode which-key vterm undo-tree treesit-auto tree-sitter-langs solarized-theme restart-emacs pyim-basedict pyim org-superstar org-roam neotree magit lua-mode lsp-ui lsp-treemacs lsp-ivy ivy-rich helpful general flycheck evil-nerd-commenter evil-collection eterm-256color counsel-projectile command-log-mode circadian)))
->>>>>>> 5a284ca (chore(emacs): comment out lsp)
+   '(company zenburn-theme yaml-mode which-key vterm undo-tree treesit-auto solarized-theme restart-emacs pyim-basedict pyim org-superstar org-roam magit lua-mode ivy-rich hydra helpful general evil-nerd-commenter evil-collection eterm-256color counsel-projectile command-log-mode circadian))
+ '(pyim-dicts
+   '((:name "懒人包" :file "~/eSync/pyim/lazy.gz")
+     (:name "搜狗－饮食大全（官方推荐）" :file "~/eSync/pyim/food.pyim"))))
