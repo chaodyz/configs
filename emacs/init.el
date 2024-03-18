@@ -14,6 +14,24 @@
   (require 'use-package)
   (setq use-package-always-ensure t)
 
+;; Install straight.el
+  ;; use Develop instead of main because potential emacs 29 bug
+(setq straight-repository-branch "develop")
+
+(defvar bootstrap-version)
+(let ((bootstrap-file
+       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+      (bootstrap-version 6))
+  (unless (file-exists-p bootstrap-file)
+    (with-current-buffer
+        (url-retrieve-synchronously
+         "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
+         'silent 'inhibit-cookies)
+      (goto-char (point-max))
+      (eval-print-last-sexp)))
+  (load bootstrap-file nil 'nomessage))
+(straight-use-package 'org)
+
 ;; Font 
 ;; Set font by different mode: (set-face-attribute 'default nil :font "FONT_NAME":height: FONT_SIZE MODE/BUFFER)
 (set-face-attribute 'default nil :font "FiraCode Nerd Font Mono" :height 180)
@@ -356,7 +374,7 @@
   ;; 设置 pyim 探针设置，这是 pyim 高级功能设置，可以实现 *无痛* 中英文切换 :-)
   ;; 我自己使用的中英文动态切换规则是：
   ;; 1. 光标只有在注释里面时，才可以输入中文。
-  ;; 2. 光标前是汉字字符时，才能输入中文。
+  ;; 2. 光标前是汉字字符时，才能输入中文。 
   ;; 3. 使用 M-j 快捷键，强制将光标前的拼音字符串转换为中文。
 
  (setq-default pyim-english-input-switch-functions
@@ -512,19 +530,16 @@
   )
 ;; Set faces for headings, lists, and other elements
 (custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(org-block ((t (:inherit fixed-pitch :height 0.9))))
- '(org-code ((t (:inherit (shadow fixed-pitch) :height 0.9))))
- '(org-default ((t (:inherit default :height 1.0))))
- '(org-ellipsis ((t (:inherit default :weight normal :height 1.0 :underline nil))))
+ ;; Set font and size for headlines
  '(org-level-1 ((t (:inherit outline-1 :height 1.15))))
  '(org-level-2 ((t (:inherit outline-2 :height 1.12))))
  '(org-level-3 ((t (:inherit outline-3 :height 1.09))))
  '(org-level-4 ((t (:inherit outline-4 :height 1.06))))
- '(org-link ((t (:inherit link :height 1.0)))))
+ '(org-default ((t (:inherit default :height 1.0))))
+ '(org-block ((t (:inherit fixed-pitch :height 0.9))))
+ '(org-code ((t (:inherit (shadow fixed-pitch) :height 0.9))))
+ '(org-link ((t (:inherit link :height 1.0))))
+ '(org-ellipsis ((t (:inherit default :weight normal :height 1.0 :underline nil)))))
 
 (setq org-todo-keywords
       '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d!)")
@@ -730,6 +745,20 @@
   :config
   (org-roam-setup))
 
+(use-package org-roam-ui
+  :straight
+    (:host github :repo "org-roam/org-roam-ui" :branch "main" :files ("*.el" "out"))
+    :after org-roam
+;;         normally we'd recommend hooking orui after org-roam, but since org-roam does not have
+;;         a hookable mode anymore, you're advised to pick something yourself
+;;         if you don't care about startup time, use
+;;  :hook (after-init . org-roam-ui-mode)
+    :config
+    (setq org-roam-ui-sync-theme t
+          org-roam-ui-follow t
+          org-roam-ui-update-on-save t
+          org-roam-ui-open-on-start t))
+
 ;; Projectile
 (use-package projectile
   :ensure t
@@ -738,7 +767,7 @@
   :config
   (projectile-mode 1)
   (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
-  (setq projectile-project-search-path '("~/projects"))
+  (setq projectile-project-search-path '("~/projects/" "~/projects/backup/"))
   (setq projectile-switch-project-action #'projectile-dired))
 
 (use-package counsel-projectile
@@ -857,13 +886,3 @@
   (add-hook 'yaml-mode-hook
             '(lambda ()
                (define-key yaml-mode-map "\C-m" 'newline-and-indent))))
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(package-selected-packages
-   '(company zenburn-theme yaml-mode which-key vterm undo-tree treesit-auto solarized-theme restart-emacs pyim-basedict pyim org-superstar org-roam magit lua-mode ivy-rich hydra helpful general evil-nerd-commenter evil-collection eterm-256color counsel-projectile command-log-mode circadian))
- '(pyim-dicts
-   '((:name "懒人包" :file "~/eSync/pyim/lazy.gz")
-     (:name "搜狗－饮食大全（官方推荐）" :file "~/eSync/pyim/food.pyim"))))

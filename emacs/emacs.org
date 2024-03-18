@@ -22,6 +22,31 @@
     (setq use-package-always-ensure t)
 #+end_src
 
+* Setup Straight.ell
+
+Setup straight
+[[https://jeffkreeftmeijer.com/emacs-straight-use-package/][Emacs package management with straight.el and use-package]]
+
+#+begin_src emacs-lisp
+    ;; Install straight.el
+    ;; use Develop instead of main because potential emacs 29 bug
+  (setq straight-repository-branch "develop")
+
+  (defvar bootstrap-version)
+  (let ((bootstrap-file
+         (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+        (bootstrap-version 6))
+    (unless (file-exists-p bootstrap-file)
+      (with-current-buffer
+          (url-retrieve-synchronously
+           "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
+           'silent 'inhibit-cookies)
+        (goto-char (point-max))
+        (eval-print-last-sexp)))
+    (load bootstrap-file nil 'nomessage))
+  (straight-use-package 'org)
+  
+#+end_src
 * Basic UI configureation
 ** Font Configuration
 Font were set in a way in a coding environment it will use =fixed-pitch,= when its in org mode, it uses =variable-pitch= font
@@ -423,7 +448,7 @@ http://tumashu.github.io/pyim-bigdict/pyim-bigdict.pyim.gz
     (setq-default pyim-punctuation-half-width-functions
                   '(pyim-probe-punctuation-line-beginning
                     pyim-probe-punctuation-after-punctuation))
-
+ 
     ;; 开启拼音搜索功能
     (pyim-isearch-mode 1)
 
@@ -739,6 +764,27 @@ http://tumashu.github.io/pyim-bigdict/pyim-bigdict.pyim.gz
     (org-roam-setup))
 #+end_src
 
+*** org roam ui
+[[https://github.com/org-roam/org-roam-ui][[GITHUB] org-roam-ui]]
+
+
+#+begin_src emacs-lisp
+(use-package org-roam-ui
+  :straight
+    (:host github :repo "org-roam/org-roam-ui" :branch "main" :files ("*.el" "out"))
+    :after org-roam
+;;         normally we'd recommend hooking orui after org-roam, but since org-roam does not have
+;;         a hookable mode anymore, you're advised to pick something yourself
+;;         if you don't care about startup time, use
+;;  :hook (after-init . org-roam-ui-mode)
+    :config
+    (setq org-roam-ui-sync-theme t
+          org-roam-ui-follow t
+          org-roam-ui-update-on-save t
+          org-roam-ui-open-on-start t))
+
+#+end_src
+
 * Projectile 
 #+begin_src emacs-lisp
 
@@ -750,7 +796,7 @@ http://tumashu.github.io/pyim-bigdict/pyim-bigdict.pyim.gz
     :config
     (projectile-mode 1)
     (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
-    (setq projectile-project-search-path '("~/projects"))
+    (setq projectile-project-search-path '("~/projects/" "~/projects/backup/"))
     (setq projectile-switch-project-action #'projectile-dired))
 
   (use-package counsel-projectile
@@ -962,3 +1008,7 @@ SCHEDULED: <2023-04-04 Tue>
 :PROPERTIES:
 :ID:       72AB6EE7-6241-463E-B035-A519B3D00F51
 :END:
+
+
+
+

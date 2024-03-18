@@ -112,7 +112,9 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
 
     # assume i have installed 'locate' for macos
     alias updatedb='sudo /usr/libexec/locate.updatedb'
-    
+    # Remove with status bar
+    alias rmprog='function __rmprog() { rm -r "$@" | pv -lep -s $(find "$@" | wc -l) >/dev/null; }; __rmprog'
+   
     # Personal
     if [[ $USER == "diz" ]]; then
 	export PATH=$HOME/.cargo/env:$PATH
@@ -144,7 +146,14 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
 	alias wc-local='cd /Users/$USER/Projects/ed-localization&&npm start'
 	alias mock-tms="cd /Users/$USER/Projects/mock-tms&&nodemon"
 	alias wc-format="cd /Users/$USER/Projects/ultipro-app&&nx format:write&&nx affected:lint"
+
+	alias one-serve="cd /Users/$USER/projects/mobile-ultipro-app&&rm -rf www dist temp&&npm run one-app:plugin:serve"
 	
+	alias one-pkginstall="cd /Users/$USER/projects/mobile-ultipro-app&&rm -rf www dist temp&&npm run one-app:plugin:package&&npm run one-app:plugin:install"
+
+	alias ukgpro="npm run one-app:ukgpro:livereload:android"
+	alias authflow="npm run one-app:authflow:livereload:android"
+	alias handler="npm run one-app:handler:livereload:android"
 	export NODE_OPTIONS=--max_old_space_size=8192
 	# python version manager
 	export PATH="$(pyenv root)/shims:${PATH}"
@@ -152,13 +161,14 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
 	export M2_HOME=/opt/apache-maven-3.8.4
 	# export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_321.jdk/Contents/Home
 	# export JAVA_HOME=/Library/Java/JavaVirtualMachines/zulu-8.jdk/Contents/Home
-	exprot JAVA_HOME=/Library/Java/JavaVirtualMachines/zulu-11.jdk/Contents/Home/
+	export JAVA_HOME=/Library/Java/JavaVirtualMachines/zulu-11.jdk/Contents/Home/
 	export ANDROID_SDK_ROOT=/Users/$USER/Library/Android/sdk
 	export ANDROID_HOME=/Users/$USER/Library/Android/sdk
-	export GRADLE_HOME=/usr/local/opt/gradle@7
 	export PATH=$ANDROID_HOME/emulator:$ANDROID_HOME/tools:$PATH
+	export GRADLE_HOME=/opt/gradle-7.1.1
 	export PATH=$GRADLE_HOME/bin:$PATH
 	export PATH=$JAVA_HOME/bin:$M2_HOME/bin:$PATH 
+	export PATH="/opt/homebrew/opt/ruby/bin:$PATH"
 
 	eval "$(fnm env --use-on-cd)"
 	[ -s "/Users/$USER/.jabba/jabba.sh" ] && source "/Users/$USER/.jabba/jabba.sh"
