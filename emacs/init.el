@@ -730,6 +730,8 @@
   :after org
   :config
   (add-to-list 'org-structure-template-alist '("sh" . "src shell"))
+   ;; Define a template for quotes
+  (add-to-list 'org-structure-template-alist '("q" . "quote"))
   (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp")))
 
 (use-package org-roam
@@ -739,9 +741,9 @@
   :custom
   (org-roam-directory "~/eSync/org/roam/")
   (org-roam-db-location "~/eSync/org/roam/org-roam.db")
-  (org-roam-completion-everywhere t)
-  :bind (:map org-mode-map
-              ("C-M-i" . completion-at-point))
+  :bind (("C-c n l" . org-roam-buffer-toggle)
+         ("C-c n f" . org-roam-node-find)
+         ("C-c n i" . org-roam-node-insert))
   :config
   (org-roam-setup))
 
