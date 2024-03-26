@@ -22,7 +22,7 @@
     (setq use-package-always-ensure t)
 #+end_src
 
-* Setup Straight.ell
+* Setup Straight.el
 
 Setup straight
 [[https://jeffkreeftmeijer.com/emacs-straight-use-package/][Emacs package management with straight.el and use-package]]
@@ -650,6 +650,16 @@ http://tumashu.github.io/pyim-bigdict/pyim-bigdict.pyim.gz
   ;; create a task from non-heading text, such as a sentence or paragraph.
   (require 'org-inlinetask)
 
+  ;; feat(visual): center text
+  (defun efs/org-mode-visual-fill ()
+    (setq visual-fill-column-width 100
+  	visual-fill-column-center-text t)
+    (visual-fill-column-mode 1))
+
+  (use-package visual-fill-column
+     :hook (org-mode . efs/org-mode-visual-fill))
+
+
   ;; Helper emphasis (ChatGPT) 🤯
   (defun my-wrap-with-stars ()
     "Wrap visual selection with *."
@@ -658,7 +668,7 @@ http://tumashu.github.io/pyim-bigdict/pyim-bigdict.pyim.gz
                       (region-beginning) (region-end))))
       (delete-region (region-beginning) (region-end))
       (insert (concat "*" selection "*"))))
-  
+
   (defun my-wrap-with-tides ()
     "Wrap visual selection with ~."
     (interactive)
@@ -786,6 +796,11 @@ http://tumashu.github.io/pyim-bigdict/pyim-bigdict.pyim.gz
           org-roam-ui-open-on-start t))
 
 #+end_src
+
+
+** writing experience in org mode
+the *M-q* fill current paragraph is very useful to align paragraph, to make it display prettier
+https://www.gnu.org/software/emacs/manual/html_node/emacs/Fill-Commands.html
 
 * Projectile 
 #+begin_src emacs-lisp
