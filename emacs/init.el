@@ -118,11 +118,14 @@
   ("q" nil "finished" :exit t))
 (global-set-key (kbd "C-c t") 'hydra-text-scale/body)
 
-;; TODO: Try to mimic move lines action
-;; keymap("x", "J", ":move '>+1<CR>gv-gv", opts)
-;; keymap("x", "K", ":move '<-2<CR>gv-gv", opts)
-;; keymap("x", "<A-j>", ":move '>+1<CR>gv-gv", opts)
-;; keymap("x", "<A-k>", ":move '<-2<CR>gv-gv", opts)
+;; French typying experience
+(setq mac-right-option-modifier nil) ;; Right Option behaves as Option
+
+  ;; TODO: Try to mimic move lines action
+  ;; keymap("x", "J", ":move '>+1<CR>gv-gv", opts)
+  ;; keymap("x", "K", ":move '<-2<CR>gv-gv", opts)
+  ;; keymap("x", "<A-j>", ":move '>+1<CR>gv-gv", opts)
+  ;; keymap("x", "<A-k>", ":move '<-2<CR>gv-gv", opts)
 
 ;; Ivy, Ivy-rich, and counsel
 ;; Note: ivy-rich must be setup after Ivy and counsel
@@ -490,31 +493,28 @@
             (todo "CANC"
                   ((org-agenda-overriding-header "Cancelled Projects")
                    (org-agenda-files org-agenda-files)))))))
-  (setq org-capture-templates
-        `(("t" "Tasks / Projects")
-          ("tt" "Task" entry (file+olp "~/eSync/org/tasks.org" "Inbox")
-           "* TODO %?\n  %U\n  %a\n  %i" :empty-lines 1)
+    (setq org-capture-templates
+          '(("t" "Task" entry (file+olp "~/eSync/org/tasks.org" "Inbox")
+             "* TODO %?\n  %U\n  %a\n  %i" :empty-lines 1)
   
-          ("j" "Journal Entries")
-          ("jj" "Journal" entry
-           (file+olp+datetree "~/eSync/org/journal.org")
-           "\n* %<%I:%M %p> - Journal :journal:\n\n%?\n\n"
-           ;; ,(dw/read-file-as-string "~/Notes/Templates/Daily.org")
-           :clock-in :clock-resume
-           :empty-lines 1)
-          ("jm" "Meeting" entry
-           (file+olp+datetree "~/eSync/org/journal.org")
-           "* %<%I:%M %p> - %a :meetings:\n\n%?\n\n"
-           :clock-in :clock-resume
-           :empty-lines 1)
-  
-          ("w" "Workflows")
-          ("we" "Checking Email" entry (file+olp+datetree "~/eSync/org/journal.org")
-           "* Checking Email :email:\n\n%?" :clock-in :clock-resume :empty-lines 1)
-  
-          ("m" "Metrics Capture")
-          ("mw" "Weight" table-line (file+headline "~/eSync/org/metrics.org" "Weight")
-           "| %U | %^{Weight} | %^{Notes} |" :kill-buffer t)))
+            ("j" "Journal" entry
+             (file+olp+datetree "~/eSync/org/journal.org")
+             "\n* %<%I:%M %p> - Journal :journal:\n\n%?\n\n"
+             :clock-in :clock-resume :empty-lines 1)
+    	
+            ("f" "French Class Notes" entry
+    	 (file+olp+datetree "~/eSync/org/french.org")
+  	 "* French Class Notes: %T
+  ** General
+  %?
+  ** Vocabulary
+  - Word 1: 
+  - Word 2: 
+  ** Grammar
+  - Rule 1: 
+  - Rule 2: 
+  ")             
+    	))
   (setq org-todo-keywords
         '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d!)")
           (sequence "BACKLOG(b)" "PLAN(p)" "READY(r)" "ACTIVE(a)" "REVIEW(v)" "WAIT(w@/!)" "HOLD(h)" "|" "COMPLETED(c)" "CANC(k@)")))
@@ -594,30 +594,27 @@
                  (org-agenda-files org-agenda-files)))))))
 
 (setq org-capture-templates
-      `(("t" "Tasks / Projects")
-        ("tt" "Task" entry (file+olp "~/eSync/org/tasks.org" "Inbox")
-         "* TODO %?\n  %U\n  %a\n  %i" :empty-lines 1)
+        '(("t" "Task" entry (file+olp "~/eSync/org/tasks.org" "Inbox")
+           "* TODO %?\n  %U\n  %a\n  %i" :empty-lines 1)
 
-        ("j" "Journal Entries")
-        ("jj" "Journal" entry
-         (file+olp+datetree "~/eSync/org/journal.org")
-         "\n* %<%I:%M %p> - Journal :journal:\n\n%?\n\n"
-         ;; ,(dw/read-file-as-string "~/Notes/Templates/Daily.org")
-         :clock-in :clock-resume
-         :empty-lines 1)
-        ("jm" "Meeting" entry
-         (file+olp+datetree "~/eSync/org/journal.org")
-         "* %<%I:%M %p> - %a :meetings:\n\n%?\n\n"
-         :clock-in :clock-resume
-         :empty-lines 1)
-
-        ("w" "Workflows")
-        ("we" "Checking Email" entry (file+olp+datetree "~/eSync/org/journal.org")
-         "* Checking Email :email:\n\n%?" :clock-in :clock-resume :empty-lines 1)
-
-        ("m" "Metrics Capture")
-        ("mw" "Weight" table-line (file+headline "~/eSync/org/metrics.org" "Weight")
-         "| %U | %^{Weight} | %^{Notes} |" :kill-buffer t)))
+          ("j" "Journal" entry
+           (file+olp+datetree "~/eSync/org/journal.org")
+           "\n* %<%I:%M %p> - Journal :journal:\n\n%?\n\n"
+           :clock-in :clock-resume :empty-lines 1)
+  	
+          ("f" "French Class Notes" entry
+  	 (file+olp+datetree "~/eSync/org/french.org")
+	 "* French Class Notes: %T
+** General
+%?
+** Vocabulary
+- Word 1: 
+- Word 2: 
+** Grammar
+- Rule 1: 
+- Rule 2: 
+")             
+  	))
 
 ;; Make sure org-indent face is `available
 (require 'org-indent)
@@ -641,7 +638,7 @@
   :hook (org-mode . org-superstar-mode)
   :custom
   (org-superstar-remove-leading-stars t)
-  (org-superstar-headline-bullets-list '("☵" "○" "✻" "✿"))
+  (org-superstar-headline-bullets-list '("☵" "○" "✻" "✿" "◆" "▶" "◉" "⚛" "♠" "☯" "✦" "⚝" "♢" "✸" "⬢"))
   :config
   (set-face-attribute 'org-superstar-item nil :height 1.0))
 
@@ -770,6 +767,9 @@
           org-roam-ui-follow t
           org-roam-ui-update-on-save t
           org-roam-ui-open-on-start t))
+
+(setq org-startup-indented t)  ;; Auto-indent headlines and content
+(setq org-startup-folded t)    ;; Fold content on startup for better readability
 
 ;; Projectile
 (use-package projectile

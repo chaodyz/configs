@@ -1,6 +1,5 @@
 #+title: Tangel Configuration
 #+PROPERTY: header-args:emacs-lisp :tangle ~/.emacs.d/init.el
-
 * Setup package.el 
    Load use package- a popular macro in Emacs that provides declarative way  to config and load packages (eval-when-compile).
 #+begin_src emacs-lisp
@@ -113,40 +112,40 @@ The undo tree  sets =C-r= to be the same as Vim
 Basic setup including rebind vim like C-u/i for page scroll, =evil-nerd-commenter= : vim commentary parity, the  =evil-collection= ensures evil mode works well in dired, terminal etc. 
 #+begin_src emacs-lisp
 
-    (use-package evil
-      :init
-      (setq evil-undo-system 'undo-tree)
-      (setq evil-want-integration t)
-      (setq evil-want-keybinding nil)
-      (setq evil-want-C-u-scroll t)
-      (setq evil-want-C-i-jump nil)
-      :config
-      (evil-mode 1)
-      (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state)
-      (define-key evil-insert-state-map (kbd "C-h") 'evil-delete-backward-char-and-join)
+  (use-package evil
+    :init
+    (setq evil-undo-system 'undo-tree)
+    (setq evil-want-integration t)
+    (setq evil-want-keybinding nil)
+    (setq evil-want-C-u-scroll t)
+    (setq evil-want-C-i-jump nil)
+    :config
+    (evil-mode 1)
+    (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state)
+    (define-key evil-insert-state-map (kbd "C-h") 'evil-delete-backward-char-and-join)
 
-      ;; Use visual line motions even outside of visual-line-mode buffers
-      (evil-global-set-key 'motion "j" 'evil-next-visual-line)
-      (evil-global-set-key 'motion "k" 'evil-previous-visual-line)
+    ;; Use visual line motions even outside of visual-line-mode buffers
+    (evil-global-set-key 'motion "j" 'evil-next-visual-line)
+    (evil-global-set-key 'motion "k" 'evil-previous-visual-line)
 
-      (evil-set-initial-state 'messages-buffer-mode 'normal)
-      (evil-set-initial-state 'dashboard-mode 'normal)
-      )
+    (evil-set-initial-state 'messages-buffer-mode 'normal)
+    (evil-set-initial-state 'dashboard-mode 'normal)
+    )
 
 
-    (use-package evil-nerd-commenter
-      ;; :config
-      ;; (evilnc-default-hotkeys)
-      )
-    (define-key evil-normal-state-map "gc" 'evilnc-comment-or-uncomment-lines)
+  (use-package evil-nerd-commenter
+    ;; :config
+    ;; (evilnc-default-hotkeys)
+    )
+  (define-key evil-normal-state-map "gc" 'evilnc-comment-or-uncomment-lines)
 
-    (use-package evil-collection
-      :after evil
-      :config
-      (evil-collection-init))
+  (use-package evil-collection
+    :after evil
+    :config
+    (evil-collection-init))
 
-    ;; Escape key to quit menu
-    (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
+  ;; Escape key to quit menu
+  (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
 #+end_src
 ** Hydra 
 #+begin_src emacs-lisp
@@ -166,14 +165,18 @@ Basic setup including rebind vim like C-u/i for page scroll, =evil-nerd-commente
 :ID:       533D8377-75CF-41D4-9E2C-A27BC86583ED
 :END:
 #+begin_src emacs-lisp
+  
+  ;; French typying experience
+  (setq mac-right-option-modifier nil) ;; Right Option behaves as Option
 
-  ;; TODO: Try to mimic move lines action
-  ;; keymap("x", "J", ":move '>+1<CR>gv-gv", opts)
-  ;; keymap("x", "K", ":move '<-2<CR>gv-gv", opts)
-  ;; keymap("x", "<A-j>", ":move '>+1<CR>gv-gv", opts)
-  ;; keymap("x", "<A-k>", ":move '<-2<CR>gv-gv", opts)
+    ;; TODO: Try to mimic move lines action
+    ;; keymap("x", "J", ":move '>+1<CR>gv-gv", opts)
+    ;; keymap("x", "K", ":move '<-2<CR>gv-gv", opts)
+    ;; keymap("x", "<A-j>", ":move '>+1<CR>gv-gv", opts)
+    ;; keymap("x", "<A-k>", ":move '<-2<CR>gv-gv", opts)
 
 #+end_src
+
 * Ivy
  Ivy and counsel enhance the interaction experience
 
@@ -583,30 +586,27 @@ http://tumashu.github.io/pyim-bigdict/pyim-bigdict.pyim.gz
 #+name: org-custom-capture
 #+begin_src emacs-lisp
     (setq org-capture-templates
-          `(("t" "Tasks / Projects")
-            ("tt" "Task" entry (file+olp "~/eSync/org/tasks.org" "Inbox")
+          '(("t" "Task" entry (file+olp "~/eSync/org/tasks.org" "Inbox")
              "* TODO %?\n  %U\n  %a\n  %i" :empty-lines 1)
 
-            ("j" "Journal Entries")
-            ("jj" "Journal" entry
+            ("j" "Journal" entry
              (file+olp+datetree "~/eSync/org/journal.org")
              "\n* %<%I:%M %p> - Journal :journal:\n\n%?\n\n"
-             ;; ,(dw/read-file-as-string "~/Notes/Templates/Daily.org")
-             :clock-in :clock-resume
-             :empty-lines 1)
-            ("jm" "Meeting" entry
-             (file+olp+datetree "~/eSync/org/journal.org")
-             "* %<%I:%M %p> - %a :meetings:\n\n%?\n\n"
-             :clock-in :clock-resume
-             :empty-lines 1)
-
-            ("w" "Workflows")
-            ("we" "Checking Email" entry (file+olp+datetree "~/eSync/org/journal.org")
-             "* Checking Email :email:\n\n%?" :clock-in :clock-resume :empty-lines 1)
-
-            ("m" "Metrics Capture")
-            ("mw" "Weight" table-line (file+headline "~/eSync/org/metrics.org" "Weight")
-             "| %U | %^{Weight} | %^{Notes} |" :kill-buffer t)))
+             :clock-in :clock-resume :empty-lines 1)
+    	
+            ("f" "French Class Notes" entry
+    	 (file+olp+datetree "~/eSync/org/french.org")
+  	 "* French Class Notes: %T
+  ** General
+  %?
+  ** Vocabulary
+  - Word 1: 
+  - Word 2: 
+  ** Grammar
+  - Rule 1: 
+  - Rule 2: 
+  ")             
+    	))
 #+end_src
 ** TODO organize this block
 :PROPERTIES:
@@ -635,7 +635,7 @@ http://tumashu.github.io/pyim-bigdict/pyim-bigdict.pyim.gz
     :hook (org-mode . org-superstar-mode)
     :custom
     (org-superstar-remove-leading-stars t)
-    (org-superstar-headline-bullets-list '("☵" "○" "✻" "✿"))
+    (org-superstar-headline-bullets-list '("☵" "○" "✻" "✿" "◆" "▶" "◉" "⚛" "♠" "☯" "✦" "⚝" "♢" "✸" "⬢"))
     :config
     (set-face-attribute 'org-superstar-item nil :height 1.0))
 
@@ -797,11 +797,13 @@ http://tumashu.github.io/pyim-bigdict/pyim-bigdict.pyim.gz
 
 #+end_src
 
-
 ** writing experience in org mode
 the *M-q* fill current paragraph is very useful to align paragraph, to make it display prettier
 https://www.gnu.org/software/emacs/manual/html_node/emacs/Fill-Commands.html
-
+#+begin_src emacs-lisp
+(setq org-startup-indented t)  ;; Auto-indent headlines and content
+(setq org-startup-folded t)    ;; Fold content on startup for better readability
+#+end_src
 * Projectile 
 #+begin_src emacs-lisp
 
