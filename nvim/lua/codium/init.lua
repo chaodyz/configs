@@ -6,7 +6,7 @@
 
 
 -- load keymaps
-vim.cmd([[source $HOME/.config/nvim/lua/vscode/settings.vim]])
+vim.cmd([[source $HOME/.config/nvim/lua/codium/settings.vim]])
 
 -- better clipboard
 vim.opt.clipboard:append("unnamedplus");
