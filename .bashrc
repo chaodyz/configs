@@ -40,11 +40,7 @@ alias fgrep='fgrep --color=auto'
 alias cp="cp -i"
 alias mv='mv -i'
 alias rm='rm -i'
-
-# adding flags
-alias df='df -h'                          # human-readable sizes
-# system shortcut
-alias ls='ls -G'
+# adding flags alias df='df -h'                          # human-readable sizes system shortcut alias ls='ls -G'
 ## Use a long listing format ##
 alias ll='ls -la -G'
 ## Show hidden files ##
@@ -116,17 +112,16 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
     alias rmprog='function __rmprog() { rm -r "$@" | pv -lep -s $(find "$@" | wc -l) >/dev/null; }; __rmprog'
    
     # Personal
-    if [[ $USER == "diz" ]]; then
-	export PATH=$HOME/.cargo/env:$PATH
-	echo "你好，祝你好运！"
-	echo "    *  / \\_ *  / \\_      _  *        *   /'__        *"
-	echo "      /    \\  /    \\,   ((        .    _/  /  \\  *'."
-	echo " .   /\\/\\  /\\/ :' __ \\_  \`          _^/  ^/    \`--."
-	echo "    /    \\/  \\  _/  \\-'\      *    /.' ^_   \\_   .\\'  *"
-	echo "  /\\  .-   \`. \\/     \\ /==~=-=~=-=-;.  _/ \\ -. \`_/   \\"
-	echo " /  \`-.__ ^   / .-'.--\\ =-=~_=-=~=^/  _ \`--./ .-'  \`-"
-	echo "/        \`.  / /       \`.~-^=-=~=^=.-'      '-._ \`._"
-    else
+    # if [[ $USER == "diz" ]]; then
+	# echo "你好，祝你好运！"
+	# echo "    *  / \\_ *  / \\_      _  *        *   /'__        *"
+	# echo "      /    \\  /    \\,   ((        .    _/  /  \\  *'."
+	# echo " .   /\\/\\  /\\/ :' __ \\_  \`          _^/  ^/    \`--."
+	# echo "    /    \\/  \\  _/  \\-'\      *    /.' ^_   \\_   .\\'  *"
+	# echo "  /\\  .-   \`. \\/     \\ /==~=-=~=-=-;.  _/ \\ -. \`_/   \\"
+	# echo " /  \`-.__ ^   / .-'.--\\ =-=~_=-=~=^/  _ \`--./ .-'  \`-"
+	# echo "/        \`.  / /       \`.~-^=-=~=^=.-'      '-._ \`._"
+	#    else
 	# Work Machine
 	echo "Bienvenue Di, bon journey!"
 	echo "              |    |    |               "
@@ -138,25 +133,30 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
 	echo "  ^^^^^ ^^^^^^^^^^^^^^^^^^^^^          "
 	echo "    ^^^^      ^^^^     ^^^    ^^        "
 	echo "         ^^^^      ^^^^                "
+    # K8s
 	alias k='kubectl'
-	# Life work crafting team
-	alias wc-run='cd /Users/$USER/Projects/ultipro-app&&npm run start:engaging-developing-web'
-	alias wc-test='cd /Users/$USER/Projects/ultipro-app&&npm run test:engaging-developing-web:watch'
-	alias wc-cypress='cd /Users/$USER/Projects/ultipro-app&&npm run test:engaging-developing-web:cypress'
-	alias wc-local='cd /Users/$USER/Projects/ed-localization&&npm start'
+
+	# UKG
 	alias mock-tms="cd /Users/$USER/Projects/mock-tms&&nodemon"
-	alias wc-format="cd /Users/$USER/Projects/ultipro-app&&nx format:write&&nx affected:lint"
-
 	alias one-serve="cd /Users/$USER/projects/mobile-ultipro-app&&rm -rf www dist temp&&npm run one-app:plugin:serve"
-	
-	alias one-pkginstall="cd /Users/$USER/projects/mobile-ultipro-app&&rm -rf www dist temp&&npm run one-app:plugin:package&&npm run one-app:plugin:install"
+	alias one-pkginstall="cd /Users/$USER/projects/mobile-ultipro-app && rm -rf www dist temp && npm run one-app:plugin:package && npm run one-app:plugin:install"
 
-	alias ukgpro="npm run one-app:ukgpro:livereload:android"
-	alias authflow="npm run one-app:authflow:livereload:android"
-	alias handler="npm run one-app:handler:livereload:android"
+	alias lr_ukgpro="npm run one-app:ukgpro:livereload:android"
+	alias lr_authflow="npm run one-app:authflow:livereload:android"
+	alias lr_handler="npm run one-app:handler:livereload:android"
+
 	export NODE_OPTIONS=--max_old_space_size=8192
-	# python version manager
-	export PATH="$(pyenv root)/shims:${PATH}"
+
+    # Rust
+	export PATH=$HOME/.cargo/env:$PATH
+	# Version managers
+    # Python
+    alias brew='env PATH="${PATH//$(pyenv root)\/shims:/}" brew'
+    # Node
+    eval "$(fnm env --use-on-cd --shell bash)"
+    # Java
+	[ -s "/Users/$USER/.jabba/jabba.sh" ] && source "/Users/$USER/.jabba/jabba.sh"
+
 
 	export M2_HOME=/opt/apache-maven-3.8.4
 	# export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_321.jdk/Contents/Home
@@ -170,14 +170,13 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
 	export PATH=$JAVA_HOME/bin:$M2_HOME/bin:$PATH 
 	export PATH="/opt/homebrew/opt/ruby/bin:$PATH"
 
-	eval "$(fnm env --use-on-cd)"
-	[ -s "/Users/$USER/.jabba/jabba.sh" ] && source "/Users/$USER/.jabba/jabba.sh"
 	# The next line updates PATH for the Google Cloud SDK.
 	if [ -f '/Users/$USER/dev/google-cloud-sdk/path.bash.inc' ]; then . '/Users/$USER/dev/google-cloud-sdk/path.bash.inc'; fi
 
 	# The next line enables shell command completion for gcloud.
 	if [ -f '/Users/$USER/dev/google-cloud-sdk/completion.bash.inc' ]; then . '/Users/$USER/dev/google-cloud-sdk/completion.bash.inc'; fi
-    fi #end of macos 
+    # fi
+    #end of macos 
     #  c(._.)o
     #   /)_")
     #    / \

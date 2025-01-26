@@ -39,7 +39,7 @@
 (set-face-attribute 'variable-pitch nil :family "Source Sans Pro" :height 180 :weight 'normal)
 
 ;; 汉字－思源黑体
-(set-fontset-font t 'han (font-spec :family "Source Han Sans CN"))
+(set-fontset-font t 'han (font-spec :family "Source Han Sans SC VF"))
 (set-face-attribute 'variable-pitch nil :family "Source Sans Pro" :height 180 :weight 'normal)
 
 ;; Enable visible bell
@@ -102,7 +102,7 @@
 (define-key evil-normal-state-map "gc" 'evilnc-comment-or-uncomment-lines)
 
 (use-package evil-collection
-  :after evil
+  :after (evil magit) ;; Ensure Magit is loaded before Evil-Collection initialized
   :config
   (evil-collection-init))
 
@@ -786,76 +786,15 @@
   :ensure t
   :config (counsel-projectile-mode))
 
-;; Magit
 (use-package magit
-  :ensure t
-  :bind (("C-c g" . magit-status))
-  :config
-  (use-package evil-magit
-    :ensure t
-    :config
-    (setq evil-magit-state 'normal) ; set the initial state to normal
-    (add-hook 'magit-mode-hook 'evil-magit-init))
-  (setq magit-display-buffer-function 'magit-display-buffer-fullframe-status-v1)
-  )
-
-(use-package treesit-auto
-  :ensure t
-  :config
-  (setq treesit-auto-install 'prompt)  ;; if grammar is missing, will prompt for installation
-  (global-treesit-auto-mode))
-
-(use-package lua-mode
   :ensure t)
 
-;; (setq gc-cons-threshold 100000000)
-;; (setq read-process-output-max (* 1024 1024)) ;; 1mb
-
-;; (use-package flycheck
-;;   :ensure t
-;;   :init (global-flycheck-mode))
-
-;; ;; Enable syntax checker
-;; (add-hook 'after-init-hook #'global-flycheck-mode)
-
-;; (use-package lsp-mode
-;;   :defer t
-;;   :hook (
-;;          (typescript-mode . lsp)
-;;          (lsp-mode . (lambda ()
-;;                        (let ((lsp-keymap-prefix "C-c l"))
-;;                          (lsp-enable-which-key-integration)))))
-;;   :commands lsp
-;;   :config
-;;   (define-key lsp-mode-map (kbd "C-c l") lsp-command-map)
-;;   (setq lsp-prefer-flymake nil) ;; Use lsp-ui and flycheck instead of flymake
-;;   (setq lsp-modeline-diagnostics-enable t)
-;;   )
-;; ;; Display global errors 
-;; (with-eval-after-load 'lsp-mode
-;;   ;; :global/:workspace/:file
-;;   (setq lsp-modeline-diagnostics-scope :workspace))
-
-;; (use-package lsp-ivy :commands lsp-ivy-workspace-symbol)
-;; (use-package lsp-ui
-;;   :hook (lsp-mode . lsp-ui-mode)
-;;   )
-
-;; (use-package lsp-treemacs :commands lsp-treemacs-errors-list)
-
-;; (use-package tree-sitter
-;;   :config
-;;   (global-tree-sitter-mode)
-;;   )
-
-;; (use-package tree-sitter-langs
-;;   :after tree-sitter
-;;   :hook (typescript-mode . tree-sitter-mode)
-;;   :config
-;;   (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode)
-;;   )
-
-;; (use-package neotree)
+(use-package treesit-auto
+  :custom
+  (treesit-auto-install 'prompt)
+  :config
+  (treesit-auto-add-to-auto-mode-alist 'all)
+  (global-treesit-auto-mode))
 
 (use-package term
   :config
