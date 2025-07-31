@@ -16,7 +16,6 @@ alias vim="nvim"
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-
 ### AUTO COMPLETE NAME complete -cf sudo
 
 ### SHOPT
@@ -24,8 +23,7 @@ shopt -s autocd # change to named directory
 shopt -s cdspell # autocorrects cd misspellings
 shopt -s cmdhist # save multi-line commands in history as single line
 shopt -s dotglob
-shopt -s histappend # do not overwrite history
-shopt -s expand_aliases # expand aliases
+shopt -s histappend # do not overwrite history shopt -s expand_aliases # expand aliases
 shopt -s checkwinsize # checks term size when bash regains control
 
 #ignore upper and lowercase when TAB completion
@@ -136,16 +134,40 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
     # K8s
 	alias k='kubectl'
 
+    #CP
+    alias cp-activate="source .nodeenv/bin/activate"
+    alias cp-start="pm2 start ecosystem.dev.config.js"
+    alias cp-restart="pm2 restart --update-env ecosystem.dev.config.js"
+    alias cp-status="pm2 start ecosystem.dev.config.js"
+    alias cp-logs="pm2 logs"
+    alias cp-stop="pm2 stop ecosystem.dev.config.js"
 	# UKG
-	alias mock-tms="cd /Users/$USER/Projects/mock-tms&&nodemon"
 	alias one-serve="cd /Users/$USER/projects/mobile-ultipro-app&&rm -rf www dist temp&&npm run one-app:plugin:serve"
 	alias one-pkginstall="cd /Users/$USER/projects/mobile-ultipro-app && rm -rf www dist temp && npm run one-app:plugin:package && npm run one-app:plugin:install"
 
-	alias lr_ukgpro="npm run one-app:ukgpro:livereload:android"
-	alias lr_authflow="npm run one-app:authflow:livereload:android"
-	alias lr_handler="npm run one-app:handler:livereload:android"
+	alias start-ukgpro="npm run one-app:ukgpro:livereload:android"
+	alias start-authflow="npm run one-app:authflow:livereload:android"
+	alias start-handler="npm run one-app:handler:livereload:android"
+	alias start-ukgpro-ios="npm run one-app:ukgpro:livereload:ios"
+	alias start-authflow-ios="npm run one-app:authflow:livereload:ios"
+	alias start-handler-ios="npm run one-app:handler:livereload:ios"
 
 	export NODE_OPTIONS=--max_old_space_size=8192
+
+    git-personal() {
+      eval "$(ssh-agent -s)"
+      ssh-add ~/.ssh/id_ed25519_personal
+      ssh -T git@github.com
+    }
+
+    git-work() {
+      eval "$(ssh-agent -s)"
+      ssh-add ~/.ssh/id_ed25519_work
+      ssh -T git@github.com
+    }
+
+    # GPG
+    export GPG_TTY=$(tty)
 
     # Rust
 	export PATH=$HOME/.cargo/env:$PATH
@@ -158,17 +180,25 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
 	[ -s "/Users/$USER/.jabba/jabba.sh" ] && source "/Users/$USER/.jabba/jabba.sh"
 
 
+    # MAVEN, JAVA, GRADLE, ANDROID STUDIO
 	export M2_HOME=/opt/apache-maven-3.8.4
+    export GRADLE_HOME=/opt/gradle/gradle-7.6
+    export JAVA_HOME=/Library/Java/JavaVirtualMachines/zulu-17.jdk/Contents/Home
 	# export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_321.jdk/Contents/Home
 	# export JAVA_HOME=/Library/Java/JavaVirtualMachines/zulu-8.jdk/Contents/Home
-	export JAVA_HOME=/Library/Java/JavaVirtualMachines/zulu-11.jdk/Contents/Home/
+	# export JAVA_HOME=/Library/Java/JavaVirtualMachines/zulu-11.jdk/Contents/Home/
 	export ANDROID_SDK_ROOT=/Users/$USER/Library/Android/sdk
 	export ANDROID_HOME=/Users/$USER/Library/Android/sdk
 	export PATH=$ANDROID_HOME/emulator:$ANDROID_HOME/tools:$PATH
-	export GRADLE_HOME=/opt/gradle-7.1.1
+
 	export PATH=$GRADLE_HOME/bin:$PATH
 	export PATH=$JAVA_HOME/bin:$M2_HOME/bin:$PATH 
-	export PATH="/opt/homebrew/opt/ruby/bin:$PATH"
+
+
+    # Added by `rbenv init` on Tue Feb  4 15:42:10 EST 2025
+    export GEM_HOME="$(ruby -e 'puts Gem.user_dir')"
+    export PATH="$PATH:$GEM_HOME/bin"
+    eval "$(rbenv init - --no-rehash bash)"
 
 	# The next line updates PATH for the Google Cloud SDK.
 	if [ -f '/Users/$USER/dev/google-cloud-sdk/path.bash.inc' ]; then . '/Users/$USER/dev/google-cloud-sdk/path.bash.inc'; fi

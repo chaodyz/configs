@@ -78,8 +78,7 @@
   :init
   (setq evil-undo-system 'undo-tree)
   (setq evil-want-integration t)
-  (setq evil-want-keybinding nil)
-  (setq evil-want-C-u-scroll t)
+  (setq evil-want-keybinding nil) (setq evil-want-C-u-scroll t)
   (setq evil-want-C-i-jump nil)
   :config
   (evil-mode 1)
@@ -408,117 +407,173 @@
    ("M-j" . pyim-convert-string-at-point) ;与 pyim-probe-dynamic-english 配合
    ("C-;" . pyim-delete-word-from-personal-buffer)))
 
-(use-package org
-  :ensure t
-  :init
-  (setq org-ellipsis " ▼"
-        org-hide-emphasis-markers t
-        org-directory "~/eSync/org/"
-        org-default-notes-file "~/eSync/org/index.org")
-  (setq org-agenda-files '("~/eSync/org" "~/eSync/org/roam")) 
-  ;; Set to the name of the file where new notes will be stored
-  (setq org-mobile-inbox-for-pull "~/eSync/org/flagged.org")
-  ;; Set to <your Dropbox root directory>/MobileOrg.
-  (setq org-mobile-directory "~/Dropbox/Apps/MobileOrg")
-  (setq org-agenda-start-with-log-mode t)
-  (setq org-log-done 'time)
-  (setq org-log-into-drawer t)
-  (setq org-startup-indented t)
-  :hook (org-mode . my-org-mode-setup)
-  :config
-  ;; Configure org mode to start with modes that more visual appealing
-  ;; - visual-line-mode: wraps lines at window width for easy reading and editing
-  ;; - variable-pitch-mode 1: sets the font face to a variable-width font for a more natural and aesthetically pleasing look
-  (defun my-org-mode-setup ()
-    "Setup visual line and variable pitch modes for Org mode."
-    (visual-line-mode)  
-    (variable-pitch-mode 1) 
-    )
-  ;; Set faces for headings, lists, and other elements
-  (custom-set-faces
-   ;; Set font and size for headlines
-   '(org-level-1 ((t (:inherit outline-1 :height 1.15))))
-   '(org-level-2 ((t (:inherit outline-2 :height 1.12))))
-   '(org-level-3 ((t (:inherit outline-3 :height 1.09))))
-   '(org-level-4 ((t (:inherit outline-4 :height 1.06))))
-   '(org-default ((t (:inherit default :height 1.0))))
-   '(org-block ((t (:inherit fixed-pitch :height 0.9))))
-   '(org-code ((t (:inherit (shadow fixed-pitch) :height 0.9))))
-   '(org-link ((t (:inherit link :height 1.0))))
-   '(org-ellipsis ((t (:inherit default :weight normal :height 1.0 :underline nil)))))
-  ;; Configure custom agenda views
-  (setq org-agenda-custom-commands
-        '(("d" "Dashboard"
-           ((agenda "" ((org-deadline-warning-days 7)))
-            (todo "NEXT"
-                  ((org-agenda-overriding-header "Next Tasks")))
-            (tags-todo "agenda/ACTIVE" ((org-agenda-overriding-header "Active Projects")))))
-  
-          ("n" "Next Tasks"
-           ((todo "NEXT"
-                  ((org-agenda-overriding-header "Next Tasks")))))
-  
-          ("W" "Work Tasks" tags-todo "+work-email")
-  
-          ;; Low-effort next actions
-          ("e" tags-todo "+TODO=\"NEXT\"+Effort<40&+Effort>0"
-           ((org-agenda-overriding-header "Low Effort Tasks")
-            (org-agenda-max-todos 20)
-            (org-agenda-files org-agenda-files)))
-  
-          ("w" "Workflow Status"
-           ((todo "WAIT"
-                  ((org-agenda-overriding-header "Waiting on External")
-                   (org-agenda-files org-agenda-files)))
-            (todo "REVIEW"
-                  ((org-agenda-overriding-header "In Review")
-                   (org-agenda-files org-agenda-files)))
-            (todo "PLAN"
-                  ((org-agenda-overriding-header "In Planning")
-                   (org-agenda-todo-list-sublevels nil)
-                   (org-agenda-files org-agenda-files)))
-            (todo "BACKLOG"
-                  ((org-agenda-overriding-header "Project Backlog")
-                   (org-agenda-todo-list-sublevels nil)
-                   (org-agenda-files org-agenda-files)))
-            (todo "READY"
-                  ((org-agenda-overriding-header "Ready for Work")
-                   (org-agenda-files org-agenda-files)))
-            (todo "ACTIVE"
-                  ((org-agenda-overriding-header "Active Projects")
-                   (org-agenda-files org-agenda-files)))
-            (todo "COMPLETED"
-                  ((org-agenda-overriding-header "Completed Projects")
-                   (org-agenda-files org-agenda-files)))
-            (todo "CANC"
-                  ((org-agenda-overriding-header "Cancelled Projects")
-                   (org-agenda-files org-agenda-files)))))))
-    (setq org-capture-templates
-          '(("t" "Task" entry (file+olp "~/eSync/org/tasks.org" "Inbox")
-             "* TODO %?\n  %U\n  %a\n  %i" :empty-lines 1)
-  
-            ("j" "Journal" entry
-             (file+olp+datetree "~/eSync/org/journal.org")
-             "\n* %<%I:%M %p> - Journal :journal:\n\n%?\n\n"
-             :clock-in :clock-resume :empty-lines 1)
-    	
-            ("f" "French Class Notes" entry
-    	 (file+olp+datetree "~/eSync/org/french.org")
-  	 "* French Class Notes: %T
-  ** General
-  %?
-  ** Vocabulary
-  - Word 1: 
-  - Word 2: 
-  ** Grammar
-  - Rule 1: 
-  - Rule 2: 
-  ")             
-    	))
-  (setq org-todo-keywords
-        '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d!)")
-          (sequence "BACKLOG(b)" "PLAN(p)" "READY(r)" "ACTIVE(a)" "REVIEW(v)" "WAIT(w@/!)" "HOLD(h)" "|" "COMPLETED(c)" "CANC(k@)")))
-  )
+(defvar my/enable-org-visual t
+  "If non-nil, enable Org Mode visual enhancements.")
+
+  (setq my/enable-org-visual nil)
+
+
+          (use-package org
+            :ensure t
+            :init
+            (setq org-ellipsis " ▼"
+                  org-hide-emphasis-markers t
+                  org-directory "~/eSync/org/"
+                  org-default-notes-file "~/eSync/org/index.org")
+            (setq org-agenda-files '("~/eSync/org" "~/eSync/org/roam")) 
+            ;; Set to the name of the file where new notes will be stored
+            (setq org-mobile-inbox-for-pull "~/eSync/org/flagged.org")
+            ;; Set to <your Dropbox root directory>/MobileOrg.
+            (setq org-mobile-directory "~/Dropbox/Apps/MobileOrg")
+            ;; Aesthetically indent
+            (setq org-startup-indented t)
+            :hook (org-mode . my-org-mode-setup)
+            :config
+
+            (when my/enable-org-visual
+          ;; Configure org mode to start with modes that more visual appealing
+          ;; - visual-line-mode: wraps lines at window width for easy reading and editing
+          ;; - variable-pitch-mode 1: sets the font face to a variable-width font for a more natural and aesthetically pleasing look
+          (defun my-org-mode-setup ()
+            "Setup visual line and variable pitch modes for Org mode."
+            (visual-line-mode)  
+            (variable-pitch-mode 1) 
+            (setq-local line-spacing 0.2)
+            ;;smartly decide when to insert a blank line based on context.
+            (setq-local org-blank-before-new-entry
+                      '((heading . auto)
+                        (plain-list-item . auto)))
+            (my/org-fixed-pitch-faces)
+            )
+          ;; Set faces for headings, lists, and other elements
+          (custom-set-faces
+           ;; Set font and size for headlines
+           '(org-level-1 ((t (:inherit outline-1 :height 1.15))))
+           '(org-level-2 ((t (:inherit outline-2 :height 1.12))))
+           '(org-level-3 ((t (:inherit outline-3 :height 1.09))))
+           '(org-level-4 ((t (:inherit outline-4 :height 1.06))))
+           '(org-default ((t (:inherit default :height 1.0))))
+           '(org-block ((t (:inherit fixed-pitch :height 0.9))))
+           '(org-code ((t (:inherit (shadow fixed-pitch) :height 0.9))))
+           '(org-link ((t (:inherit link :height 1.0))))
+           '(org-ellipsis ((t (:inherit default :weight normal :height 1.0 :underline nil)))))
+          
+          ;; This enables company-mode (autocomplete) when you’re editing Org files.
+          (add-hook 'org-mode-hook #'company-mode)
+          ;;This tells Org to display inline images at their natural size (actual pixel width), rather than scaling them down.
+          (setq org-image-actual-width nil)
+          
+          
+            ;; feat(visual): center text
+            (defun efs/org-mode-visual-fill ()
+              (setq visual-fill-column-width 100
+            	visual-fill-column-center-text t)
+              (visual-fill-column-mode 1))
+          
+            (use-package visual-fill-column
+               :hook (org-mode . efs/org-mode-visual-fill))
+          
+            ;; headline bullet
+            (use-package org-superstar
+              :ensure t
+              :hook (org-mode . org-superstar-mode)
+              :custom
+              (org-superstar-remove-leading-stars t)
+              (org-superstar-headline-bullets-list '("☵" "○" "✻" "✿" "◆" "▶" "◉" "⚛" "♠" "☯" "✦" "⚝" "♢" "✸" "⬢"))
+              :config
+              (set-face-attribute 'org-superstar-item nil :height 1.0))
+          )
+
+            (setq org-tag-alist
+                  '(
+            	;; location
+                    ("home" . ?h)
+                    ("out task" . ?o)
+            	;; device/occasion
+                    ("computer" . ?d)
+                    ("phone" . ?m)
+            	;; work
+                    ("work" . ?w)
+                    ("CP" . ?x)
+            	;; personal
+            	("chore" . ?c)
+                    ("finance" . ?f)
+                    ("relationship" . ?l)
+                    ("interview" . ?i)
+                    ("swim" . ?s)
+                    ("CG" . ?g)
+                    ("read" . ?r)
+            	;; status
+                    ("planning" . ?n)
+                    ("backlog" . ?b)
+            	))
+            
+            (setq org-agenda-custom-commands
+                  '(("p" "Planning"
+                         ((tags-todo "+planning"
+                                     ((org-agenda-overriding-header "Planning Tasks")))
+                          (tags-todo "-{.*}"
+                                     ((org-agenda-overriding-header "Untagged Tasks")))
+                          (todo ".*" ((org-agenda-files '("~/eSync/org/tasks.org"))
+                                      (org-agenda-overriding-header "Unprocessed TODO Items")))))
+            
+                    ("d" "Daily Agenda"
+                     ((agenda "" ((org-agenda-span 'day)
+                                  (org-deadline-warning-days 7)))
+                      (tags-todo "+PRIORITY=\"A\""
+                                 ((org-agenda-overriding-header "High Priority Tasks")))))
+            
+                    ("w" "Weekly Review"
+                     ((agenda ""
+                              ((org-agenda-overriding-header "Completed Tasks")
+                               (org-agenda-skip-function '(org-agenda-skip-entry-if 'nottodo 'done))
+                               (org-agenda-span 'week)))
+            
+                      (agenda ""
+                              ((org-agenda-overriding-header "Unfinished Scheduled Tasks")
+                               (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
+                               (org-agenda-span 'week)))))))
+              (setq org-capture-templates
+                    '(("t" "Task" entry (file+olp "~/eSync/org/tasks.org" "Inbox")
+                       "* TODO %?\n  %U\n  %a\n  %i" :empty-lines 1)
+            
+                      ("j" "Journal" entry
+                       (file+olp+datetree "~/eSync/org/journal.org")
+                       "\n* %<%I:%M %p> - Journal :journal:\n\n%?\n\n"
+                       :clock-in :clock-resume :empty-lines 1)
+              	
+                      ("f" "French Class Notes" entry
+              	 (file+olp+datetree "~/eSync/org/french.org")
+            	 "* French Class Notes: %T
+            ** General
+            %?
+            ** Vocabulary
+            - Word 1: 
+            - Word 2: 
+            ** Grammar
+            - Rule 1: 
+            - Rule 2: 
+            ")             
+              	))
+            (setq org-todo-keywords
+                      '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)" "CANCEL(c@)")))
+            
+            (setq org-todo-keyword-faces
+                  '(("TODO" . (:foreground "orange" :weight bold))
+                    ("NEXT" . (:foreground "yellow" :weight bold))
+                    ("DONE" . (:foreground "green" :weight bold))
+                    ("CANCEL" . (:foreground "gray" :weight bold))))
+            
+            (setq org-priority-faces
+                  '((?A . (:foreground "red" :weight bold))
+                    (?B . (:foreground "orange" :weight bold))
+                    (?C . (:foreground "green" :weight bold))))
+            
+            (setq org-log-done 'time)
+            (setq org-agenda-start-with-log-mode t)
+            (setq org-log-into-drawer t)
+            
+            )
 
 ;; Configure org mode to start with modes that more visual appealing
 ;; - visual-line-mode: wraps lines at window width for easy reading and editing
@@ -527,6 +582,12 @@
   "Setup visual line and variable pitch modes for Org mode."
   (visual-line-mode)  
   (variable-pitch-mode 1) 
+  (setq-local line-spacing 0.2)
+  ;;smartly decide when to insert a blank line based on context.
+  (setq-local org-blank-before-new-entry
+            '((heading . auto)
+              (plain-list-item . auto)))
+  (my/org-fixed-pitch-faces)
   )
 ;; Set faces for headings, lists, and other elements
 (custom-set-faces
@@ -541,57 +602,98 @@
  '(org-link ((t (:inherit link :height 1.0))))
  '(org-ellipsis ((t (:inherit default :weight normal :height 1.0 :underline nil)))))
 
+;; This enables company-mode (autocomplete) when you’re editing Org files.
+(add-hook 'org-mode-hook #'company-mode)
+;;This tells Org to display inline images at their natural size (actual pixel width), rather than scaling them down.
+(setq org-image-actual-width nil)
+
+
+  ;; feat(visual): center text
+  (defun efs/org-mode-visual-fill ()
+    (setq visual-fill-column-width 100
+  	visual-fill-column-center-text t)
+    (visual-fill-column-mode 1))
+
+  (use-package visual-fill-column
+     :hook (org-mode . efs/org-mode-visual-fill))
+
+  ;; headline bullet
+  (use-package org-superstar
+    :ensure t
+    :hook (org-mode . org-superstar-mode)
+    :custom
+    (org-superstar-remove-leading-stars t)
+    (org-superstar-headline-bullets-list '("☵" "○" "✻" "✿" "◆" "▶" "◉" "⚛" "♠" "☯" "✦" "⚝" "♢" "✸" "⬢"))
+    :config
+    (set-face-attribute 'org-superstar-item nil :height 1.0))
+
+(setq org-tag-alist
+      '(
+	;; location
+        ("home" . ?h)
+        ("out task" . ?o)
+	;; device/occasion
+        ("computer" . ?d)
+        ("phone" . ?m)
+	;; work
+        ("work" . ?w)
+        ("CP" . ?x)
+	;; personal
+	("chore" . ?c)
+        ("finance" . ?f)
+        ("relationship" . ?l)
+        ("interview" . ?i)
+        ("swim" . ?s)
+        ("CG" . ?g)
+        ("read" . ?r)
+	;; status
+        ("planning" . ?n)
+        ("backlog" . ?b)
+	))
+
 (setq org-todo-keywords
-      '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d!)")
-        (sequence "BACKLOG(b)" "PLAN(p)" "READY(r)" "ACTIVE(a)" "REVIEW(v)" "WAIT(w@/!)" "HOLD(h)" "|" "COMPLETED(c)" "CANC(k@)")))
+          '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)" "CANCEL(c@)")))
 
-;; Configure custom agenda views
+(setq org-todo-keyword-faces
+      '(("TODO" . (:foreground "orange" :weight bold))
+        ("NEXT" . (:foreground "yellow" :weight bold))
+        ("DONE" . (:foreground "green" :weight bold))
+        ("CANCEL" . (:foreground "gray" :weight bold))))
+
+(setq org-priority-faces
+      '((?A . (:foreground "red" :weight bold))
+        (?B . (:foreground "orange" :weight bold))
+        (?C . (:foreground "green" :weight bold))))
+
+(setq org-log-done 'time)
+(setq org-agenda-start-with-log-mode t)
+(setq org-log-into-drawer t)
+
 (setq org-agenda-custom-commands
-      '(("d" "Dashboard"
-         ((agenda "" ((org-deadline-warning-days 7)))
-          (todo "NEXT"
-                ((org-agenda-overriding-header "Next Tasks")))
-          (tags-todo "agenda/ACTIVE" ((org-agenda-overriding-header "Active Projects")))))
+      '(("p" "Planning"
+             ((tags-todo "+planning"
+                         ((org-agenda-overriding-header "Planning Tasks")))
+              (tags-todo "-{.*}"
+                         ((org-agenda-overriding-header "Untagged Tasks")))
+              (todo ".*" ((org-agenda-files '("~/eSync/org/tasks.org"))
+                          (org-agenda-overriding-header "Unprocessed TODO Items")))))
 
-        ("n" "Next Tasks"
-         ((todo "NEXT"
-                ((org-agenda-overriding-header "Next Tasks")))))
+        ("d" "Daily Agenda"
+         ((agenda "" ((org-agenda-span 'day)
+                      (org-deadline-warning-days 7)))
+          (tags-todo "+PRIORITY=\"A\""
+                     ((org-agenda-overriding-header "High Priority Tasks")))))
 
-        ("W" "Work Tasks" tags-todo "+work-email")
+        ("w" "Weekly Review"
+         ((agenda ""
+                  ((org-agenda-overriding-header "Completed Tasks")
+                   (org-agenda-skip-function '(org-agenda-skip-entry-if 'nottodo 'done))
+                   (org-agenda-span 'week)))
 
-        ;; Low-effort next actions
-        ("e" tags-todo "+TODO=\"NEXT\"+Effort<40&+Effort>0"
-         ((org-agenda-overriding-header "Low Effort Tasks")
-          (org-agenda-max-todos 20)
-          (org-agenda-files org-agenda-files)))
-
-        ("w" "Workflow Status"
-         ((todo "WAIT"
-                ((org-agenda-overriding-header "Waiting on External")
-                 (org-agenda-files org-agenda-files)))
-          (todo "REVIEW"
-                ((org-agenda-overriding-header "In Review")
-                 (org-agenda-files org-agenda-files)))
-          (todo "PLAN"
-                ((org-agenda-overriding-header "In Planning")
-                 (org-agenda-todo-list-sublevels nil)
-                 (org-agenda-files org-agenda-files)))
-          (todo "BACKLOG"
-                ((org-agenda-overriding-header "Project Backlog")
-                 (org-agenda-todo-list-sublevels nil)
-                 (org-agenda-files org-agenda-files)))
-          (todo "READY"
-                ((org-agenda-overriding-header "Ready for Work")
-                 (org-agenda-files org-agenda-files)))
-          (todo "ACTIVE"
-                ((org-agenda-overriding-header "Active Projects")
-                 (org-agenda-files org-agenda-files)))
-          (todo "COMPLETED"
-                ((org-agenda-overriding-header "Completed Projects")
-                 (org-agenda-files org-agenda-files)))
-          (todo "CANC"
-                ((org-agenda-overriding-header "Cancelled Projects")
-                 (org-agenda-files org-agenda-files)))))))
+          (agenda ""
+                  ((org-agenda-overriding-header "Unfinished Scheduled Tasks")
+                   (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
+                   (org-agenda-span 'week)))))))
 
 (setq org-capture-templates
         '(("t" "Task" entry (file+olp "~/eSync/org/tasks.org" "Inbox")
@@ -616,99 +718,66 @@
 ")             
   	))
 
-;; Make sure org-indent face is `available
-(require 'org-indent)
-;; Ensure that anything that should be fixed-pitch in Org files appears that way
-(set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch)
-(set-face-attribute 'org-table nil  :inherit 'fixed-pitch)
-(set-face-attribute 'org-formula nil  :inherit 'fixed-pitch)
-(set-face-attribute 'org-code nil   :inherit '(shadow fixed-pitch))
-(set-face-attribute 'org-indent nil :inherit '(org-hide fixed-pitch))
-(set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
-(set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
-(set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
-(set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch)
-
-;; Get rid of the background on column views
-(set-face-attribute 'org-column nil :background nil) (set-face-attribute 'org-column-title nil :background nil)
-
-;; headline bullet
-(use-package org-superstar
-  :ensure t
-  :hook (org-mode . org-superstar-mode)
-  :custom
-  (org-superstar-remove-leading-stars t)
-  (org-superstar-headline-bullets-list '("☵" "○" "✻" "✿" "◆" "▶" "◉" "⚛" "♠" "☯" "✦" "⚝" "♢" "✸" "⬢"))
-  :config
-  (set-face-attribute 'org-superstar-item nil :height 1.0))
-
-;; cosmetic function
-(defun my/org-mode-hook ()
-  "Customize Org mode settings."
-  (setq-default line-spacing 0.2)
-  (setq-default org-blank-before-new-entry '((heading . auto)
-                                             (plain-list-item . auto))))
-(add-hook 'org-mode-hook #'my/org-mode-hook)
-
 ;; create a task from non-heading text, such as a sentence or paragraph.
 (require 'org-inlinetask)
 
-;; feat(visual): center text
-(defun efs/org-mode-visual-fill ()
-  (setq visual-fill-column-width 100
-	visual-fill-column-center-text t)
-  (visual-fill-column-mode 1))
+(defun my/org-fixed-pitch-faces ()
+  (require 'org-indent)
+  (dolist (face '(org-block org-table org-formula org-code
+                   org-indent org-verbatim org-special-keyword
+                   org-meta-line org-checkbox))
+    (set-face-attribute face nil :inherit 'fixed-pitch))
 
-(use-package visual-fill-column
-   :hook (org-mode . efs/org-mode-visual-fill))
+  (set-face-attribute 'org-code nil :inherit '(shadow fixed-pitch))
+  (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
+  (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
+  (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
+  (set-face-attribute 'org-column nil :background nil)
+  (set-face-attribute 'org-column-title nil :background nil))
 
+  ;; Helper emphasis (ChatGPT) 🤯
+  (defun my-wrap-with-stars ()
+    "Wrap visual selection with *."
+    (interactive)
+    (let ((selection (buffer-substring-no-properties
+                      (region-beginning) (region-end))))
+      (delete-region (region-beginning) (region-end))
+      (insert (concat "*" selection "*"))))
 
-;; Helper emphasis (ChatGPT) 🤯
-(defun my-wrap-with-stars ()
-  "Wrap visual selection with *."
-  (interactive)
-  (let ((selection (buffer-substring-no-properties
-                    (region-beginning) (region-end))))
-    (delete-region (region-beginning) (region-end))
-    (insert (concat "*" selection "*"))))
+  (defun my-wrap-with-tides ()
+    "Wrap visual selection with ~."
+    (interactive)
+    (let ((selection (buffer-substring-no-properties
+                      (region-beginning) (region-end))))
+      (delete-region (region-beginning) (region-end))
+      (insert (concat "~" selection "~"))))
 
-(defun my-wrap-with-tides ()
-  "Wrap visual selection with ~."
-  (interactive)
-  (let ((selection (buffer-substring-no-properties
-                    (region-beginning) (region-end))))
-    (delete-region (region-beginning) (region-end))
-    (insert (concat "~" selection "~"))))
+  (defun my-wrap-with-equals ()
+    "Wrap visual selection with =."
+    (interactive)
+    (let ((selection (buffer-substring-no-properties
+                      (region-beginning) (region-end))))
+      (delete-region (region-beginning) (region-end))
+      (insert (concat "=" selection "="))))
 
-(defun my-wrap-with-equals ()
-  "Wrap visual selection with =."
-  (interactive)
-  (let ((selection (buffer-substring-no-properties
-                    (region-beginning) (region-end))))
-    (delete-region (region-beginning) (region-end))
-    (insert (concat "=" selection "="))))
+  ;; Bind the function to a key combination
+  (define-key evil-visual-state-map (kbd "C-*") 'my-wrap-with-stars)
+  (define-key evil-visual-state-map (kbd "C-~") 'my-wrap-with-tides)
+  (define-key evil-visual-state-map (kbd "C-=") 'my-wrap-with-equals)
 
-;; Bind the function to a key combination
-(define-key evil-visual-state-map (kbd "C-*") 'my-wrap-with-stars)
-(define-key evil-visual-state-map (kbd "C-~") 'my-wrap-with-tides)
-(define-key evil-visual-state-map (kbd "C-=") 'my-wrap-with-equals)
+  ;; Surround with ANY KEY (chatGPT)
+  (defun surround-with-key (beg end key)
+    "Surround the region between BEG and END with KEY."
+    (interactive "r\nsSurround with: ")
+    (goto-char end)
+    (insert key)
+    (goto-char beg)
+    (insert key))
 
-;; Surround with ANY KEY (chatGPT)
-(defun surround-with-key (beg end key)
-  "Surround the region between BEG and END with KEY."
-  (interactive "r\nsSurround with: ")
-  (goto-char end)
-  (insert key)
-  (goto-char beg)
-  (insert key))
-
-(general-define-key
- :states '(visual)
- :keymaps 'override
- "s" 'surround-with-key)
-
-(add-hook 'org-mode-hook 'company-mode)
-(setq org-image-actual-width nil)
+  (general-define-key
+   :states '(visual)
+   :keymaps 'override
+   "s" 'surround-with-key)
 
 (use-package org-babel
   :ensure nil ; already built-in
@@ -742,17 +811,42 @@
   (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp")))
 
 (use-package org-roam
-  :ensure t
-  :init
-  (setq org-roam-v2-ack t)
-  :custom
-  (org-roam-directory "~/eSync/org/roam/")
-  (org-roam-db-location "~/eSync/org/roam/org-roam.db")
-  :bind (("C-c n l" . org-roam-buffer-toggle)
-         ("C-c n f" . org-roam-node-find)
-         ("C-c n i" . org-roam-node-insert))
-  :config
-  (org-roam-setup))
+      :ensure t
+      :init
+      (setq org-roam-v2-ack t)
+      :custom
+      (org-roam-directory "~/eSync/org/roam/")
+      (org-roam-db-location "~/eSync/org/roam/org-roam.db")
+      :bind (("C-c n l" . org-roam-buffer-toggle)
+             ("C-c n f" . org-roam-node-find)
+             ("C-c n i" . org-roam-node-insert))
+      :config
+      (org-roam-setup))
+
+(setq org-roam-capture-templates
+      `(("l" "Leetcode Problem" plain
+         "%?"
+         :if-new (file+head "leetcode/${slug}.org"
+                            "#+title: ${title}\n#+filetags: :leetcode:\n\n* 📌 Problem Description\n\n* 💡 Solution Summary\n\n* ✅ Java Code\n#+begin_src java\n\n#+end_src\n\n* ❗️ Pitfalls\n\n* 🔁 Related Patterns\n\n* 🧠 Similar Problems\n")
+         :unnarrowed t)
+
+        ("w" "Mistake Log" plain
+         "* ❗️ Mistake: ${title}\n- Cause:\n- Fix:\n- Correct Solution:\n- Related Notes: [[id:]]\n"
+         :if-new (file+head "wrong/${slug}.org"
+                            "#+title: Mistake - ${title}\n#+filetags: :wrong:review:\n")
+         :unnarrowed t)
+
+        ("a" "Algorithm Template" plain
+         "* ✨ Overview\n\n* 🧱 Java Template\n#+begin_src java\n\n#+end_src\n\n* 📌 Key Points\n\n* 🔁 Common Questions\n- [[id:]]\n- [[id:]]\n"
+         :if-new (file+head "algo/${slug}.org"
+                            "#+title: ${title}\n#+filetags: :algo:template:\n")
+         :unnarrowed t)
+
+        ("r" "Weekly Review" plain
+         "* ✅ Solved This Week\n- Number of Problems:\n- Patterns Reviewed:\n- Mistakes:\n\n* 🔁 Frequent Patterns\n- [[id:]]\n\n* 🤯 Confusing Points\n\n* 📌 Next Week Goals\n"
+         :if-new (file+head "review/${slug}.org"
+                            "#+title: Weekly Review ${title}\n#+filetags: :weekly:review:\n")
+         :unnarrowed t)))
 
 (use-package org-roam-ui
   :straight
@@ -817,7 +911,7 @@
 (load-file "~/.emacs.d/lisp/joplin-mode.el")
 
 ;;++ Joplin mode (on top of Markdown).
-(autoload 'joplin-mode "joplin-mode"
+
    "Major mode for editing Joplin files" t)
 ; Note that joplin-mode will step down if it is not joplin data.
 (add-to-list 'auto-mode-alist '("/[a-f0-9]\\{32\\}\\.md\\'" . joplin-mode))
