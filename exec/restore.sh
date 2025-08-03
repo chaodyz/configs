@@ -1,41 +1,45 @@
 #!/usr/bin/env bash
 
-function restore_action() {
-    echo "Restoring"
-    # Platform specific
-    if [ "$(uname)" == "Darwin" ]; then
-	# Do something under Mac OS X platform       
-	cp ~/projects/configs/.bash_profile       ~/.bash_profile &&
-	    cp ~/projects/configs/.bashrc      ~/.bashrc
+DOTFILES_DIR=~/projects/configs
 
-    elif  [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
-	# Do something under GNU/Linux platform
-	cp ~/projects/configs/.bashrc     ~/.bashrc
-	
-	# elif [ "$(expr substr $(uname -s) 1 10)" == "MINGW64_NT" ]; then
-	# Do something under 32 bits Windows NT platform
-	# else [ "$(expr substr $(uname -s) 1 10)" == "MINGW32_NT" ];
-	# Do something under 64 bits Windows NT platform
+restore_action() {
+    echo "♻ Restoring configs from $DOTFILES_DIR"
+
+    # Platform specific
+    if [[ "$(uname)" == "Darwin" ]]; then
+        cp "$DOTFILES_DIR/.bash_profile" ~/.bash_profile
+        cp "$DOTFILES_DIR/.bashrc" ~/.bashrc
+        cp "$DOTFILES_DIR/vscode/keybindings.mac.json" \
+           "$HOME/Library/Application Support/Code/User/keybindings.json"
+        [[ -f "$DOTFILES_DIR/cursor/keybindings.mac.json" ]] && \
+            cp "$DOTFILES_DIR/cursor/keybindings.mac.json" \
+               "$HOME/Library/Application Support/Cursor/User/keybindings.json"
+    elif [[ "$(uname)" == "Linux" ]]; then
+        cp "$DOTFILES_DIR/.bashrc" ~/.bashrc
+        cp "$DOTFILES_DIR/vscode/keybindings.linux.json" \
+           "$HOME/.config/Code/User/keybindings.json"
+        [[ -f "$DOTFILES_DIR/cursor/keybindings.linux.json" ]] && \
+            cp "$DOTFILES_DIR/cursor/keybindings.linux.json" \
+               "$HOME/.config/Cursor/User/keybindings.json"
     fi
 
-    cp      ~/projects/configs/.tmux.conf             ~/.tmux.conf  &&
-	cp      ~/projects/configs/starship.toml          ~/.config/starship.toml  &&
-	cp      ~/projects/configs/alacritty.toml         ~/.config/alacritty/alacritty.toml  &&
-	cp      ~/projects/configs/keymap.json            ~/.config/joplin/keymap.json &&
-	rm -rf ~/.config/nvim/ &&
-	cp -rf  ~/projects/configs/nvim                   ~/.config/ &&
-	cp      ~/projects/configs/emacs/init.el          ~/.emacs.d/init.el &&
-	cp      ~/projects/configs/emacs/emacs.org        ~/eSync/org/emacs.org
+    # Common configs
+    cp "$DOTFILES_DIR/tmux/.tmux.conf" ~/.tmux.conf
+    cp "$DOTFILES_DIR/starship/starship.toml" ~/.config/starship.toml
+    cp "$DOTFILES_DIR/alacritty/alacritty.toml" ~/.config/alacritty/alacritty.toml
+    cp "$DOTFILES_DIR/joplin/keymap.json" ~/.config/joplin/keymap.json
+    rm -rf ~/.config/nvim/
+    cp -rf "$DOTFILES_DIR/nvim" ~/.config/
+    cp "$DOTFILES_DIR/emacs/init.el" ~/.emacs.d/init.el
+    cp "$DOTFILES_DIR/emacs/emacs.org" ~/eSync/org/emacs.org
 
-    echo "done"
+    echo "✅ Restore complete."
 }
 
-read -p "Do you want to proceed restore, this will reset all your local files with the files from configs? (y/n) " choice
+read -p "Do you want to restore your configs from dotfiles? (y/n) " choice
 
 case "$choice" in
-    y|Y ) echo "Proceeding to the restore action."
-	  restore_action
-	  ;;
-    n|N ) echo "Exiting the restore script." && exit;;
-    * ) echo "Invalid choice. Exiting the restore script." && exit;;
+    y|Y ) restore_action ;;
+    n|N ) echo "Exiting." ;;
+    * ) echo "Invalid choice. Exiting." ;;
 esac

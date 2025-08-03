@@ -407,173 +407,164 @@
    ("M-j" . pyim-convert-string-at-point) ;与 pyim-probe-dynamic-english 配合
    ("C-;" . pyim-delete-word-from-personal-buffer)))
 
-(defvar my/enable-org-visual t
-  "If non-nil, enable Org Mode visual enhancements.")
-
-  (setq my/enable-org-visual nil)
-
-
-          (use-package org
-            :ensure t
-            :init
-            (setq org-ellipsis " ▼"
-                  org-hide-emphasis-markers t
-                  org-directory "~/eSync/org/"
-                  org-default-notes-file "~/eSync/org/index.org")
-            (setq org-agenda-files '("~/eSync/org" "~/eSync/org/roam")) 
-            ;; Set to the name of the file where new notes will be stored
-            (setq org-mobile-inbox-for-pull "~/eSync/org/flagged.org")
-            ;; Set to <your Dropbox root directory>/MobileOrg.
-            (setq org-mobile-directory "~/Dropbox/Apps/MobileOrg")
-            ;; Aesthetically indent
-            (setq org-startup-indented t)
-            :hook (org-mode . my-org-mode-setup)
-            :config
-
-            (when my/enable-org-visual
-          ;; Configure org mode to start with modes that more visual appealing
-          ;; - visual-line-mode: wraps lines at window width for easy reading and editing
-          ;; - variable-pitch-mode 1: sets the font face to a variable-width font for a more natural and aesthetically pleasing look
-          (defun my-org-mode-setup ()
-            "Setup visual line and variable pitch modes for Org mode."
-            (visual-line-mode)  
-            (variable-pitch-mode 1) 
-            (setq-local line-spacing 0.2)
-            ;;smartly decide when to insert a blank line based on context.
-            (setq-local org-blank-before-new-entry
-                      '((heading . auto)
-                        (plain-list-item . auto)))
-            (my/org-fixed-pitch-faces)
-            )
-          ;; Set faces for headings, lists, and other elements
-          (custom-set-faces
-           ;; Set font and size for headlines
-           '(org-level-1 ((t (:inherit outline-1 :height 1.15))))
-           '(org-level-2 ((t (:inherit outline-2 :height 1.12))))
-           '(org-level-3 ((t (:inherit outline-3 :height 1.09))))
-           '(org-level-4 ((t (:inherit outline-4 :height 1.06))))
-           '(org-default ((t (:inherit default :height 1.0))))
-           '(org-block ((t (:inherit fixed-pitch :height 0.9))))
-           '(org-code ((t (:inherit (shadow fixed-pitch) :height 0.9))))
-           '(org-link ((t (:inherit link :height 1.0))))
-           '(org-ellipsis ((t (:inherit default :weight normal :height 1.0 :underline nil)))))
-          
-          ;; This enables company-mode (autocomplete) when you’re editing Org files.
-          (add-hook 'org-mode-hook #'company-mode)
-          ;;This tells Org to display inline images at their natural size (actual pixel width), rather than scaling them down.
-          (setq org-image-actual-width nil)
-          
-          
-            ;; feat(visual): center text
-            (defun efs/org-mode-visual-fill ()
-              (setq visual-fill-column-width 100
-            	visual-fill-column-center-text t)
-              (visual-fill-column-mode 1))
-          
-            (use-package visual-fill-column
-               :hook (org-mode . efs/org-mode-visual-fill))
-          
-            ;; headline bullet
-            (use-package org-superstar
-              :ensure t
-              :hook (org-mode . org-superstar-mode)
-              :custom
-              (org-superstar-remove-leading-stars t)
-              (org-superstar-headline-bullets-list '("☵" "○" "✻" "✿" "◆" "▶" "◉" "⚛" "♠" "☯" "✦" "⚝" "♢" "✸" "⬢"))
-              :config
-              (set-face-attribute 'org-superstar-item nil :height 1.0))
-          )
-
-            (setq org-tag-alist
-                  '(
-            	;; location
-                    ("home" . ?h)
-                    ("out task" . ?o)
-            	;; device/occasion
-                    ("computer" . ?d)
-                    ("phone" . ?m)
-            	;; work
-                    ("work" . ?w)
-                    ("CP" . ?x)
-            	;; personal
-            	("chore" . ?c)
-                    ("finance" . ?f)
-                    ("relationship" . ?l)
-                    ("interview" . ?i)
-                    ("swim" . ?s)
-                    ("CG" . ?g)
-                    ("read" . ?r)
-            	;; status
-                    ("planning" . ?n)
-                    ("backlog" . ?b)
-            	))
-            
-            (setq org-agenda-custom-commands
-                  '(("p" "Planning"
-                         ((tags-todo "+planning"
-                                     ((org-agenda-overriding-header "Planning Tasks")))
-                          (tags-todo "-{.*}"
-                                     ((org-agenda-overriding-header "Untagged Tasks")))
-                          (todo ".*" ((org-agenda-files '("~/eSync/org/tasks.org"))
-                                      (org-agenda-overriding-header "Unprocessed TODO Items")))))
-            
-                    ("d" "Daily Agenda"
-                     ((agenda "" ((org-agenda-span 'day)
-                                  (org-deadline-warning-days 7)))
-                      (tags-todo "+PRIORITY=\"A\""
-                                 ((org-agenda-overriding-header "High Priority Tasks")))))
-            
-                    ("w" "Weekly Review"
-                     ((agenda ""
-                              ((org-agenda-overriding-header "Completed Tasks")
-                               (org-agenda-skip-function '(org-agenda-skip-entry-if 'nottodo 'done))
-                               (org-agenda-span 'week)))
-            
-                      (agenda ""
-                              ((org-agenda-overriding-header "Unfinished Scheduled Tasks")
-                               (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
-                               (org-agenda-span 'week)))))))
-              (setq org-capture-templates
-                    '(("t" "Task" entry (file+olp "~/eSync/org/tasks.org" "Inbox")
-                       "* TODO %?\n  %U\n  %a\n  %i" :empty-lines 1)
-            
-                      ("j" "Journal" entry
-                       (file+olp+datetree "~/eSync/org/journal.org")
-                       "\n* %<%I:%M %p> - Journal :journal:\n\n%?\n\n"
-                       :clock-in :clock-resume :empty-lines 1)
-              	
-                      ("f" "French Class Notes" entry
-              	 (file+olp+datetree "~/eSync/org/french.org")
-            	 "* French Class Notes: %T
-            ** General
-            %?
-            ** Vocabulary
-            - Word 1: 
-            - Word 2: 
-            ** Grammar
-            - Rule 1: 
-            - Rule 2: 
-            ")             
-              	))
-            (setq org-todo-keywords
-                      '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)" "CANCEL(c@)")))
-            
-            (setq org-todo-keyword-faces
-                  '(("TODO" . (:foreground "orange" :weight bold))
-                    ("NEXT" . (:foreground "yellow" :weight bold))
-                    ("DONE" . (:foreground "green" :weight bold))
-                    ("CANCEL" . (:foreground "gray" :weight bold))))
-            
-            (setq org-priority-faces
-                  '((?A . (:foreground "red" :weight bold))
-                    (?B . (:foreground "orange" :weight bold))
-                    (?C . (:foreground "green" :weight bold))))
-            
-            (setq org-log-done 'time)
-            (setq org-agenda-start-with-log-mode t)
-            (setq org-log-into-drawer t)
-            
-            )
+(use-package org
+  :ensure t
+  :init
+  (setq org-ellipsis " ▼"
+        org-hide-emphasis-markers t
+        org-directory "~/eSync/org/"
+        org-default-notes-file "~/eSync/org/index.org")
+  (setq org-agenda-files '("~/eSync/org" "~/eSync/org/roam")) 
+  ;; Set to the name of the file where new notes will be stored
+  (setq org-mobile-inbox-for-pull "~/eSync/org/flagged.org")
+  ;; Set to <your Dropbox root directory>/MobileOrg.
+  (setq org-mobile-directory "~/Dropbox/Apps/MobileOrg")
+  ;; Aesthetically indent
+  (setq org-startup-indented t)
+  :hook (org-mode . my-org-mode-setup)
+  :config
+  ;; Configure org mode to start with modes that more visual appealing
+  ;; - visual-line-mode: wraps lines at window width for easy reading and editing
+  ;; - variable-pitch-mode 1: sets the font face to a variable-width font for a more natural and aesthetically pleasing look
+  (defun my-org-mode-setup ()
+    "Setup visual line and variable pitch modes for Org mode."
+    (visual-line-mode)  
+    (variable-pitch-mode 1) 
+    (setq-local line-spacing 0.2)
+    ;;smartly decide when to insert a blank line based on context.
+    (setq-local org-blank-before-new-entry
+              '((heading . auto)
+                (plain-list-item . auto)))
+    (my/org-fixed-pitch-faces)
+    )
+  ;; Set faces for headings, lists, and other elements
+  (custom-set-faces
+   ;; Set font and size for headlines
+   '(org-level-1 ((t (:inherit outline-1 :height 1.15))))
+   '(org-level-2 ((t (:inherit outline-2 :height 1.12))))
+   '(org-level-3 ((t (:inherit outline-3 :height 1.09))))
+   '(org-level-4 ((t (:inherit outline-4 :height 1.06))))
+   '(org-default ((t (:inherit default :height 1.0))))
+   '(org-block ((t (:inherit fixed-pitch :height 0.9))))
+   '(org-code ((t (:inherit (shadow fixed-pitch) :height 0.9))))
+   '(org-link ((t (:inherit link :height 1.0))))
+   '(org-ellipsis ((t (:inherit default :weight normal :height 1.0 :underline nil)))))
+  
+  ;; This enables company-mode (autocomplete) when you’re editing Org files.
+  (add-hook 'org-mode-hook #'company-mode)
+  ;;This tells Org to display inline images at their natural size (actual pixel width), rather than scaling them down.
+  (setq org-image-actual-width nil)
+  
+  
+    ;; feat(visual): center text
+    (defun efs/org-mode-visual-fill ()
+      (setq visual-fill-column-width 100
+    	visual-fill-column-center-text t)
+      (visual-fill-column-mode 1))
+  
+    (use-package visual-fill-column
+       :hook (org-mode . efs/org-mode-visual-fill))
+  
+    ;; headline bullet
+    (use-package org-superstar
+      :ensure t
+      :hook (org-mode . org-superstar-mode)
+      :custom
+      (org-superstar-remove-leading-stars t)
+      (org-superstar-headline-bullets-list '("☵" "○" "✻" "✿" "◆" "▶" "◉" "⚛" "♠" "☯" "✦" "⚝" "♢" "✸" "⬢"))
+      :config
+      (set-face-attribute 'org-superstar-item nil :height 1.0))
+  
+  (setq org-tag-alist
+        '(
+  	;; location
+          ("home" . ?h)
+          ("out task" . ?o)
+  	;; device/occasion
+          ("computer" . ?d)
+          ("phone" . ?m)
+  	;; work
+          ("work" . ?w)
+          ("CP" . ?x)
+  	;; personal
+  	("chore" . ?c)
+          ("finance" . ?f)
+          ("relationship" . ?l)
+          ("interview" . ?i)
+          ("swim" . ?s)
+          ("CG" . ?g)
+          ("read" . ?r)
+  	;; status
+          ("planning" . ?n)
+          ("backlog" . ?b)
+  	))
+  
+  (setq org-agenda-custom-commands
+        '(("p" "Planning"
+               ((tags-todo "+planning"
+                           ((org-agenda-overriding-header "Planning Tasks")))
+                (tags-todo "-{.*}"
+                           ((org-agenda-overriding-header "Untagged Tasks")))
+                (todo ".*" ((org-agenda-files '("~/eSync/org/tasks.org"))
+                            (org-agenda-overriding-header "Unprocessed TODO Items")))))
+  
+          ("d" "Daily Agenda"
+           ((agenda "" ((org-agenda-span 'day)
+                        (org-deadline-warning-days 7)))
+            (tags-todo "+PRIORITY=\"A\""
+                       ((org-agenda-overriding-header "High Priority Tasks")))))
+  
+          ("w" "Weekly Review"
+           ((agenda ""
+                    ((org-agenda-overriding-header "Completed Tasks")
+                     (org-agenda-skip-function '(org-agenda-skip-entry-if 'nottodo 'done))
+                     (org-agenda-span 'week)))
+  
+            (agenda ""
+                    ((org-agenda-overriding-header "Unfinished Scheduled Tasks")
+                     (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
+                     (org-agenda-span 'week)))))))
+    (setq org-capture-templates
+          '(("t" "Task" entry (file+olp "~/eSync/org/tasks.org" "Inbox")
+             "* TODO %?\n  %U\n  %a\n  %i" :empty-lines 1)
+  
+            ("j" "Journal" entry
+             (file+olp+datetree "~/eSync/org/journal.org")
+             "\n* %<%I:%M %p> - Journal :journal:\n\n%?\n\n"
+             :clock-in :clock-resume :empty-lines 1)
+    	
+            ("f" "French Class Notes" entry
+    	 (file+olp+datetree "~/eSync/org/french.org")
+  	 "* French Class Notes: %T
+  ** General
+  %?
+  ** Vocabulary
+  - Word 1: 
+  - Word 2: 
+  ** Grammar
+  - Rule 1: 
+  - Rule 2: 
+  ")             
+    	))
+  (setq org-todo-keywords
+            '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)" "CANCEL(c@)")))
+  
+  (setq org-todo-keyword-faces
+        '(("TODO" . (:foreground "orange" :weight bold))
+          ("NEXT" . (:foreground "yellow" :weight bold))
+          ("DONE" . (:foreground "green" :weight bold))
+          ("CANCEL" . (:foreground "gray" :weight bold))))
+  
+  (setq org-priority-faces
+        '((?A . (:foreground "red" :weight bold))
+          (?B . (:foreground "orange" :weight bold))
+          (?C . (:foreground "green" :weight bold))))
+  
+  (setq org-log-done 'time)
+  (setq org-agenda-start-with-log-mode t)
+  (setq org-log-into-drawer t)
+  
+  )
 
 ;; Configure org mode to start with modes that more visual appealing
 ;; - visual-line-mode: wraps lines at window width for easy reading and editing
