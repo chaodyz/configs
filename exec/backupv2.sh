@@ -36,7 +36,14 @@ backup_action() {
     cp ~/.config/starship.toml "$DOTFILES_DIR/starship/starship.toml"
     cp ~/.config/alacritty/alacritty.toml "$DOTFILES_DIR/alacritty/alacritty.toml"
     cp ~/.config/joplin/keymap.json "$DOTFILES_DIR/joplin/keymap.json"
-    cp -rf ~/.config/nvim "$DOTFILES_DIR/nvim"
+
+    if [ -d "$HOME/.config/nvim" ]; then
+        rsync -av --exclude 'lazy-lock.json' \
+                  --exclude 'plugin/packer_compiled.lua' \
+                  --exclude 'plugin/luacache*' \
+            "$HOME/.config/nvim/" "$DOTFILES_DIR/nvim"
+    fi
+
     cp ~/.emacs.d/init.el "$DOTFILES_DIR/emacs/init.el"
     cp ~/eSync/org/emacs.org "$DOTFILES_DIR/emacs/emacs.org"
 
@@ -60,7 +67,7 @@ install_symlinks() {
 
     # Shell configs
     backup_if_not_symlink ~/.bashrc
-    [[ -f "$DOTFILES_DIR/.bashrc" ]] && ln -sf "$DOTFILES_DIR/bash/.bashrc" ~/.bashrc
+    [[ -f "$DOTFILES_DIR/bash/.bashrc" ]] && ln -sf "$DOTFILES_DIR/bash/.bashrc" ~/.bashrc
 
     if [[ "$(uname)" == "Darwin" ]]; then
         backup_if_not_symlink ~/.bash_profile
@@ -73,9 +80,17 @@ install_symlinks() {
     ln -sf "$DOTFILES_DIR/starship/starship.toml" ~/.config/starship.toml
     ln -sf "$DOTFILES_DIR/alacritty/alacritty.toml" ~/.config/alacritty/alacritty.toml
     ln -sf "$DOTFILES_DIR/joplin/keymap.json" ~/.config/joplin/keymap.json
-    ln -sf "$DOTFILES_DIR/nvim" ~/.config/nvim
     ln -sf "$DOTFILES_DIR/emacs/init.el" ~/.emacs.d/init.el
     ln -sf "$DOTFILES_DIR/emacs/emacs.org" ~/eSync/org/emacs.org
+    
+    # Remove existing Neovim config
+    # this clean up guarantees the new symlink will be created cleanly.
+    if [ -e "$HOME/.config/nvim" ] || [ -L "$HOME/.config/nvim" ]; then
+        rm -rf "$HOME/.config/nvim"
+    fi
+
+    echo "🔗 Symlinking Neovim config ..."
+    ln -s "$DOTFILES_DIR/nvim" "$HOME/.config/nvim"
 
     # VSCode & Cursor configs
     if [[ "$(uname)" == "Darwin" ]]; then

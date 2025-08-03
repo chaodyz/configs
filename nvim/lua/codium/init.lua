@@ -4,11 +4,10 @@
 =============================================================
 ]]
 
-
 -- load keymaps
 vim.cmd([[source $HOME/.config/nvim/lua/codium/settings.vim]])
 
--- better clipboard
+-- Always use the clipboard for All Operations
 vim.opt.clipboard:append("unnamedplus");
 
 --[[

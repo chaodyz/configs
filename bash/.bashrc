@@ -78,6 +78,13 @@ if [[ "$OSTYPE" == "linux-gnu" ]]; then
     # 'bluetoothctl'
     # sound ctl 'alsamixer'
     export PATH="/opt/cmake/3.27.4/bin:$PATH"
+    #CP
+    alias cp-activate="source .nodeenv/bin/activate"
+    alias cp-start="pm2 start ecosystem.dev.config.js"
+    alias cp-restart="pm2 restart --update-env ecosystem.dev.config.js"
+    alias cp-status="pm2 start ecosystem.dev.config.js"
+    alias cp-logs="pm2 logs"
+    alias cp-stop="pm2 stop ecosystem.dev.config.js"
 
     #   .--.
     #  |o_o |

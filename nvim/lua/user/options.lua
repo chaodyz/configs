@@ -35,6 +35,37 @@ local options = {
   -- guifont = "monospace:h17",               -- the font used in graphical neovim applications
 }
 
+
+if vim.fn.has("clipboard") == 1 then
+  -- Prefer Wayland clipboard
+  if vim.fn.executable("wl-copy") == 1 then
+    vim.g.clipboard = {
+      name = "wl-clipboard",
+      copy = {
+        ["+"] = { "wl-copy", "--type", "text/plain" },
+        ["*"] = { "wl-copy", "--type", "text/plain" },
+      },
+      paste = {
+        ["+"] = { "wl-paste", "--no-newline" },
+        ["*"] = { "wl-paste", "--no-newline" },
+      },
+    }
+  -- Fallback to X11 clipboard
+  elseif vim.fn.executable("xclip") == 1 then
+    vim.g.clipboard = {
+      name = "xclip",
+      copy = {
+        ["+"] = { "xclip", "-selection", "clipboard" },
+        ["*"] = { "xclip", "-selection", "primary" },
+      },
+      paste = {
+        ["+"] = { "xclip", "-selection", "clipboard", "-o" },
+        ["*"] = { "xclip", "-selection", "primary", "-o" },
+      },
+    }
+  end
+end
+
 vim.opt.shortmess:append "c"
 
 for k, v in pairs(options) do

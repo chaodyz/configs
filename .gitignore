@@ -2,6 +2,7 @@
 luac.out
 *.DS_Store
 nvim/plugin/packer_compiled.lua
+lazy-lock.json
 # luarocks build files
 *.src.rock
 *.zip
