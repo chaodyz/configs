@@ -1,11 +1,113 @@
 // Place your key bindings in this file to override the defaults
 [
+  // Paste, cut, copy
+  { "key": "ctrl+c", "command": "editor.action.clipboardCopyAction" },
+  { "key": "ctrl+v", "command": "editor.action.clipboardPasteAction" },
+  { "key": "ctrl+x", "command": "editor.action.clipboardCutAction" },
+  // In Editor Search
   {
-    "key": "shift+meta+p",
-    "command": "workbench.action.showCommands"
+    "key": "ctrl+f",
+    "command": "-vscode-neovim.ctrl-f",
+    "when": "editorTextFocus && neovim.ctrlKeysNormal.f && neovim.init && neovim.mode != 'insert' && editorLangId not in 'neovim.editorLangIdExclusions'"
+  },
+
+  // File Search
+  { "key": "meta+shift+f", "command": "workbench.action.findInFiles" },
+  { "key": "ctrl+shift+f", "command": "-workbench.action.findInFiles" },
+
+  // Quick Open
+  { "key": "meta+p", "command": "workbench.action.quickOpen" },
+  { "key": "ctrl+p", "command": "-workbench.action.quickOpen" },
+
+  // Command Palette
+  { "key": "meta+shift+p", "command": "workbench.action.showCommands" },
+  { "key": "ctrl+shift+p", "command": "-workbench.action.showCommands" },
+
+  // List navigation
+  {
+    "key": "j",
+    "command": "list.focusDown",
+    "when": "listFocus && !inputFocus"
   },
   {
-    "key": "ctrl+shift+p",
-    "command": "-workbench.action.showCommands"
+    "key": "k",
+    "command": "list.focusUp",
+    "when": "listFocus && !inputFocus"
+  },
+
+  // Code hint list options navigation
+  {
+    "key": "ctrl+k",
+    "command": "-aipopup.action.modal.generate",
+    "when": "editorFocus && !composerBarIsVisible"
+  },
+  {
+    "key": "ctrl+k",
+    "command": "selectPrevSuggestion",
+    "when": "editorTextFocus && suggestWidgetMultipleSuggestions && suggestWidgetVisible"
+  },
+  {
+    "key": "meta+k",
+    "command": "aipopup.action.modal.generate",
+    "when": "editorFocus && !composerBarIsVisible"
+  },
+  {
+    "key": "ctrl+j",
+    "command": "-workbench.action.togglePanel"
+  },
+  {
+    "key": "meta+j",
+    "command": "workbench.action.togglePanel"
+  },
+  {
+    "key": "ctrl+j",
+    "command": "selectNextSuggestion",
+    "when": "editorTextFocus && suggestWidgetMultipleSuggestions && suggestWidgetVisible"
+  },
+  // Quick menu navigation
+  {
+    "key": "ctrl+j",
+    "command": "workbench.action.quickOpenNavigateNext",
+    "when": "inQuickOpen"
+  },
+  {
+    "key": "ctrl+k",
+    "command": "workbench.action.quickOpenNavigatePrevious",
+    "when": "inQuickOpen"
+  },
+  {
+    "key": "ctrl+tab",
+    "command": "-workbench.action.quickOpenNavigateNextInEditorPicker",
+    "when": "inEditorsPicker && inQuickOpen"
+  },
+  {
+    "key": "ctrl+shift+tab",
+    "command": "-workbench.action.quickOpenNavigatePreviousInEditorPicker",
+    "when": "inEditorsPicker && inQuickOpen"
+  },
+  // Tab navigation
+  {
+    "key": "ctrl+m ctrl+pageup",
+    "command": "-workbench.action.previousEditorInGroup"
+  },
+  {
+    "key": "shift+tab",
+    "command": "workbench.action.previousEditorInGroup",
+    "when": "neovim.mode !='insert'"
+  },
+  {
+    "key": "ctrl+m ctrl+pagedown",
+    "command": "-workbench.action.nextEditorInGroup"
+  },
+  {
+    "key": "tab",
+    "command": "workbench.action.nextEditorInGroup",
+    "when": "neovim.mode !='insert'"
+  },
+  // Quick fix
+  {
+    "key": "ctrl+.",
+    "command": "keyboard-quickfix.openQuickFix",
+    "when": "editorHasCodeActionsProvider && editorTextFocus && !editorReadonly"
   }
 ]
