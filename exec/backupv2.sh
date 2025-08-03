@@ -13,7 +13,10 @@ backup_action() {
 
     # Platform specific
     if [[ "$(uname)" == "Darwin" ]]; then
+
         cp ~/.bash_profile "$DOTFILES_DIR/.bash_profile"
+        cp ~/.bashrc "$DOTFILES_DIR/.bashrc"
+
         cp "$HOME/Library/Application Support/Code/User/keybindings.json" \
            "$DOTFILES_DIR/vscode/keybindings.mac.json"
         [[ -f "$HOME/Library/Application Support/Cursor/User/keybindings.json" ]] && \
@@ -57,12 +60,12 @@ install_symlinks() {
 
     # Shell configs
     backup_if_not_symlink ~/.bashrc
-    [[ -f "$DOTFILES_DIR/.bashrc" ]] && ln -sf "$DOTFILES_DIR/.bashrc" ~/.bashrc
+    [[ -f "$DOTFILES_DIR/.bashrc" ]] && ln -sf "$DOTFILES_DIR/bash/.bashrc" ~/.bashrc
 
     if [[ "$(uname)" == "Darwin" ]]; then
         backup_if_not_symlink ~/.bash_profile
         [[ -f "$DOTFILES_DIR/.bash_profile" ]] && \
-            ln -sf "$DOTFILES_DIR/.bash_profile" ~/.bash_profile
+            ln -sf "$DOTFILES_DIR/bash/.bash_profile" ~/.bash_profile
     fi
 
     # Common configs
