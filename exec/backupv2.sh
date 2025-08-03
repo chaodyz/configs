@@ -14,8 +14,8 @@ backup_action() {
     # Platform specific
     if [[ "$(uname)" == "Darwin" ]]; then
 
-        cp ~/.bash_profile "$DOTFILES_DIR/.bash_profile"
-        cp ~/.bashrc "$DOTFILES_DIR/.bashrc"
+        cp ~/.bash_profile "$DOTFILES_DIR/bash/.bash_profile"
+        cp ~/.bashrc "$DOTFILES_DIR/bash/.bashrc"
 
         cp "$HOME/Library/Application Support/Code/User/keybindings.json" \
            "$DOTFILES_DIR/vscode/keybindings.mac.json"
@@ -23,7 +23,7 @@ backup_action() {
             cp "$HOME/Library/Application Support/Cursor/User/keybindings.json" \
                "$DOTFILES_DIR/cursor/keybindings.mac.json"
     elif [[ "$(uname)" == "Linux" ]]; then
-        cp ~/.bashrc "$DOTFILES_DIR/.bashrc"
+        cp ~/.bashrc "$DOTFILES_DIR/bash/.bashrc"
         cp "$HOME/.config/Code/User/keybindings.json" \
            "$DOTFILES_DIR/vscode/keybindings.linux.json"
         [[ -f "$HOME/.config/Cursor/User/keybindings.json" ]] && \

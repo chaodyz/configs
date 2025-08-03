@@ -1,0 +1,28 @@
+// Place your key bindings in this file to override the defaults
+[
+  {
+    "key": "ctrl+i",
+    "command": "composerMode.agent"
+  },
+  {
+    "key": "ctrl+e",
+    "command": "composerMode.background"
+  },
+
+  // Paste, cut, copy
+  { "key": "ctrl+c", "command": "editor.action.clipboardCopyAction" },
+  { "key": "ctrl+v", "command": "editor.action.clipboardPasteAction" },
+  { "key": "ctrl+x", "command": "editor.action.clipboardCutAction" },
+
+  // Quick Open
+  { "key": "meta+p", "command": "workbench.action.quickOpen" },
+  { "key": "ctrl+p", "command": "-workbench.action.quickOpen" },
+
+  // File Search
+  { "key": "meta+shift+f", "command": "workbench.action.findInFiles" },
+  { "key": "ctrl+shift+f", "command": "-workbench.action.findInFiles" },
+
+  // Command Palette
+  { "key": "meta+shift+p", "command": "workbench.action.showCommands" },
+  { "key": "ctrl+shift+p", "command": "-workbench.action.showCommands" }
+]
