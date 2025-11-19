@@ -25,7 +25,6 @@ shopt -s cmdhist # save multi-line commands in history as single line
 shopt -s dotglob
 shopt -s histappend # do not overwrite history shopt -s expand_aliases # expand aliases
 shopt -s checkwinsize # checks term size when bash regains control
-
 #ignore upper and lowercase when TAB completion
 bind "set completion-ignore-case on"
 
@@ -39,16 +38,12 @@ alias cp="cp -i"
 alias mv='mv -i'
 alias rm='rm -i'
 # adding flags alias df='df -h'                          # human-readable sizes system shortcut alias ls='ls -G'
-## Use a long listing format ##
-alias ll='ls -la -G'
-## Show hidden files ##
-alias l.='ls -d .* -G'
 
 # Git
 alias gc="git checkout"
 
 if [[ "$OSTYPE" == "linux-gnu" ]]; then
-    #----Archlinux ----------------------
+    #----Linux ----------------------
     #  (\(\  
     #  (-.-)
     # o_(")(")
@@ -70,6 +65,9 @@ if [[ "$OSTYPE" == "linux-gnu" ]]; then
     echo " .'   '  :  '   '."
     echo "        '    :   '"
     echo "             '"
+
+    alias ll='ls -la --color=auto'
+    alias l.='ls -d .[^.]* --color=auto'
     
     # shortcut
     alias joplin='~/.joplin/Joplin.AppImage'
@@ -85,6 +83,18 @@ if [[ "$OSTYPE" == "linux-gnu" ]]; then
     alias cp-status="pm2 start ecosystem.dev.config.js"
     alias cp-logs="pm2 logs"
     alias cp-stop="pm2 stop ecosystem.dev.config.js"
+
+    alias kde-restart="kquitapp5 plasmashell && kstart5 plasmashell"
+
+
+    # Development
+    # Terminal prompt
+    eval "$(starship init bash)"
+    # fast node manager
+     eval "$(fnm env --use-on-cd --shell bash)"
+
+    # Java
+	[ -s "/Users/$USER/.jabba/jabba.sh" ] && source "/Users/$USER/.jabba/jabba.sh"
 
     #   .--.
     #  |o_o |
@@ -104,6 +114,8 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
     # Mac
     # Check if the operating system is Linux
     #echo "Running on MacOS"
+    alias ll='ls -la -G'
+    alias l.='ls -d .* -G'
     
     # MacOS common
     export PATH=/opt/homebrew/bin:$PATH
@@ -220,7 +232,6 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
     #------------------------------------------
 fi
 
- eval "$(starship init bash)"
 
 
 

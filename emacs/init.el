@@ -14,33 +14,15 @@
   (require 'use-package)
   (setq use-package-always-ensure t)
 
-;; Install straight.el
-  ;; use Develop instead of main because potential emacs 29 bug
-(setq straight-repository-branch "develop")
-
-(defvar bootstrap-version)
-(let ((bootstrap-file
-       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
-      (bootstrap-version 6))
-  (unless (file-exists-p bootstrap-file)
-    (with-current-buffer
-        (url-retrieve-synchronously
-         "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
-         'silent 'inhibit-cookies)
-      (goto-char (point-max))
-      (eval-print-last-sexp)))
-  (load bootstrap-file nil 'nomessage))
-(straight-use-package 'org)
-
 ;; Font 
 ;; Set font by different mode: (set-face-attribute 'default nil :font "FONT_NAME":height: FONT_SIZE MODE/BUFFER)
 (set-face-attribute 'default nil :font "FiraCode Nerd Font Mono" :height 180)
 (set-face-attribute 'fixed-pitch nil :font "FiraCode Nerd Font Mono" :height 160)
-(set-face-attribute 'variable-pitch nil :family "Source Sans Pro" :height 180 :weight 'normal)
+(set-face-attribute 'variable-pitch nil :family "Source Sans 3" :height 180 :weight 'normal)
 
 ;; 汉字－思源黑体
 (set-fontset-font t 'han (font-spec :family "Source Han Sans SC VF"))
-(set-face-attribute 'variable-pitch nil :family "Source Sans Pro" :height 180 :weight 'normal)
+(set-face-attribute 'variable-pitch nil :family "Source Sans 3" :height 180 :weight 'normal)
 
 ;; Enable visible bell
 (setq visible-bell t)
@@ -70,13 +52,14 @@
 (global-visual-line-mode t)
 
 (use-package undo-tree
-    :ensure t
-    :config
-(global-undo-tree-mode))
+  :ensure t
+  :init
+  :config
+  (global-undo-tree-mode 1))
 
 (use-package evil
   :init
-  (setq evil-undo-system 'undo-tree)
+  (setq evil-undo-system 'undo-tree);; tell Evil to use undo-tree
   (setq evil-want-integration t)
   (setq evil-want-keybinding nil) (setq evil-want-C-u-scroll t)
   (setq evil-want-C-i-jump nil)
@@ -419,8 +402,7 @@
   (setq org-mobile-inbox-for-pull "~/eSync/org/flagged.org")
   ;; Set to <your Dropbox root directory>/MobileOrg.
   (setq org-mobile-directory "~/Dropbox/Apps/MobileOrg")
-  ;; Aesthetically indent
-  (setq org-startup-indented t)
+  (setq org-startup-indented 1)
   :hook (org-mode . my-org-mode-setup)
   :config
   ;; Configure org mode to start with modes that more visual appealing
@@ -433,9 +415,9 @@
     (setq-local line-spacing 0.2)
     ;;smartly decide when to insert a blank line based on context.
     (setq-local org-blank-before-new-entry
-              '((heading . auto)
-                (plain-list-item . auto)))
-    (my/org-fixed-pitch-faces)
+                '((heading . auto)
+                  (plain-list-item . auto)))
+     ;; (my/org-fixed-pitch-faces)
     )
   ;; Set faces for headings, lists, and other elements
   (custom-set-faces
@@ -456,24 +438,31 @@
   (setq org-image-actual-width nil)
   
   
-    ;; feat(visual): center text
-    (defun efs/org-mode-visual-fill ()
-      (setq visual-fill-column-width 100
-    	visual-fill-column-center-text t)
-      (visual-fill-column-mode 1))
   
-    (use-package visual-fill-column
-       :hook (org-mode . efs/org-mode-visual-fill))
+  ;; feat(visual): center text
+  (defun efs/org-mode-visual-fill ()
+    (setq visual-fill-column-width 100
+      	visual-fill-column-center-text t)
+    (visual-fill-column-mode 1))
   
-    ;; headline bullet
-    (use-package org-superstar
-      :ensure t
-      :hook (org-mode . org-superstar-mode)
-      :custom
-      (org-superstar-remove-leading-stars t)
-      (org-superstar-headline-bullets-list '("☵" "○" "✻" "✿" "◆" "▶" "◉" "⚛" "♠" "☯" "✦" "⚝" "♢" "✸" "⬢"))
-      :config
-      (set-face-attribute 'org-superstar-item nil :height 1.0))
+  
+  (use-package visual-fill-column
+    :hook (org-mode . efs/org-mode-visual-fill))
+  
+  ;; headline bullet
+  (use-package org-superstar
+    :ensure t
+    :hook (org-mode . org-superstar-mode)
+    :init
+    (setq org-superstar-remove-leading-stars t
+  	  org-superstar-leading-bullet " "
+          org-hide-leading-stars t
+          org-indent-mode-turns-on-hiding-stars t
+          org-superstar-prettify-item-bullets t
+          org-superstar-headline-bullets-list '("☵" "○" "✻" "✿" "◆" "▶" "◉" "⚛" "♠" "☯" "✦" "⚝" "♢" "✸" "⬢"))
+    :config
+    ;; consistent size for list bullets
+    (set-face-attribute 'org-superstar-item nil :height 1.0))
   
   (setq org-tag-alist
         '(
@@ -576,9 +565,9 @@
   (setq-local line-spacing 0.2)
   ;;smartly decide when to insert a blank line based on context.
   (setq-local org-blank-before-new-entry
-            '((heading . auto)
-              (plain-list-item . auto)))
-  (my/org-fixed-pitch-faces)
+              '((heading . auto)
+                (plain-list-item . auto)))
+   ;; (my/org-fixed-pitch-faces)
   )
 ;; Set faces for headings, lists, and other elements
 (custom-set-faces
@@ -599,24 +588,31 @@
 (setq org-image-actual-width nil)
 
 
-  ;; feat(visual): center text
-  (defun efs/org-mode-visual-fill ()
-    (setq visual-fill-column-width 100
-  	visual-fill-column-center-text t)
-    (visual-fill-column-mode 1))
 
-  (use-package visual-fill-column
-     :hook (org-mode . efs/org-mode-visual-fill))
+;; feat(visual): center text
+(defun efs/org-mode-visual-fill ()
+  (setq visual-fill-column-width 100
+    	visual-fill-column-center-text t)
+  (visual-fill-column-mode 1))
 
-  ;; headline bullet
-  (use-package org-superstar
-    :ensure t
-    :hook (org-mode . org-superstar-mode)
-    :custom
-    (org-superstar-remove-leading-stars t)
-    (org-superstar-headline-bullets-list '("☵" "○" "✻" "✿" "◆" "▶" "◉" "⚛" "♠" "☯" "✦" "⚝" "♢" "✸" "⬢"))
-    :config
-    (set-face-attribute 'org-superstar-item nil :height 1.0))
+
+(use-package visual-fill-column
+  :hook (org-mode . efs/org-mode-visual-fill))
+
+;; headline bullet
+(use-package org-superstar
+  :ensure t
+  :hook (org-mode . org-superstar-mode)
+  :init
+  (setq org-superstar-remove-leading-stars t
+	  org-superstar-leading-bullet " "
+        org-hide-leading-stars t
+        org-indent-mode-turns-on-hiding-stars t
+        org-superstar-prettify-item-bullets t
+        org-superstar-headline-bullets-list '("☵" "○" "✻" "✿" "◆" "▶" "◉" "⚛" "♠" "☯" "✦" "⚝" "♢" "✸" "⬢"))
+  :config
+  ;; consistent size for list bullets
+  (set-face-attribute 'org-superstar-item nil :height 1.0))
 
 (setq org-tag-alist
       '(
@@ -710,65 +706,53 @@
   	))
 
 ;; create a task from non-heading text, such as a sentence or paragraph.
-(require 'org-inlinetask)
+  (require 'org-inlinetask)
 
-(defun my/org-fixed-pitch-faces ()
-  (require 'org-indent)
-  (dolist (face '(org-block org-table org-formula org-code
-                   org-indent org-verbatim org-special-keyword
-                   org-meta-line org-checkbox))
-    (set-face-attribute face nil :inherit 'fixed-pitch))
+(defun my/org-fixed-pitch-faces () (require 'org-indent) (dolist (face '(org-block org-table org-formula org-code org-indent org-verbatim org-special-keyword org-meta-line org-checkbox)) (set-face-attribute face nil :inherit 'fixed-pitch)) (set-face-attribute 'org-code nil :inherit '(shadow fixed-pitch)) (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch)) (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch)) (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch)) (set-face-attribute 'org-column nil :background nil) (set-face-attribute 'org-column-title nil :background nil))
 
-  (set-face-attribute 'org-code nil :inherit '(shadow fixed-pitch))
-  (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
-  (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
-  (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
-  (set-face-attribute 'org-column nil :background nil)
-  (set-face-attribute 'org-column-title nil :background nil))
+  ;;  Helper emphasis
+    (defun my-wrap-with-stars ()
+      "Wrap visual selection with *."
+      (interactive)
+      (let ((selection (buffer-substring-no-properties
+                        (region-beginning) (region-end))))
+        (delete-region (region-beginning) (region-end))
+        (insert (concat "*" selection "*"))))
 
-  ;; Helper emphasis (ChatGPT) 🤯
-  (defun my-wrap-with-stars ()
-    "Wrap visual selection with *."
-    (interactive)
-    (let ((selection (buffer-substring-no-properties
-                      (region-beginning) (region-end))))
-      (delete-region (region-beginning) (region-end))
-      (insert (concat "*" selection "*"))))
+    (defun my-wrap-with-tides ()
+      "Wrap visual selection with ~."
+      (interactive)
+      (let ((selection (buffer-substring-no-properties
+                        (region-beginning) (region-end))))
+        (delete-region (region-beginning) (region-end))
+        (insert (concat "~" selection "~"))))
 
-  (defun my-wrap-with-tides ()
-    "Wrap visual selection with ~."
-    (interactive)
-    (let ((selection (buffer-substring-no-properties
-                      (region-beginning) (region-end))))
-      (delete-region (region-beginning) (region-end))
-      (insert (concat "~" selection "~"))))
+    (defun my-wrap-with-equals ()
+      "Wrap visual selection with =."
+      (interactive)
+      (let ((selection (buffer-substring-no-properties
+                        (region-beginning) (region-end))))
+        (delete-region (region-beginning) (region-end))
+        (insert (concat "=" selection "="))))
 
-  (defun my-wrap-with-equals ()
-    "Wrap visual selection with =."
-    (interactive)
-    (let ((selection (buffer-substring-no-properties
-                      (region-beginning) (region-end))))
-      (delete-region (region-beginning) (region-end))
-      (insert (concat "=" selection "="))))
+    ;; Bind the function to a key combination
+    (define-key evil-visual-state-map (kbd "C-*") 'my-wrap-with-stars)
+    (define-key evil-visual-state-map (kbd "C-~") 'my-wrap-with-tides)
+    (define-key evil-visual-state-map (kbd "C-=") 'my-wrap-with-equals)
 
-  ;; Bind the function to a key combination
-  (define-key evil-visual-state-map (kbd "C-*") 'my-wrap-with-stars)
-  (define-key evil-visual-state-map (kbd "C-~") 'my-wrap-with-tides)
-  (define-key evil-visual-state-map (kbd "C-=") 'my-wrap-with-equals)
+    ;; Surround with ANY KEY (chatGPT)
+    (defun surround-with-key (beg end key)
+      "Surround the region between BEG and END with KEY."
+      (interactive "r\nsSurround with: ")
+      (goto-char end)
+      (insert key)
+      (goto-char beg)
+      (insert key))
 
-  ;; Surround with ANY KEY (chatGPT)
-  (defun surround-with-key (beg end key)
-    "Surround the region between BEG and END with KEY."
-    (interactive "r\nsSurround with: ")
-    (goto-char end)
-    (insert key)
-    (goto-char beg)
-    (insert key))
-
-  (general-define-key
-   :states '(visual)
-   :keymaps 'override
-   "s" 'surround-with-key)
+    (general-define-key
+     :states '(visual)
+     :keymaps 'override
+     "s" 'surround-with-key)
 
 (use-package org-babel
   :ensure nil ; already built-in
@@ -839,20 +823,6 @@
                             "#+title: Weekly Review ${title}\n#+filetags: :weekly:review:\n")
          :unnarrowed t)))
 
-(use-package org-roam-ui
-  :straight
-    (:host github :repo "org-roam/org-roam-ui" :branch "main" :files ("*.el" "out"))
-    :after org-roam
-;;         normally we'd recommend hooking orui after org-roam, but since org-roam does not have
-;;         a hookable mode anymore, you're advised to pick something yourself
-;;         if you don't care about startup time, use
-;;  :hook (after-init . org-roam-ui-mode)
-    :config
-    (setq org-roam-ui-sync-theme t
-          org-roam-ui-follow t
-          org-roam-ui-update-on-save t
-          org-roam-ui-open-on-start t))
-
 (setq org-startup-indented t)  ;; Auto-indent headlines and content
 (setq org-startup-folded t)    ;; Fold content on startup for better readability
 
@@ -881,6 +851,16 @@
   (treesit-auto-add-to-auto-mode-alist 'all)
   (global-treesit-auto-mode))
 
+(use-package eglot
+:ensure nil
+:hook ((python-mode
+        java-mode
+        c-mode c++-mode
+        js-mode
+        typescript-mode
+        go-mode
+        rust-mode) . eglot-ensure))
+
 (use-package term
   :config
   (setq explicit-shell-file-name "bash"))
@@ -902,7 +882,7 @@
 (load-file "~/.emacs.d/lisp/joplin-mode.el")
 
 ;;++ Joplin mode (on top of Markdown).
-
+(autoload 'joplin-mode "joplin-mode"
    "Major mode for editing Joplin files" t)
 ; Note that joplin-mode will step down if it is not joplin data.
 (add-to-list 'auto-mode-alist '("/[a-f0-9]\\{32\\}\\.md\\'" . joplin-mode))

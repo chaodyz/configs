@@ -1,16 +1,9 @@
 // Place your key bindings in this file to override the defaults
 [
   {
-    "key": "ctrl+i",
-    "command": "composerMode.agent"
+    "key": "ctrl+c",
+    "command": "editor.action.clipboardCopyAction"
   },
-  {
-    "key": "ctrl+e",
-    "command": "composerMode.background"
-  },
-
-  // Paste, cut, copy
-  { "key": "ctrl+c", "command": "editor.action.clipboardCopyAction" },
   { "key": "ctrl+v", "command": "editor.action.clipboardPasteAction" },
   { "key": "ctrl+x", "command": "editor.action.clipboardCutAction" },
   // In Editor Search
@@ -118,5 +111,20 @@
     "key": "ctrl+.",
     "command": "keyboard-quickfix.openQuickFix",
     "when": "editorHasCodeActionsProvider && editorTextFocus && !editorReadonly"
+  },
+  // Override 'open chat' for vim go back
+  {
+    "key": "ctrl+i",
+    "command": "-composerMode.agent"
+  },
+  {
+    "key": "ctrl+i",
+    "command": "-composer.startComposerPrompt"
+  },
+  // Cursor Suggestion
+  {
+    "key": "`",
+    "command": "editor.action.acceptCursorTabSuggestion",
+    "when": "cpp.shouldAcceptTab"
   }
 ]
