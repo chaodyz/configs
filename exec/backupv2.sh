@@ -75,7 +75,7 @@ install_symlinks() {
 
     if [[ "$(uname)" == "Darwin" ]]; then
         backup_if_not_symlink ~/.bash_profile
-        [[ -f "$DOTFILES_DIR/.bash_profile" ]] && \
+        [[ -f "$DOTFILES_DIR/bash/.bash_profile" ]] && \
             ln -sf "$DOTFILES_DIR/bash/.bash_profile" ~/.bash_profile
     fi
 
