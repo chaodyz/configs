@@ -30,8 +30,14 @@ restore_action() {
     cp "$DOTFILES_DIR/joplin/keymap.json" ~/.config/joplin/keymap.json
     rm -rf ~/.config/nvim/
     cp -rf "$DOTFILES_DIR/nvim" ~/.config/
+    mkdir -p ~/.emacs.d
     cp "$DOTFILES_DIR/emacs/init.el" ~/.emacs.d/init.el
-    cp "$DOTFILES_DIR/emacs/emacs.org" ~/eSync/org/emacs.org
+
+    # Restore emacs config directory
+    if [ -d "$DOTFILES_DIR/emacs/config" ]; then
+        rm -rf ~/.emacs.d/config
+        cp -rf "$DOTFILES_DIR/emacs/config" ~/.emacs.d/
+    fi
 
     echo "✅ Restore complete."
 }

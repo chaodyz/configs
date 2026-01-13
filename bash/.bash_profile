@@ -4,5 +4,4 @@ if [ -f ~/.bashrc ]; then
 	. ~/.bashrc
 fi
 
-# Added by Windsurf
-export PATH="/Users/diz/.codeium/windsurf/bin:$PATH"
+eval "$(starship init bash)"

@@ -1,22 +1,21 @@
 #+title: Tangel Configuration
-#+PROPERTY: header-args:emacs-lisp :tangle ~/.emacs.d/init.el
-* Preface
-As many open source project that i have touched, the configuration of emacs is becoming overwhelming, due to my problem solving mindset has been: Problem  -> implementation, however through time implementation context is lost, and the reason of the solution became obscure.
-
-Today chatGPT gave me this idea to organize the block, so i thought will give it a shot.
-#+begin_src shell
-~/.emacs.d/
-├── config/
-│   ├── org-core.el
-│   ├── org-visual.el
-│   ├── org-agenda.el
-│   └── org-roam.el
-├── init.el       ;; minimal
-└── init.org      ;; org-babel source
-#+end_src
-* Setup package.el 
+#+PROPERTY: header-args:emacs-lisp :tangle no
+* Setup package.el
    Load use package- a popular macro in Emacs that provides declarative way  to config and load packages (eval-when-compile).
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/base.el
+;;; base.el --- Package setup and basic UI configuration -*- lexical-binding: t -*-
+
+;;; Commentary:
+;; This module contains:
+;; - Package manager setup (package.el, use-package)
+;; - Basic UI configuration (disable scrollbar, toolbar, etc.)
+;; - Line numbers and visual settings
+
+;;; Code:
+
+;; =============================================================================
+;; Package Setup
+;; =============================================================================
 
     (require 'package)
     (setq package-archives '(("melpa" . "https://melpa.org/packages/")
@@ -67,8 +66,17 @@ Today chatGPT gave me this idea to organize the block, so i thought will give it
 ** Font Configuration
 Font were set in a way in a coding environment it will use =fixed-pitch,= when its in org mode, it uses =variable-pitch= font
 *** English
-#+begin_src emacs-lisp
-  ;; Font 
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/fonts.el
+;;; fonts.el --- Font configuration -*- lexical-binding: t -*-
+
+;;; Commentary:
+;; This module contains font configuration for:
+;; - English fonts (FiraCode Nerd Font Mono, Source Sans 3)
+;; - Chinese fonts (Source Han Sans SC VF)
+
+;;; Code:
+
+  ;; Font
   ;; Set font by different mode: (set-face-attribute 'default nil :font "FONT_NAME":height: FONT_SIZE MODE/BUFFER)
   (set-face-attribute 'default nil :font "FiraCode Nerd Font Mono" :height 180)
   (set-face-attribute 'fixed-pitch nil :font "FiraCode Nerd Font Mono" :height 160)
@@ -76,14 +84,21 @@ Font were set in a way in a coding environment it will use =fixed-pitch,= when i
 #+end_src
 
 *** 汉字
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/fonts.el
   ;; 汉字－思源黑体
   (set-fontset-font t 'han (font-spec :family "Source Han Sans SC VF"))
   (set-face-attribute 'variable-pitch nil :family "Source Sans 3" :height 180 :weight 'normal)
+
+(provide 'fonts)
+;;; fonts.el ends here
 #+end_src
 
 ** Others
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/base.el
+;; =============================================================================
+;; Basic UI Configuration
+;; =============================================================================
+
   ;; Enable visible bell
   (setq visible-bell t)
   (setq ring-bell-function 'ignore)
@@ -95,7 +110,7 @@ Font were set in a way in a coding environment it will use =fixed-pitch,= when i
   (set-fringe-mode 10) ; Give some breathing room
   (menu-bar-mode -1)  ; Disable the menu bar
 
-  (setq split-width-threshold 160) ; the minimum width of a window that Emacs should split horizontally instead of vertically. 
+  (setq split-width-threshold 160) ; the minimum width of a window that Emacs should split horizontally instead of vertically.
   (setq split-height-threshold 80)
 
   (column-number-mode)
@@ -108,8 +123,11 @@ Font were set in a way in a coding environment it will use =fixed-pitch,= when i
   ;; Override some modes which derive from the above
   (dolist (mode '(org-mode-hook))
   (add-hook mode (lambda () (display-line-numbers-mode 0))))
-  ; Wrap text 
+  ; Wrap text
   (global-visual-line-mode t)
+
+(provide 'base)
+;;; base.el ends here
 #+end_src
 
 #+RESULTS:
@@ -117,19 +135,41 @@ Font were set in a way in a coding environment it will use =fixed-pitch,= when i
 
 * Text editing experience
 ** undo-tree
-The undo tree  sets =C-r= to be the same as Vim 
-#+begin_src emacs-lisp
+The undo tree  sets =C-r= to be the same as Vim
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/editing.el
+;;; editing.el --- Text editing configuration -*- lexical-binding: t -*-
+
+;;; Commentary:
+;; This module contains text editing enhancements:
+;; - undo-tree for better undo/redo
+;; - Evil mode for Vim emulation
+;; - Evil collection for Evil mode compatibility
+;; - Evil nerd commenter for commenting
+;; - Hydra for text scaling
+;; - French typing support (right Option key)
+
+;;; Code:
+
+;; =============================================================================
+;; Undo Tree
+;; =============================================================================
+
 (use-package undo-tree
   :ensure t
   :init
   :config
-  (global-undo-tree-mode 1))  
+  (global-undo-tree-mode 1))
 #+end_src
 
 ** Evil mod
 e
-Basic setup including rebind vim like C-u/i for page scroll, =evil-nerd-commenter= : vim commentary parity, the  =evil-collection= ensures evil mode works well in dired, terminal etc. 
-#+begin_src emacs-lisp
+Basic setup including rebind vim like C-u/i for page scroll, =evil-nerd-commenter= : vim commentary parity, the  =evil-collection= ensures evil mode works well in dired, terminal etc.
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/editing.el
+
+;; =============================================================================
+;; Evil Mode (Vim Emulation)
+;; =============================================================================
+
 
   (use-package evil
     :init
@@ -164,9 +204,19 @@ Basic setup including rebind vim like C-u/i for page scroll, =evil-nerd-commente
 
   ;; Escape key to quit menu
   (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
+
+  ;; Xref keybindings for Evil mode
+  (with-eval-after-load 'evil
+    (define-key evil-normal-state-map (kbd "gd") #'xref-find-definitions)
+    (define-key evil-normal-state-map (kbd "gr") #'xref-find-references))
 #+end_src
-** Hydra 
-#+begin_src emacs-lisp
+** Hydra
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/editing.el
+
+;; =============================================================================
+;; Hydra (Text Scaling)
+;; =============================================================================
+
 
   (use-package hydra)
   
@@ -182,9 +232,13 @@ Basic setup including rebind vim like C-u/i for page scroll, =evil-nerd-commente
 :PROPERTIES:
 :ID:       533D8377-75CF-41D4-9E2C-A27BC86583ED
 :END:
-#+begin_src emacs-lisp
-  
-  ;; French typying experience
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/editing.el
+
+;; =============================================================================
+;; Other Experiments / Settings
+;; =============================================================================
+
+  ;; French typing experience
   (setq mac-right-option-modifier nil) ;; Right Option behaves as Option
 
     ;; TODO: Try to mimic move lines action
@@ -193,14 +247,29 @@ Basic setup including rebind vim like C-u/i for page scroll, =evil-nerd-commente
     ;; keymap("x", "<A-j>", ":move '>+1<CR>gv-gv", opts)
     ;; keymap("x", "<A-k>", ":move '<-2<CR>gv-gv", opts)
 
+(provide 'editing)
+;;; editing.el ends here
 #+end_src
 
 * Ivy
  Ivy and counsel enhance the interaction experience
 
- #+begin_src emacs-lisp
+ #+begin_src emacs-lisp :tangle ~/.emacs.d/config/completion.el
+;;; completion.el --- Completion frameworks configuration -*- lexical-binding: t -*-
 
-   ;; Ivy, Ivy-rich, and counsel
+;;; Commentary:
+;; This module contains completion and search frameworks:
+;; - Ivy: Generic completion frontend
+;; - Ivy-rich: Enhanced Ivy display
+;; - Counsel: Ivy-enhanced commands
+;; - Company: In-buffer completion
+
+;;; Code:
+
+;; =============================================================================
+;; Ivy, Ivy-rich, and Counsel
+;; =============================================================================
+
    ;; Note: ivy-rich must be setup after Ivy and counsel
    (use-package ivy
      :ensure t
@@ -236,7 +305,16 @@ Basic setup including rebind vim like C-u/i for page scroll, =evil-nerd-commente
      (setq ivy-initial-inputs-alist nil))
  #+end_src
 * Theme
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/theme.el
+;;; theme.el --- Theme configuration -*- lexical-binding: t -*-
+
+;;; Commentary:
+;; This module contains theme configuration:
+;; - Zenburn theme (dark mode)
+;; - Solarized theme (light mode)
+;; - Circadian for automatic theme switching based on location
+
+;;; Code:
 
   ;; Theme
   (use-package zenburn-theme
@@ -253,7 +331,7 @@ Basic setup including rebind vim like C-u/i for page scroll, =evil-nerd-commente
     (setq solarized-high-contrast-mode-line 0)
     )
 
-  ;; Load Theme by location's sunrise and sunset 
+  ;; Load Theme by location's sunrise and sunset
   (use-package circadian
     :ensure t
     :config
@@ -265,6 +343,8 @@ Basic setup including rebind vim like C-u/i for page scroll, =evil-nerd-commente
                              (:sunset  . zenburn)))
     (circadian-setup))
 
+(provide 'theme)
+;;; theme.el ends here
 #+end_src
 * Helpful 
 #+begin_src emacs-lisp
@@ -292,9 +372,41 @@ Basic setup including rebind vim like C-u/i for page scroll, =evil-nerd-commente
   (global-set-key (kbd "C-c d") 'describe-thing-at-point)
 
 #+end_src
-* General 
-** Main 
-#+begin_src emacs-lisp :noweb yes
+* General
+** Which key
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/keybindings.el
+;;; keybindings.el --- Keybinding configuration -*- lexical-binding: t -*-
+
+;;; Commentary:
+;; This module contains:
+;; - Which-key: Display available keybindings
+;; - General: Leader key and keybinding definitions
+;; - All SPC-prefixed keybindings for various modes
+
+;;; Code:
+
+;; =============================================================================
+;; Which Key
+;; =============================================================================
+
+  ;; Which key
+  (use-package which-key
+    :ensure t
+    :diminish
+    :config
+    (which-key-mode)
+    (setq which-key-idle-delay 0.3)
+    (setq which-key-prefix-prefix "SPC")
+    (setq which-key-allow-evil-operators t)
+    )
+#+end_src
+** Main
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/keybindings.el :noweb yes
+
+;; =============================================================================
+;; General (Leader Key Configuration)
+;; =============================================================================
+
   (use-package general
     :ensure t
     :requires which-key
@@ -305,20 +417,8 @@ Basic setup including rebind vim like C-u/i for page scroll, =evil-nerd-commente
     <<general-define-window>>
     <<general-define-lsp>>
     <<general-define-org>>
+    <<general-define-claude>>
     <<general-define-magit>>
-    )
-#+end_src
-** Which key
-#+begin_src emacs-lisp
-  ;; Which key
-  (use-package which-key
-    :ensure t
-    :diminish
-    :config
-    (which-key-mode)
-    (setq which-key-idle-delay 0.3)
-    (setq which-key-prefix-prefix "SPC")
-    (setq which-key-allow-evil-operators t)
     )
 #+end_src
 ** define leader key
@@ -416,6 +516,18 @@ Basic setup including rebind vim like C-u/i for page scroll, =evil-nerd-commente
     "o it" '(org-toggle-inline-images :which-key "Toggle inline image")
     )
 #+end_src
+*** Claude
+#+name: general-define-claude
+#+begin_src emacs-lisp
+  (leader-key-def
+    "c" '(:ignore t :which-key " Claude Console...")
+    "c t" 'claude-code-ide)
+#+end_src
+** Footer
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/keybindings.el
+(provide 'keybindings)
+;;; keybindings.el ends here
+#+end_src
 * Command log mode
 #+begin_src emacs-lisp
 
@@ -491,8 +603,23 @@ http://tumashu.github.io/pyim-bigdict/pyim-bigdict.pyim.gz
 
 #+end_src
 * Org Mode
-** Main 
-#+begin_src emacs-lisp :noweb yes
+** Main
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/org-core.el
+;;; org-core.el --- Core Org mode configuration -*- lexical-binding: t -*-
+
+;;; Commentary:
+;; This module contains core Org mode settings:
+;; - Basic org configuration (directories, files, mobile sync)
+;; - Org babel for code execution
+;; - Org tempo for quick templates
+;; - Org inlinetask
+
+;;; Code:
+
+;; =============================================================================
+;; Core Org Configuration
+;; =============================================================================
+
   (use-package org
     :ensure t
     :init
@@ -500,12 +627,16 @@ http://tumashu.github.io/pyim-bigdict/pyim-bigdict.pyim.gz
           org-hide-emphasis-markers t
           org-directory "~/eSync/org/"
           org-default-notes-file "~/eSync/org/index.org")
-    (setq org-agenda-files '("~/eSync/org" "~/eSync/org/roam")) 
+    (setq org-agenda-files '("~/eSync/org" "~/eSync/org/roam"))
     ;; Set to the name of the file where new notes will be stored
     (setq org-mobile-inbox-for-pull "~/eSync/org/flagged.org")
     ;; Set to <your Dropbox root directory>/MobileOrg.
     (setq org-mobile-directory "~/Dropbox/Apps/MobileOrg")
-    (setq org-startup-indented 1)
+    (setq org-startup-indented 1))
+#+end_src
+** Workflow Configuration
+This section is loaded separately in org-workflow.el and org-visual.el
+#+begin_src emacs-lisp :tangle no :noweb yes
     :hook (org-mode . my-org-mode-setup)
     :config
     <<org-visual>>
@@ -513,11 +644,23 @@ http://tumashu.github.io/pyim-bigdict/pyim-bigdict.pyim.gz
     <<org-custom-agenda>>
     <<org-custom-capture>>
     <<org-custom-todo>>
-    )
 #+end_src
 ** Visual
 #+name:org-visual
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/org-visual.el
+;;; org-visual.el --- Org mode visual configuration -*- lexical-binding: t -*-
+
+;;; Commentary:
+;; This module contains Org mode visual enhancements:
+;; - Visual line and variable pitch modes
+;; - Custom faces for headlines and elements
+;; - Company mode integration
+;; - Visual fill column for centered text
+;; - Org superstar for headline bullets
+;; - Helper functions for emphasis markup
+
+;;; Code:
+
   ;; Configure org mode to start with modes that more visual appealing
   ;; - visual-line-mode: wraps lines at window width for easy reading and editing
   ;; - variable-pitch-mode 1: sets the font face to a variable-width font for a more natural and aesthetically pleasing look
@@ -577,11 +720,29 @@ http://tumashu.github.io/pyim-bigdict/pyim-bigdict.pyim.gz
     ;; consistent size for list bullets
     (set-face-attribute 'org-superstar-item nil :height 1.0))
 
+;; Hook to enable visual settings
+(add-hook 'org-mode-hook 'my-org-mode-setup)
+
 #+end_src
 ** Agenda/TODO/Capture
 *** Tags
 #+name: org-custom-tags
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/org-workflow.el
+;;; org-workflow.el --- Org mode workflow configuration -*- lexical-binding: t -*-
+
+;;; Commentary:
+;; This module contains Org mode workflow features:
+;; - Custom tags
+;; - TODO keywords and states
+;; - Custom agenda views
+;; - Capture templates
+
+;;; Code:
+
+;; =============================================================================
+;; Custom Tags
+;; =============================================================================
+
   (setq org-tag-alist
         '(
   	;; location
@@ -607,7 +768,13 @@ http://tumashu.github.io/pyim-bigdict/pyim-bigdict.pyim.gz
   	))
 #+end_src
 *** Custom todo
-TODO → IN-PROGRESS → WAITING → DONE or CANCELED
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/org-workflow.el
+
+;; =============================================================================
+;; Custom TODO Keywords
+;; =============================================================================
+
+;; TODO → IN-PROGRESS → WAITING → DONE or CANCELED
 
 	- sequence: Defines the order of states.
 	- |: Separates active states (left) from completed/closed states (right).
@@ -616,9 +783,10 @@ TODO → IN-PROGRESS → WAITING → DONE or CANCELED
 	- Special markers:
 		@: Prompts for a note when transitioning to this state.
 		!: Records a timestamp when transitioning to this state.
+#+end_src
 
 #+name: org-custom-todo
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/org-workflow.el
   (setq org-todo-keywords
             '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)" "CANCEL(c@)")))
 
@@ -636,11 +804,16 @@ TODO → IN-PROGRESS → WAITING → DONE or CANCELED
   (setq org-log-done 'time)
   (setq org-agenda-start-with-log-mode t)
   (setq org-log-into-drawer t)
-  
+
 #+end_src
 *** Custom agenda
 #+name: org-custom-agenda
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/org-workflow.el
+
+;; =============================================================================
+;; Custom Agenda Views
+;; =============================================================================
+
 
 (setq org-agenda-custom-commands
       '(("p" "Planning"
@@ -668,9 +841,14 @@ TODO → IN-PROGRESS → WAITING → DONE or CANCELED
                    (org-agenda-skip-function '(org-agenda-skip-entry-if 'todo 'done))
                    (org-agenda-span 'week)))))))
 #+end_src
-*** Custom capture 
+*** Custom capture
 #+name: org-custom-capture
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/org-workflow.el
+
+;; =============================================================================
+;; Capture Templates
+;; =============================================================================
+
     (setq org-capture-templates
           '(("t" "Task" entry (file+olp "~/eSync/org/tasks.org" "Inbox")
              "* TODO %?\n  %U\n  %a\n  %i" :empty-lines 1)
@@ -698,10 +876,11 @@ TODO → IN-PROGRESS → WAITING → DONE or CANCELED
 :PROPERTIES:
 :ID:       855F0833-66EB-4BFC-8331-F882C70EAA68
 :END:
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/org-visual.el
 
-    ;; create a task from non-heading text, such as a sentence or paragraph.
-    (require 'org-inlinetask)
+;; =============================================================================
+;; Helper Functions
+;; =============================================================================
 
   (defun my/org-fixed-pitch-faces () (require 'org-indent) (dolist (face '(org-block org-table org-formula org-code org-indent org-verbatim org-special-keyword org-meta-line org-checkbox)) (set-face-attribute face nil :inherit 'fixed-pitch)) (set-face-attribute 'org-code nil :inherit '(shadow fixed-pitch)) (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch)) (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch)) (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch)) (set-face-attribute 'org-column nil :background nil) (set-face-attribute 'org-column-title nil :background nil))
 
@@ -749,6 +928,8 @@ TODO → IN-PROGRESS → WAITING → DONE or CANCELED
        :keymaps 'override
        "s" 'surround-with-key)
 
+(provide 'org-visual)
+;;; org-visual.el ends here
 #+end_src
 
 # *** Images
@@ -765,7 +946,12 @@ TODO → IN-PROGRESS → WAITING → DONE or CANCELED
 #         )
 # #+end_src
 ** Babel
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/org-core.el
+
+;; =============================================================================
+;; Org Babel
+;; =============================================================================
+
   (use-package org-babel
     :ensure nil ; already built-in
     :defer t ; lazy loading
@@ -788,6 +974,10 @@ TODO → IN-PROGRESS → WAITING → DONE or CANCELED
   ;;   ;; Add support for Node.js
   ;;   (setq org-babel-js-cmd "node"))
 
+;; =============================================================================
+;; Org Tempo (Quick Templates)
+;; =============================================================================
+
   (use-package org-tempo
     :ensure nil
     :after org
@@ -800,7 +990,17 @@ TODO → IN-PROGRESS → WAITING → DONE or CANCELED
 #+end_src
 
 ** Roam
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/org-roam.el
+;;; org-roam.el --- Org Roam configuration -*- lexical-binding: t -*-
+
+;;; Commentary:
+;; This module contains Org Roam configuration:
+;; - Basic Org Roam setup
+;; - Custom capture templates for different note types
+;; - Leetcode, mistake logs, algorithm templates, weekly reviews
+
+;;; Code:
+
     (use-package org-roam
       :ensure t
       :init
@@ -838,6 +1038,9 @@ TODO → IN-PROGRESS → WAITING → DONE or CANCELED
          :if-new (file+head "review/${slug}.org"
                             "#+title: Weekly Review ${title}\n#+filetags: :weekly:review:\n")
          :unnarrowed t)))
+
+(provide 'org-roam)
+;;; org-roam.el ends here
 #+end_src
 
 # *** org roam ui
@@ -864,12 +1067,41 @@ TODO → IN-PROGRESS → WAITING → DONE or CANCELED
 ** writing experience in org mode
 the *M-q* fill current paragraph is very useful to align paragraph, to make it display prettier
 https://www.gnu.org/software/emacs/manual/html_node/emacs/Fill-Commands.html
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/org-core.el
+
+;; Org writing experience settings
 (setq org-startup-indented t)  ;; Auto-indent headlines and content
 (setq org-startup-folded t)    ;; Fold content on startup for better readability
+
+;; =============================================================================
+;; Org Inlinetask
+;; =============================================================================
+
+;; Create a task from non-heading text, such as a sentence or paragraph
+(require 'org-inlinetask)
+
+(provide 'org-core)
+;;; org-core.el ends here
 #+end_src
 * Projectile
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/development.el
+;;; development.el --- Development tools configuration -*- lexical-binding: t -*-
+
+;;; Commentary:
+;; This module contains development tools:
+;; - Treesitter for syntax highlighting
+;; - Eglot for LSP support
+;; - Projectile for project management
+;; - Counsel-projectile integration
+;; - Magit for git integration
+;; - Markdown mode
+;; - Claude Code IDE
+
+;;; Code:
+
+;; =============================================================================
+;; Projectile (Project Management)
+;; =============================================================================
 
   ;; Projectile
   (use-package projectile
@@ -888,10 +1120,46 @@ https://www.gnu.org/software/emacs/manual/html_node/emacs/Fill-Commands.html
 
 #+end_src
 * Magit
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/development.el
+
+;; =============================================================================
+;; Magit (Git Interface)
+;; =============================================================================
+
 (use-package magit
   :ensure t)
 #+end_src
+
+* Markdown
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/development.el
+
+;; =============================================================================
+;; Markdown Mode
+;; =============================================================================
+
+(use-package markdown-mode
+  :ensure t
+  :mode ("README\\.md\\'" . gfm-mode)
+  :init (setq markdown-command "multimarkdown")
+  :bind (:map markdown-mode-map
+         ("C-c C-e" . markdown-export)))
+#+end_src
+
+* Claude Code IDE
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/development.el
+
+;; =============================================================================
+;; Claude Code IDE
+;; =============================================================================
+
+(use-package claude-code-ide
+  :ensure t
+  :vc (:url "https://github.com/manzaltu/claude-code-ide.el" :rev :newest)
+  :bind ("C-c C-'" . claude-code-ide-menu) ; Set your favorite keybinding
+  :config
+  (claude-code-ide-emacs-tools-setup)) ; Optionally enable Emacs MCP tools
+#+end_src
+
 * Treesitter
 ** Use treesit-auto
 https://github.com/renzmann/treesit-auto
@@ -901,7 +1169,17 @@ treesit auto is a tool to help treesiter to find the missing major mode. In orde
 here author shared his thought about how emacs-treesit-auto is created
 https://robbmann.io/posts/emacs-treesit-auto/
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/development.el
+
+;; =============================================================================
+;; Tree-sitter (Syntax Highlighting)
+;; =============================================================================
+
+;; Tree-sitter-auto helps treesitter find the missing major mode
+;; Useful for formats like tsx
+;; Reference: https://github.com/renzmann/treesit-auto
+;; Author's blog: https://robbmann.io/posts/emacs-treesit-auto/
+
   (use-package treesit-auto
     :custom
     (treesit-auto-install 'prompt)
@@ -912,16 +1190,38 @@ https://robbmann.io/posts/emacs-treesit-auto/
 # 
 * LSP
 Emacs 29 auto includes eglot, a lightweight, buit-in LSP client. This means you don't need to install or configure external LSP clients unless you prefer the alternatives like lsp-mode.
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/development.el
+
+;; =============================================================================
+;; LSP (Language Server Protocol)
+;; =============================================================================
+
+;; Emacs 29+ includes eglot, a lightweight, built-in LSP client
+;; No need to install external LSP clients unless you prefer alternatives like lsp-mode
+
   (use-package eglot
   :ensure nil
-  :hook ((python-mode
+  :hook ((tsx-ts-mode
+          typescript-ts-mode
+          js-ts-mode
+          python-mode
           java-mode
-          c-mode c++-mode
+          c-mode
+          c++-mode
           js-mode
           typescript-mode
           go-mode
-          rust-mode) . eglot-ensure))
+          rust-mode) . eglot-ensure)
+  :config
+  ;; Prefer xref for definitions
+  (setq xref-show-definitions-function xref-show-xrefs-function))
+
+;; Note: For TypeScript, ensure language servers are installed:
+;;   npm install -g @angular/language-service@latest
+;;   npm install -g typescript
+
+(provide 'development)
+;;; development.el ends here
 #+end_src
 
   ,*Typescript*
@@ -989,13 +1289,19 @@ set backup file to a specific directory.
 #+end_src 
 
 *Company*
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle ~/.emacs.d/config/completion.el
+
+;; =============================================================================
+;; Company (In-buffer Completion)
+;; =============================================================================
 
   (use-package company
     :ensure t
     :config
     (global-company-mode 1))
 
+(provide 'completion)
+;;; completion.el ends here
 #+end_src
 
 * Yaml mode 

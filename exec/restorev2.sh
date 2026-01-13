@@ -27,9 +27,14 @@ restore_action() {
     cp -rf "$DOTFILES_DIR/nvim" ~/.config/
 
     # --- Emacs ---
-    mkdir -p ~/.emacs.d ~/eSync/org
+    mkdir -p ~/.emacs.d
     cp "$DOTFILES_DIR/emacs/init.el" ~/.emacs.d/init.el
-    cp "$DOTFILES_DIR/emacs/emacs.org" ~/eSync/org/emacs.org
+
+    # Restore emacs config directory
+    if [ -d "$DOTFILES_DIR/emacs/config" ]; then
+        rm -rf ~/.emacs.d/config
+        cp -rf "$DOTFILES_DIR/emacs/config" ~/.emacs.d/
+    fi
 
     # --- VSCode & Cursor (per platform) ---
     if [[ "$(uname)" == "Darwin" ]]; then

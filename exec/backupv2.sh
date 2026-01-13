@@ -45,7 +45,11 @@ backup_action() {
     fi
 
     cp ~/.emacs.d/init.el "$DOTFILES_DIR/emacs/init.el"
-    cp ~/eSync/org/emacs.org "$DOTFILES_DIR/emacs/emacs.org"
+
+    # Backup emacs config directory
+    if [ -d "$HOME/.emacs.d/config" ]; then
+        rsync -av "$HOME/.emacs.d/config/" "$DOTFILES_DIR/emacs/config"
+    fi
 
     echo "✅ Backup complete."
 }
@@ -81,7 +85,12 @@ install_symlinks() {
     ln -sf "$DOTFILES_DIR/alacritty/alacritty.toml" ~/.config/alacritty/alacritty.toml
     ln -sf "$DOTFILES_DIR/joplin/keymap.json" ~/.config/joplin/keymap.json
     ln -sf "$DOTFILES_DIR/emacs/init.el" ~/.emacs.d/init.el
-    ln -sf "$DOTFILES_DIR/emacs/emacs.org" ~/eSync/org/emacs.org
+
+    # Symlink emacs config directory
+    if [ -e "$HOME/.emacs.d/config" ] || [ -L "$HOME/.emacs.d/config" ]; then
+        rm -rf "$HOME/.emacs.d/config"
+    fi
+    ln -s "$DOTFILES_DIR/emacs/config" "$HOME/.emacs.d/config"
     
     # Remove existing Neovim config
     # this clean up guarantees the new symlink will be created cleanly.
@@ -113,7 +122,7 @@ install_symlinks() {
 # ----------------------------------------------------------
 # Menu
 # ----------------------------------------------------------
-read -p "Backup (b) or Install (i)? " choice
+read -p "Backup (b) or Install Symlinks (i)? " choice
 
 case "$choice" in
     b|B ) backup_action ;;

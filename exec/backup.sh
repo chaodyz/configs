@@ -30,8 +30,8 @@ function backup_action() {
 	
 	cp ~/.emacs.d/init.el ~/projects/configs/emacs/init.el &&
 
-	# backup org files
-	cp ~/eSync/org/emacs.org ~/projects/configs/emacs/emacs.org
+	# backup emacs config directory
+	cp -rf ~/.emacs.d/config ~/projects/configs/emacs/
 
     echo "done"
 }
