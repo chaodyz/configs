@@ -768,22 +768,13 @@ This section is loaded separately in org-workflow.el and org-visual.el
   	))
 #+end_src
 *** Custom todo
-#+begin_src emacs-lisp :tangle ~/.emacs.d/config/org-workflow.el
-
-;; =============================================================================
-;; Custom TODO Keywords
-;; =============================================================================
-
-;; TODO → IN-PROGRESS → WAITING → DONE or CANCELED
-
-	- sequence: Defines the order of states.
-	- |: Separates active states (left) from completed/closed states (right).
-	- Shortcut keys:
-		(t), (i), (w), (d), (c) are optional key shortcuts for quickly switching states (e.g., t for TODO).
-	- Special markers:
-		@: Prompts for a note when transitioning to this state.
-		!: Records a timestamp when transitioning to this state.
-#+end_src
+Documentation for TODO keywords:
+- sequence: Defines the order of states.
+- |: Separates active states (left) from completed/closed states (right).
+- Shortcut keys: (t), (i), (w), (d), (c) are optional key shortcuts for quickly switching states (e.g., t for TODO).
+- Special markers:
+  - @: Prompts for a note when transitioning to this state.
+  - !: Records a timestamp when transitioning to this state.
 
 #+name: org-custom-todo
 #+begin_src emacs-lisp :tangle ~/.emacs.d/config/org-workflow.el
@@ -860,17 +851,20 @@ This section is loaded separately in org-workflow.el and org-visual.el
     	
             ("f" "French Class Notes" entry
     	 (file+olp+datetree "~/eSync/org/french.org")
-  	 "* French Class Notes: %T
-  ** General
-  %?
-  ** Vocabulary
-  - Word 1: 
-  - Word 2: 
-  ** Grammar
-  - Rule 1: 
-  - Rule 2: 
-  ")             
-    	))
+ 	 "* French Class Notes: %T
+ ** General
+ %?
+ ** Vocabulary
+ - Word 1: 
+ - Word 2: 
+ ** Grammar
+ - Rule 1: 
+ - Rule 2: 
+ ")             
+   	))
+
+(provide 'org-workflow)
+;;; org-workflow.el ends here
 #+end_src
 ** TODO organize this block
 :PROPERTIES:

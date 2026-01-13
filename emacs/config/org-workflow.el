@@ -13,43 +13,32 @@
 ;; Custom Tags
 ;; =============================================================================
 
-(setq org-tag-alist
-      '(
-        ;; Location
-        ("home" . ?h)
-        ("out task" . ?o)
-        ;; Device/occasion
-        ("computer" . ?d)
-        ("phone" . ?m)
-        ;; Work
-        ("work" . ?w)
-        ("CP" . ?x)
-        ;; Personal
-        ("chore" . ?c)
-        ("finance" . ?f)
-        ("relationship" . ?l)
-        ("interview" . ?i)
-        ("swim" . ?s)
-        ("CG" . ?g)
-        ("read" . ?r)
-        ;; Status
-        ("planning" . ?n)
-        ("backlog" . ?b)))
-
-;; =============================================================================
-;; Custom TODO Keywords
-;; =============================================================================
-
-;; TODO → NEXT → DONE or CANCEL
-;; - sequence: Defines the order of states
-;; - |: Separates active states (left) from completed/closed states (right)
-;; - Shortcut keys: (t), (n), (d), (c) for quickly switching states
-;; - Special markers:
-;;   @: Prompts for a note when transitioning to this state
-;;   !: Records a timestamp when transitioning to this state
+  (setq org-tag-alist
+        '(
+  	;; location
+          ("home" . ?h)
+          ("out task" . ?o)
+  	;; device/occasion
+          ("computer" . ?d)
+          ("phone" . ?m)
+  	;; work
+          ("work" . ?w)
+          ("CP" . ?x)
+  	;; personal
+  	("chore" . ?c)
+          ("finance" . ?f)
+          ("relationship" . ?l)
+          ("interview" . ?i)
+          ("swim" . ?s)
+          ("CG" . ?g)
+          ("read" . ?r)
+  	;; status
+          ("planning" . ?n)
+          ("backlog" . ?b)
+  	))
 
 (setq org-todo-keywords
-      '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)" "CANCEL(c@)")))
+          '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)" "CANCEL(c@)")))
 
 (setq org-todo-keyword-faces
       '(("TODO" . (:foreground "orange" :weight bold))
@@ -69,6 +58,7 @@
 ;; =============================================================================
 ;; Custom Agenda Views
 ;; =============================================================================
+
 
 (setq org-agenda-custom-commands
       '(("p" "Planning"
@@ -100,27 +90,28 @@
 ;; Capture Templates
 ;; =============================================================================
 
-(setq org-capture-templates
-      '(("t" "Task" entry (file+olp "~/eSync/org/tasks.org" "Inbox")
-         "* TODO %?\n  %U\n  %a\n  %i" :empty-lines 1)
+    (setq org-capture-templates
+          '(("t" "Task" entry (file+olp "~/eSync/org/tasks.org" "Inbox")
+             "* TODO %?\n  %U\n  %a\n  %i" :empty-lines 1)
 
-        ("j" "Journal" entry
-         (file+olp+datetree "~/eSync/org/journal.org")
-         "\n* %<%I:%M %p> - Journal :journal:\n\n%?\n\n"
-         :clock-in :clock-resume :empty-lines 1)
-
-        ("f" "French Class Notes" entry
-         (file+olp+datetree "~/eSync/org/french.org")
-         "* French Class Notes: %T
-** General
-%?
-** Vocabulary
-- Word 1:
-- Word 2:
-** Grammar
-- Rule 1:
-- Rule 2:
-")))
+            ("j" "Journal" entry
+             (file+olp+datetree "~/eSync/org/journal.org")
+             "\n* %<%I:%M %p> - Journal :journal:\n\n%?\n\n"
+             :clock-in :clock-resume :empty-lines 1)
+    	
+            ("f" "French Class Notes" entry
+    	 (file+olp+datetree "~/eSync/org/french.org")
+ 	 "* French Class Notes: %T
+ ** General
+ %?
+ ** Vocabulary
+ - Word 1: 
+ - Word 2: 
+ ** Grammar
+ - Rule 1: 
+ - Rule 2: 
+ ")             
+   	))
 
 (provide 'org-workflow)
 ;;; org-workflow.el ends here
