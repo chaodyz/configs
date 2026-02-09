@@ -120,11 +120,5 @@
   {
     "key": "ctrl+i",
     "command": "-composer.startComposerPrompt"
-  },
-  // Cursor Suggestion
-  {
-    "key": "`",
-    "command": "editor.action.acceptCursorTabSuggestion",
-    "when": "cpp.shouldAcceptTab"
   }
 ]
