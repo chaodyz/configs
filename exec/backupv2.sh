@@ -9,7 +9,7 @@ backup_action() {
     echo "📦 Backing up current config to: $DOTFILES_DIR"
 
     # Ensure folder structure exists
-    mkdir -p "$DOTFILES_DIR"/{vscode,cursor,starship,alacritty,emacs,nvim,joplin,tmux}
+    mkdir -p "$DOTFILES_DIR"/{vscode,cursor,starship,alacritty,emacs,nvim,joplin,tmux,claude}
 
     # Platform specific
     if [[ "$(uname)" == "Darwin" ]]; then
@@ -51,6 +51,13 @@ backup_action() {
         rsync -av "$HOME/.emacs.d/config/" "$DOTFILES_DIR/emacs/config"
     fi
 
+    # Claude configs
+    cp ~/.claude/CLAUDE.md "$DOTFILES_DIR/claude/CLAUDE.md"
+    [[ -f ~/.claude/settings.json ]] && cp ~/.claude/settings.json "$DOTFILES_DIR/claude/settings.json"
+    if [ -d "$HOME/.claude/commands" ]; then
+        rsync -av "$HOME/.claude/commands/" "$DOTFILES_DIR/claude/commands"
+    fi
+
     echo "✅ Backup complete."
 }
 
@@ -70,6 +77,7 @@ install_symlinks() {
     }
 
     # Shell configs
+    echo "🔗 Symlinking shell configs ..."
     backup_if_not_symlink ~/.bashrc
     [[ -f "$DOTFILES_DIR/bash/.bashrc" ]] && ln -sf "$DOTFILES_DIR/bash/.bashrc" ~/.bashrc
 
@@ -80,28 +88,39 @@ install_symlinks() {
     fi
 
     # Common configs
+    echo "🔗 Symlinking common configs ..."
     ln -sf "$DOTFILES_DIR/tmux/.tmux.conf" ~/.tmux.conf
     ln -sf "$DOTFILES_DIR/starship/starship.toml" ~/.config/starship.toml
     ln -sf "$DOTFILES_DIR/alacritty/alacritty.toml" ~/.config/alacritty/alacritty.toml
     ln -sf "$DOTFILES_DIR/joplin/keymap.json" ~/.config/joplin/keymap.json
-    ln -sf "$DOTFILES_DIR/emacs/init.el" ~/.emacs.d/init.el
 
-    # Symlink emacs config directory
+    # Emacs config
+    echo "🔗 Symlinking Emacs config ..."
+    ln -sf "$DOTFILES_DIR/emacs/init.el" ~/.emacs.d/init.el
     if [ -e "$HOME/.emacs.d/config" ] || [ -L "$HOME/.emacs.d/config" ]; then
         rm -rf "$HOME/.emacs.d/config"
     fi
     ln -s "$DOTFILES_DIR/emacs/config" "$HOME/.emacs.d/config"
-    
-    # Remove existing Neovim config
-    # this clean up guarantees the new symlink will be created cleanly.
+
+    # Claude configs
+    echo "🔗 Symlinking Claude configs ..."
+    ln -sf "$DOTFILES_DIR/claude/CLAUDE.md" ~/.claude/CLAUDE.md
+    [[ -f "$DOTFILES_DIR/claude/settings.json" ]] && \
+        ln -sf "$DOTFILES_DIR/claude/settings.json" ~/.claude/settings.json
+    if [ -e "$HOME/.claude/commands" ] || [ -L "$HOME/.claude/commands" ]; then
+        rm -rf "$HOME/.claude/commands"
+    fi
+    ln -s "$DOTFILES_DIR/claude/commands" "$HOME/.claude/commands"
+
+    # Neovim config
+    echo "🔗 Symlinking Neovim config ..."
     if [ -e "$HOME/.config/nvim" ] || [ -L "$HOME/.config/nvim" ]; then
         rm -rf "$HOME/.config/nvim"
     fi
-
-    echo "🔗 Symlinking Neovim config ..."
     ln -s "$DOTFILES_DIR/nvim" "$HOME/.config/nvim"
 
     # VSCode & Cursor configs
+    echo "🔗 Symlinking VSCode & Cursor configs ..."
     if [[ "$(uname)" == "Darwin" ]]; then
         ln -sf "$DOTFILES_DIR/vscode/keybindings.mac.json" \
                "$HOME/Library/Application Support/Code/User/keybindings.json"

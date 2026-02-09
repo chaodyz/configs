@@ -36,6 +36,15 @@ restore_action() {
         cp -rf "$DOTFILES_DIR/emacs/config" ~/.emacs.d/
     fi
 
+    # --- Claude ---
+    mkdir -p ~/.claude
+    cp "$DOTFILES_DIR/claude/CLAUDE.md" ~/.claude/CLAUDE.md
+    [[ -f "$DOTFILES_DIR/claude/settings.json" ]] && cp "$DOTFILES_DIR/claude/settings.json" ~/.claude/settings.json
+    if [ -d "$DOTFILES_DIR/claude/commands" ]; then
+        rm -rf ~/.claude/commands
+        cp -rf "$DOTFILES_DIR/claude/commands" ~/.claude/
+    fi
+
     # --- VSCode & Cursor (per platform) ---
     if [[ "$(uname)" == "Darwin" ]]; then
         mkdir -p "$HOME/Library/Application Support/Code/User"
