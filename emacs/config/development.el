@@ -117,6 +117,20 @@
           rust-mode
           json-mode
           json-ts-mode) . eglot-ensure)
+  :bind (:map eglot-mode-map
+              ;; Go to definition (F12 like VS Code)
+              ("<f12>" . xref-find-definitions)
+              ("C-<f12>" . xref-find-definitions-other-window)
+              ;; Find references (Shift+F12 like VS Code)
+              ("S-<f12>" . xref-find-references)
+              ;; Rename symbol (F2 like VS Code)
+              ("<f2>" . eglot-rename)
+              ;; Code actions (Ctrl+. like VS Code)
+              ("C-." . eglot-code-actions)
+              ;; Show documentation (hover)
+              ("C-h ." . eldoc-doc-buffer)
+              ;; Format buffer/region
+              ("C-S-i" . eglot-format))
   :config
   ;; Configure TypeScript language server for MDX files
   ;; MDX files open in markdown-mode, manually run M-x eglot to activate
@@ -128,7 +142,25 @@
                '((json-mode json-ts-mode) . ("vscode-json-languageserver" "--stdio")))
 
   ;; Prefer xref for definitions
-  (setq xref-show-definitions-function xref-show-xrefs-function))
+  (setq xref-show-definitions-function xref-show-xrefs-function)
+
+  ;; Show documentation on hover (like VS Code)
+  (setq eldoc-echo-area-use-multiline-p nil))  ; Keep it concise
+
+  ;; Format on save (optional, uncomment if you want this)
+  ;; (add-hook 'before-save-hook
+  ;;           (lambda ()
+  ;;             (when (eglot-managed-p)
+  ;;               (eglot-format-buffer))))
+
+  ;; Evil mode bindings for LSP (Vim-style shortcuts)
+  (with-eval-after-load 'evil
+    (evil-define-key 'normal eglot-mode-map
+      (kbd "gd") 'xref-find-definitions           ; Go to definition
+      (kbd "gD") 'xref-find-definitions-other-window
+      (kbd "gr") 'xref-find-references            ; Go to references
+      (kbd "K") 'eldoc-doc-buffer                 ; Show docs (like Vim K)
+      (kbd "C-.") 'eglot-code-actions))
 
 ;; Note: Ensure language servers are installed:
 ;;   npm install -g @angular/language-service@latest

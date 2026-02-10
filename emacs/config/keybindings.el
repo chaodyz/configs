@@ -23,9 +23,27 @@
     (setq which-key-allow-evil-operators t)
     )
 
+
+  ;; Switch buffer in current project
+  (global-set-key (kbd "C-S-b") 'counsel-projectile-switch-to-buffer)
+
+  ;; Switch between projects
+  (global-set-key (kbd "C-S-p") 'counsel-projectile-switch-project)
+
+  ;; Quick buffer switch (all buffers, not just project)
+  (global-set-key (kbd "C-b") 'counsel-ibuffer)
+
 ;; =============================================================================
 ;; General (Leader Key Configuration)
 ;; =============================================================================
+
+  ;; Smart quit: close buffer if only window, otherwise close window
+  (defun my/smart-quit ()
+    "Close window if multiple windows exist, otherwise kill buffer."
+    (interactive)
+    (if (one-window-p)
+        (kill-buffer)
+      (delete-window)))
 
   (use-package general
     :ensure t
@@ -40,11 +58,11 @@
       "f" 'counsel-find-file
       "h" 'counsel-command-history
       "p" 'projectile-command-map
-      "q" 'delete-window
+      "q" 'my/smart-quit :which-key "Close buffer/window"
       "r" 'counsel-recentf
+      "s" 'counsel-projectile-rg :which-key " Search in project"
       "w" 'save-buffer
       "R" 'restart-emacs
-      "e" 'neotree-toggle :which-key " Neotree"
       "v" 'vterm :which-key " Vterm"
       )
     (leader-key-def
@@ -53,20 +71,6 @@
       "b c" 'kill-buffer
       "b w" 'save-buffer 
       )
-    (leader-key-def
-      "a" '(:ignore t :which-key " Window...")
-      "a v" #'split-window-right
-      "a s" #'split-window-below
-      "a w" #'other-window
-      "a o" #'delete-other-windows
-      "a h" #'evil-window-left
-      "a j" #'evil-window-down
-      "a k" #'evil-window-up
-      "a l" #'evil-window-right
-      "a H" #'evil-window-move-far-left
-      "a J" #'evil-window-move-very-bottom
-      "a K" #'evil-window-move-very-top
-      "a L" #'evil-window-move-far-right)
     
     (leader-key-def
       "o" '(:ignore t :which-key " Org...")
@@ -85,10 +89,9 @@
       )
     (leader-key-def
       "c" '(:ignore t :which-key " Claude Console...")
-      "c t" 'claude-code-ide
-      "c r" 'claude-code-ide-resume
-      "c c" 'claude-code-ide-continue
-      "c l" 'claude-code-ide-list-sessions
+      "c c" 'claude-code-ide :which-key "Open Console"
+      "c r" 'claude-code-ide-resume :which-key "Resume session"
+      "c l" 'claude-code-ide-list-sessions :which-key "List sessions"
      )
 
     (leader-key-def
@@ -98,6 +101,16 @@
       "g l" 'magit-log-buffer-file
       "g g" 'magit-dispatch
       "g c" 'magit-commit-create)
+
+    (leader-key-def
+      "l" '(:ignore t :which-key " LSP/Code...")
+      "l d" 'xref-find-definitions :which-key "Go to definition"
+      "l r" 'xref-find-references :which-key "Find references"
+      "l n" 'eglot-rename :which-key "Rename symbol"
+      "l a" 'eglot-code-actions :which-key "Code actions"
+      "l f" 'eglot-format :which-key "Format"
+      "l h" 'eldoc-doc-buffer :which-key "Show documentation"
+      "l e" 'flymake-show-buffer-diagnostics :which-key "Show errors")
     )
 
 (provide 'keybindings)
