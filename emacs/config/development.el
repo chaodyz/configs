@@ -44,7 +44,8 @@
 
 (use-package markdown-mode
   :ensure t
-  :mode ("README\\.md\\'" . gfm-mode)
+  :mode (("README\\.md\\'" . gfm-mode)
+         ("\\.mdx\\'" . markdown-mode))
   :init (setq markdown-command "multimarkdown")
   :bind (:map markdown-mode-map
          ("C-c C-e" . markdown-export)))
@@ -113,14 +114,26 @@
           js-mode
           typescript-mode
           go-mode
-          rust-mode) . eglot-ensure)
+          rust-mode
+          json-mode
+          json-ts-mode) . eglot-ensure)
   :config
+  ;; Configure TypeScript language server for MDX files
+  ;; MDX files open in markdown-mode, manually run M-x eglot to activate
+  (add-to-list 'eglot-server-programs
+               '(markdown-mode . ("typescript-language-server" "--stdio")))
+
+  ;; Configure JSON language server for schema validation
+  (add-to-list 'eglot-server-programs
+               '((json-mode json-ts-mode) . ("vscode-json-languageserver" "--stdio")))
+
   ;; Prefer xref for definitions
   (setq xref-show-definitions-function xref-show-xrefs-function))
 
-;; Note: For TypeScript, ensure language servers are installed:
+;; Note: Ensure language servers are installed:
 ;;   npm install -g @angular/language-service@latest
 ;;   npm install -g typescript
+;;   npm install -g vscode-langservers-extracted  # Includes JSON, HTML, CSS, ESLint servers
 
 (provide 'development)
 ;;; development.el ends here

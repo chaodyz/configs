@@ -85,7 +85,12 @@
       )
     (leader-key-def
       "c" '(:ignore t :which-key " Claude Console...")
-      "c t" 'claude-code-ide)
+      "c t" 'claude-code-ide
+      "c r" 'claude-code-ide-resume
+      "c c" 'claude-code-ide-continue
+      "c l" 'claude-code-ide-list-sessions
+     )
+
     (leader-key-def
       "g" '(:ignore t :which-key " Magit...")
       "g s" 'magit-status

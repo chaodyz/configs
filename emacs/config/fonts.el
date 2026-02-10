@@ -9,8 +9,8 @@
 
   ;; Font
   ;; Set font by different mode: (set-face-attribute 'default nil :font "FONT_NAME":height: FONT_SIZE MODE/BUFFER)
-  (set-face-attribute 'default nil :font "FiraCode Nerd Font Mono" :height 120)
-  (set-face-attribute 'fixed-pitch nil :font "FiraCode Nerd Font Mono" :height 160)
+  (set-face-attribute 'default nil :font "FiraCode Nerd Font Mono" :height 130)
+  (set-face-attribute 'fixed-pitch nil :font "FiraCode Nerd Font Mono" :height 120)
   (set-face-attribute 'variable-pitch nil :family "Source Sans 3" :height 160 :weight 'normal)
 
 ;; 汉字－思源黑体
