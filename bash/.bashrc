@@ -50,21 +50,24 @@ if [[ "$OSTYPE" == "linux-gnu" ]]; then
     # 1. Check if the operating system is Linux
 
     #echo "Running on Linux"
-    echo "            ."
-    echo "         .   :   ."
-    echo "     '.   .  :  .   .'"
-    echo "  ._   '._.-'''-._.'   _."
-    echo "    '-..'         '..-' "
-    echo " --._ /.==.     .==.\ _.--"
-    echo "     ;/_o__\\   /_o__\\;"
-    echo "-----|'     ) (     '|-----"
-    echo "    _: \\_) (\\_/) (_/ ;_"
-    echo " --'  \\  '._.=._.'  /  '--"
-    echo "   _.-''.  '._.'  .''-._"
-    echo "  '    .''.(_).''.    '"
-    echo " .'   '  :  '   '."
-    echo "        '    :   '"
-    echo "             '"
+    # Only show ASCII art in interactive terminal sessions
+    if [[ $- == *i* ]]; then
+        echo "            ."
+        echo "         .   :   ."
+        echo "     '.   .  :  .   .'"
+        echo "  ._   '._.-'''-._.'   _."
+        echo "    '-..'         '..-' "
+        echo " --._ /.==.     .==.\ _.--"
+        echo "     ;/_o__\\   /_o__\\;"
+        echo "-----|'     ) (     '|-----"
+        echo "    _: \\_) (\\_/) (_/ ;_"
+        echo " --'  \\  '._.=._.'  /  '--"
+        echo "   _.-''.  '._.'  .''-._"
+        echo "  '    .''.(_).''.    '"
+        echo " .'   '  :  '   '."
+        echo "        '    :   '"
+        echo "             '"
+    fi
 
     alias ll='ls -la --color=auto'
     alias l.='ls -d .[^.]* --color=auto'
@@ -129,27 +132,31 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
     alias rmprog='function __rmprog() { rm -r "$@" | pv -lep -s $(find "$@" | wc -l) >/dev/null; }; __rmprog'
    
     # Personal
-    # if [[ $USER == "diz" ]]; then
-	# echo "你好，祝你好运！"
-	# echo "    *  / \\_ *  / \\_      _  *        *   /'__        *"
-	# echo "      /    \\  /    \\,   ((        .    _/  /  \\  *'."
-	# echo " .   /\\/\\  /\\/ :' __ \\_  \`          _^/  ^/    \`--."
-	# echo "    /    \\/  \\  _/  \\-'\      *    /.' ^_   \\_   .\\'  *"
-	# echo "  /\\  .-   \`. \\/     \\ /==~=-=~=-=-;.  _/ \\ -. \`_/   \\"
-	# echo " /  \`-.__ ^   / .-'.--\\ =-=~_=-=~=^/  _ \`--./ .-'  \`-"
-	# echo "/        \`.  / /       \`.~-^=-=~=^=.-'      '-._ \`._"
-	#    else
-	# Work Machine
-	# echo "Bienvenue Di, bon journey!"
-	# echo "              |    |    |               "
-	# echo "             )_)  )_)  )_)              "
-	# echo "            )___))___))___)\            "
-	# echo "           )____)____)_____)\\          "
-	# echo "         _____|____|____|____\\\__      "
-	# echo "---------\\                   /---------"
-	# echo "  ^^^^^ ^^^^^^^^^^^^^^^^^^^^^          "
-	# echo "    ^^^^      ^^^^     ^^^    ^^        "
-	# echo "         ^^^^      ^^^^                "
+    # Only show ASCII art in interactive terminal sessions
+    if [[ $- == *i* ]]; then
+        if [[ $USER == "diz" ]]; then
+            echo "你好，祝你好运！"
+            echo "    *  / \\_ *  / \\_      _  *        *   /'__        *"
+            echo "      /    \\  /    \\,   ((        .    _/  /  \\  *'."
+            echo " .   /\\/\\  /\\/ :' __ \\_  \`          _^/  ^/    \`--."
+            echo "    /    \\/  \\  _/  \\-'\      *    /.' ^_   \\_   .\\'  *"
+            echo "  /\\  .-   \`. \\/     \\ /==~=-=~=-=-;.  _/ \\ -. \`_/   \\"
+            echo " /  \`-.__ ^   / .-'.--\\ =-=~_=-=~=^/  _ \`--./ .-'  \`-"
+            echo "/        \`.  / /       \`.~-^=-=~=^=.-'      '-._ \`._"
+        else
+            # Work Machine
+            echo "Bienvenue Di, bonne journée!"
+            echo "              |    |    |               "
+            echo "             )_)  )_)  )_)              "
+            echo "            )___))___))___)\            "
+            echo "           )____)____)_____)\\          "
+            echo "         _____|____|____|____\\\__      "
+            echo "---------\\                   /---------"
+            echo "  ^^^^^ ^^^^^^^^^^^^^^^^^^^^^          "
+            echo "    ^^^^      ^^^^     ^^^    ^^        "
+            echo "         ^^^^      ^^^^                "
+        fi
+    fi
     # K8s
 	alias k='kubectl'
 
@@ -180,11 +187,6 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
     # Java
 	[ -s "/Users/$USER/.jabba/jabba.sh" ] && source "/Users/$USER/.jabba/jabba.sh"
 
-	# The next line updates PATH for the Google Cloud SDK.
-	if [ -f '/Users/$USER/dev/google-cloud-sdk/path.bash.inc' ]; then . '/Users/$USER/dev/google-cloud-sdk/path.bash.inc'; fi
-
-	# The next line enables shell command completion for gcloud.
-	if [ -f '/Users/$USER/dev/google-cloud-sdk/completion.bash.inc' ]; then . '/Users/$USER/dev/google-cloud-sdk/completion.bash.inc'; fi
 
     # GNU libtool
     PATH="/opt/homebrew/opt/libtool/libexec/gnubin:$PATH"
