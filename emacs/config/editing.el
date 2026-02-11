@@ -80,6 +80,15 @@
   (global-set-key (kbd "C-c t") 'hydra-text-scale/body)
 
 ;; =============================================================================
+;; Indentation & Formatting
+;; =============================================================================
+
+;; Set bash indentation to 2 spaces
+(setq sh-basic-offset 2)
+;; Use spaces instead of tabs (applies to all modes by default)
+(setq-default indent-tabs-mode nil)
+
+;; =============================================================================
 ;; Other Experiments / Settings
 ;; =============================================================================
 

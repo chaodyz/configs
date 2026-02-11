@@ -120,7 +120,9 @@
           go-mode
           rust-mode
           json-mode
-          json-ts-mode) . eglot-ensure)
+          json-ts-mode
+          sh-mode
+          bash-ts-mode) . eglot-ensure)
   :bind (:map eglot-mode-map
               ;; Go to definition (F12 like VS Code)
               ("<f12>" . xref-find-definitions)
@@ -144,6 +146,10 @@
   ;; Configure JSON language server for schema validation
   (add-to-list 'eglot-server-programs
                '((json-mode json-ts-mode) . ("vscode-json-languageserver" "--stdio")))
+
+  ;; Configure bash language server for shell scripts
+  (add-to-list 'eglot-server-programs
+               '((sh-mode bash-ts-mode) . ("bash-language-server" "start")))
 
   ;; Prefer xref for definitions
   (setq xref-show-definitions-function xref-show-xrefs-function)
@@ -170,6 +176,7 @@
 ;;   npm install -g @angular/language-service@latest
 ;;   npm install -g typescript
 ;;   npm install -g vscode-langservers-extracted  # Includes JSON, HTML, CSS, ESLint servers
+;;   npm install -g bash-language-server
 
 (provide 'development)
 ;;; development.el ends here
