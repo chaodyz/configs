@@ -92,6 +92,7 @@
       "c c" 'claude-code-ide :which-key "Open Console"
       "c r" 'claude-code-ide-resume :which-key "Resume session"
       "c l" 'claude-code-ide-list-sessions :which-key "List sessions"
+      "c x" 'claude-code-ide-stop :which-key "Kill"
      )
 
     (leader-key-def

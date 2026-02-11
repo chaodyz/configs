@@ -1,71 +1,122 @@
 ;;; ai-completion.el --- AI-powered code completion -*- lexical-binding: t -*-
 
 ;;; Commentary:
-;; This module provides AI-powered code completion using Codeium
-;; Codeium is a free alternative to GitHub Copilot
+;; This module provides AI-powered code completion using GitHub Copilot
+;; Uses official GitHub Copilot with existing license
+;; Also includes EditorConfig support for consistent formatting
 ;;
 ;; INSTALLATION (One-time setup):
 ;;
 ;;   1. Clone the repository:
-;;      git clone --depth 1 https://github.com/Exafunction/codeium.el ~/.emacs.d/codeium.el
+;;      git clone https://github.com/copilot-emacs/copilot.el ~/.emacs.d/copilot.el
 ;;
-;;   2. Restart Emacs
+;;   2. Install Node.js (required by Copilot):
+;;      brew install node  # macOS
+;;      # or use your system's package manager
 ;;
-;;   3. Run: M-x codeium-install (downloads the language server)
+;;   3. Restart Emacs
 ;;
-;;   4. Run: M-x codeium-init (authenticate - opens browser)
+;;   4. Run: M-x copilot-install-server (one-time setup)
+;;
+;;   5. Run: M-x copilot-login (authenticate with GitHub)
 ;;
 ;; USAGE:
-;;   - AI suggestions appear in completion menu
-;;   - Works with Company mode
-;;   - Tab to accept completion
-;;
-;; REQUIREMENTS:
-;;   - Emacs compiled with libxml2 support
-;;   - Check with: M-: (libxml-available-p)
+;;   - Ghost text appears as you type
+;;   - Tab to accept suggestion (in insert mode)
+;;   - M-n / M-p to cycle through alternatives
+;;   - M-[ / M-] to accept word-by-word
+;;   - C-g to dismiss
+
 ;;; Code:
 
 ;; =============================================================================
-;; Codeium (Free AI Code Completion)
+;; EditorConfig Support
 ;; =============================================================================
 
-;; Add codeium to load path (requires manual clone - see instructions above)
-(add-to-list 'load-path "~/.emacs.d/codeium.el")
+;; Automatically apply .editorconfig settings (indent_size, indent_style, etc.)
+(use-package editorconfig
+  :ensure t
+  :config
+  (editorconfig-mode 1))
 
-;; Only load if codeium is available
-(when (file-directory-p "~/.emacs.d/codeium.el")
-  (use-package codeium
-    :ensure nil  ; Don't try to install from package manager
-    :init
-    ;; Add codeium to completion-at-point-functions
-    (add-to-list 'completion-at-point-functions #'codeium-completion-at-point)
+;; Minimal fallback for files without .editorconfig
+(setq-default indent-tabs-mode nil)      ; Use spaces by default
+(setq-default tab-width 2)               ; Display tabs as 2 spaces
+
+;; =============================================================================
+;; GitHub Copilot Integration
+;; =============================================================================
+
+;; Add copilot to load path (requires manual clone)
+(add-to-list 'load-path "~/.emacs.d/copilot.el")
+
+;; Load copilot if available
+(when (file-directory-p "~/.emacs.d/copilot.el")
+  (use-package copilot
+    :ensure nil
+    :hook (prog-mode . copilot-mode)
+    :bind (:map copilot-completion-map
+                ;; Tab to accept (works in insert mode)
+                ("<tab>" . copilot-accept-completion)
+                ("TAB" . copilot-accept-completion)
+
+                ;; Word-by-word acceptance
+                ("M-<right>" . copilot-accept-completion-by-word)
+                ("M-]" . copilot-accept-completion-by-word)
+
+                ;; Line-by-line acceptance
+                ("M-<down>" . copilot-accept-completion-by-line)
+
+                ;; Cycle through suggestions
+                ("M-n" . copilot-next-completion)
+                ("M-p" . copilot-previous-completion)
+
+                ;; Dismiss
+                ("C-g" . copilot-clear-overlay))
 
     :config
-    ;; Disable dialog boxes (use minibuffer instead)
-    (setq use-dialog-box nil)
+    ;; Show copilot status in mode line
+    (setq copilot-mode-line-format " Copilot")
 
-    ;; Show codeium status in mode line (optional)
-    (setq codeium-mode-line-enable
-          (lambda (api) (not (memq api '(CancelRequest Heartbeat AcceptCompletion)))))
-    (add-to-list 'mode-line-format '(:eval (car-safe codeium-mode-line)) t)
+    ;; Suppress indentation warning (harmless)
+    (setq copilot-indent-offset-warning-disable t)
 
-    ;; Enable codeium in programming modes
-    (add-hook 'prog-mode-hook
-              (lambda ()
-                (add-to-list 'completion-at-point-functions #'codeium-completion-at-point)))))
+    ;; Set default indentation to match .editorconfig (2 spaces)
+    (setq copilot-indent-offset-alist
+          '((c-mode . 2)
+            (c++-mode . 2)
+            (java-mode . 2)
+            (js-mode . 2)
+            (js-ts-mode . 2)
+            (typescript-mode . 2)
+            (typescript-ts-mode . 2)
+            (tsx-ts-mode . 2)
+            (python-mode . 2)
+            (go-mode . 2)
+            (rust-mode . 2)
+            (json-mode . 2)
+            (json-ts-mode . 2)
+            (css-mode . 2)
+            (sh-mode . 2)
+            (markdown-mode . 2)))
+
+    ;; Customize ghost text appearance (optional)
+    (custom-set-faces
+     '(copilot-overlay-face ((t (:foreground "#6c7086" :italic t)))))))
 
 ;; =============================================================================
-;; Company Mode Configuration for Codeium
+;; Integration with Company
 ;; =============================================================================
 
-;; Optimize company for better AI completion experience
+;; Make sure Tab works for Copilot, not Company
 (with-eval-after-load 'company
-  ;; Faster completion popup
-  (setq company-idle-delay 0.1)
-  ;; Start completing after 1 character
-  (setq company-minimum-prefix-length 1)
-  ;; Don't require exact match
-  (setq company-require-match nil))
+  ;; Disable Tab in company (let Copilot handle it)
+  (define-key company-active-map (kbd "<tab>") nil)
+  (define-key company-active-map (kbd "TAB") nil)
+
+  ;; Use C-n/C-p for company completion instead
+  (define-key company-active-map (kbd "C-n") 'company-select-next)
+  (define-key company-active-map (kbd "C-p") 'company-select-previous))
 
 (provide 'ai-completion)
 ;;; ai-completion.el ends here
