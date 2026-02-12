@@ -16,20 +16,20 @@
 ;; Projectile (Project Management)
 ;; =============================================================================
 
-  ;; Projectile
-  (use-package projectile
-    :ensure t
-    :init
-    (setq projectile-completion-system 'ivy)
-    :config
-    (projectile-mode 1)
-    (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
-    (setq projectile-project-search-path '("~/projects/" "~/projects/backup/"))
-    (setq projectile-switch-project-action #'projectile-dired))
+;; Projectile
+(use-package projectile
+  :ensure t
+  :init
+  (setq projectile-completion-system 'ivy)
+  :config
+  (projectile-mode 1)
+  (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+  (setq projectile-project-search-path '("~/projects/" "~/projects/backup/"))
+  (setq projectile-switch-project-action #'projectile-dired))
 
-  (use-package counsel-projectile
-    :ensure t
-    :config (counsel-projectile-mode))
+(use-package counsel-projectile
+  :ensure t
+  :config (counsel-projectile-mode))
 
 ;; =============================================================================
 ;; Magit (Git Interface)
@@ -48,7 +48,7 @@
          ("\\.mdx\\'" . markdown-mode))
   :init (setq markdown-command "multimarkdown")
   :bind (:map markdown-mode-map
-         ("C-c C-e" . markdown-export)))
+              ("C-c C-e" . markdown-export)))
 
 ;; =============================================================================
 ;; Claude Code IDE
@@ -74,30 +74,30 @@
 ;; Reference: https://github.com/renzmann/treesit-auto
 ;; Author's blog: https://robbmann.io/posts/emacs-treesit-auto/
 
-  ;; Configure tree-sitter language sources
+;; Configure tree-sitter language sources
 (setq treesit-language-source-alist
-   '((bash "https://github.com/tree-sitter/tree-sitter-bash")
-     (cmake "https://github.com/uyha/tree-sitter-cmake")
-     (css "https://github.com/tree-sitter/tree-sitter-css")
-     (elisp "https://github.com/Wilfred/tree-sitter-elisp")
-     (go "https://github.com/tree-sitter/tree-sitter-go")
-     (html "https://github.com/tree-sitter/tree-sitter-html")
-     (javascript "https://github.com/tree-sitter/tree-sitter-javascript" "master" "src")
-     (json "https://github.com/tree-sitter/tree-sitter-json")
-     (make "https://github.com/alemuller/tree-sitter-make")
-     (markdown "https://github.com/ikatyang/tree-sitter-markdown")
-     (python "https://github.com/tree-sitter/tree-sitter-python")
-     (toml "https://github.com/tree-sitter/tree-sitter-toml")
-     (tsx "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src")
-     (typescript "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src")
-     (yaml "https://github.com/ikatyang/tree-sitter-yaml")))
+      '((bash "https://github.com/tree-sitter/tree-sitter-bash")
+        (cmake "https://github.com/uyha/tree-sitter-cmake")
+        (css "https://github.com/tree-sitter/tree-sitter-css")
+        (elisp "https://github.com/Wilfred/tree-sitter-elisp")
+        (go "https://github.com/tree-sitter/tree-sitter-go")
+        (html "https://github.com/tree-sitter/tree-sitter-html")
+        (javascript "https://github.com/tree-sitter/tree-sitter-javascript" "master" "src")
+        (json "https://github.com/tree-sitter/tree-sitter-json")
+        (make "https://github.com/alemuller/tree-sitter-make")
+        (markdown "https://github.com/ikatyang/tree-sitter-markdown")
+        (python "https://github.com/tree-sitter/tree-sitter-python")
+        (toml "https://github.com/tree-sitter/tree-sitter-toml")
+        (tsx "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src")
+        (typescript "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src")
+        (yaml "https://github.com/ikatyang/tree-sitter-yaml")))
 
-  (use-package treesit-auto
-    :custom
-    (treesit-auto-install 'prompt)
-    :config
-    (treesit-auto-add-to-auto-mode-alist 'all)
-    (global-treesit-auto-mode))
+(use-package treesit-auto
+  :custom
+  (treesit-auto-install 'prompt)
+  :config
+  (treesit-auto-add-to-auto-mode-alist 'all)
+  (global-treesit-auto-mode))
 
 ;; =============================================================================
 ;; LSP (Language Server Protocol)
@@ -106,7 +106,7 @@
 ;; Emacs 29+ includes eglot, a lightweight, built-in LSP client
 ;; No need to install external LSP clients unless you prefer alternatives like lsp-mode
 
-  (use-package eglot
+(use-package eglot
   :ensure nil
   :hook ((tsx-ts-mode
           typescript-ts-mode
@@ -157,26 +157,40 @@
   ;; Show documentation on hover (like VS Code)
   (setq eldoc-echo-area-use-multiline-p nil))  ; Keep it concise
 
-  ;; Format on save (optional, uncomment if you want this)
-  ;; (add-hook 'before-save-hook
-  ;;           (lambda ()
-  ;;             (when (eglot-managed-p)
-  ;;               (eglot-format-buffer))))
+;; Format on save (optional, uncomment if you want this)
+;; (add-hook 'before-save-hook
+;;           (lambda ()
+;;             (when (eglot-managed-p)
+;;               (eglot-format-buffer))))
 
-  ;; Evil mode bindings for LSP (Vim-style shortcuts)
-  (with-eval-after-load 'evil
-    (evil-define-key 'normal eglot-mode-map
-      (kbd "gd") 'xref-find-definitions           ; Go to definition
-      (kbd "gD") 'xref-find-definitions-other-window
-      (kbd "gr") 'xref-find-references            ; Go to references
-      (kbd "K") 'eldoc-doc-buffer                 ; Show docs (like Vim K)
-      (kbd "C-.") 'eglot-code-actions))
+;; Evil mode bindings for LSP (Vim-style shortcuts)
+(with-eval-after-load 'evil
+  (evil-define-key 'normal eglot-mode-map
+    (kbd "gd") 'xref-find-definitions           ; Go to definition
+    (kbd "gD") 'xref-find-definitions-other-window
+    (kbd "gr") 'xref-find-references            ; Go to references
+    (kbd "K") 'eldoc-doc-buffer                 ; Show docs (like Vim K)
+    (kbd "C-.") 'eglot-code-actions))
 
 ;; Note: Ensure language servers are installed:
 ;;   npm install -g @angular/language-service@latest
 ;;   npm install -g typescript
 ;;   npm install -g vscode-langservers-extracted  # Includes JSON, HTML, CSS, ESLint servers
 ;;   npm install -g bash-language-server
+
+;; =============================================================================
+;; Apheleia
+;; =============================================================================
+
+(use-package apheleia
+  :ensure t
+  :config
+  ;; Enable global mode for format-on-save
+  ;; (apheleia-global-mode +1)
+
+  ;; Optional: Customize prettier command if needed
+  (setf (alist-get 'prettier apheleia-formatters)
+        '("prettier" "--stdin-filepath" filepath)))
 
 (provide 'development)
 ;;; development.el ends here
