@@ -43,6 +43,10 @@
   (set-fringe-mode 10) ; Give some breathing room
   (menu-bar-mode -1)  ; Disable the menu bar
 
+
+  (setq resize-mini-windows t) ; Grow and shrink the mini window as needed
+  (setq max-mini-window-height 0.35) ; Cap 35% of frame height
+
   (setq split-width-threshold 160) ; the minimum width of a window that Emacs should split horizontally instead of vertically.
   (setq split-height-threshold 80)
 

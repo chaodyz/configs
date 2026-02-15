@@ -50,20 +50,6 @@
   :bind (:map markdown-mode-map
               ("C-c C-e" . markdown-export)))
 
-;; =============================================================================
-;; Claude Code IDE
-;; =============================================================================
-
-(use-package claude-code-ide
-  :ensure t
-  :vc (:url "https://github.com/manzaltu/claude-code-ide.el" :rev :newest)
-  :bind ("C-c C-'" . claude-code-ide-menu) ; Set your favorite keybinding
-  :config
-  ;; Configure diff view behavior to prevent "session reload" appearance
-  (setq claude-code-ide-show-claude-window-in-ediff t)  ; Keep Claude visible during diff
-  (setq claude-code-ide-focus-claude-after-ediff nil)   ; Don't switch focus to Claude after diff opens
-  (setq claude-code-ide-switch-tab-on-ediff nil)        ; Don't switch tabs when opening diff
-  (claude-code-ide-emacs-tools-setup)) ; Optionally enable Emacs MCP tools
 
 ;; =============================================================================
 ;; Tree-sitter (Syntax Highlighting)

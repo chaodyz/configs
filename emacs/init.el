@@ -24,7 +24,7 @@
 ;; Editing experience
 (require 'editing)        ; Evil mode, undo-tree
 (require 'completion)     ; Ivy, counsel, company
-(require 'ai-completion)  ; Codeium AI code completion
+(require 'ai)  ; AI Integrations
 (require 'keybindings)    ; General, which-key, hydra
 
 ;; Org mode - loaded in dependency order
@@ -52,12 +52,13 @@
  '(package-selected-packages nil)
  '(package-vc-selected-packages
    '((claude-code-ide :url
-		      "https://github.com/manzaltu/claude-code-ide.el"))))
+                      "https://github.com/manzaltu/claude-code-ide.el"))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(copilot-overlay-face ((t (:foreground "#6c7086" :italic t))))
  '(org-block ((t (:inherit fixed-pitch :height 0.9))))
  '(org-code ((t (:inherit (shadow fixed-pitch) :height 0.9))))
  '(org-default ((t (:inherit default :height 1.0))))

@@ -1,6 +1,8 @@
-;;; ai-completion.el --- AI-powered code completion -*- lexical-binding: t -*-
+;;; ai.el --- AI integration -*- lexical-binding: t -*-
 
 ;;; Commentary:
+;; This module provide Claude-ide integration
+
 ;; This module provides AI-powered code completion using GitHub Copilot
 ;; Uses official GitHub Copilot with existing license
 ;; Also includes EditorConfig support for consistent formatting
@@ -118,5 +120,45 @@
   (define-key company-active-map (kbd "C-n") 'company-select-next)
   (define-key company-active-map (kbd "C-p") 'company-select-previous))
 
-(provide 'ai-completion)
-;;; ai-completion.el ends here
+
+;; =============================================================================
+;; Claude Code IDE
+;; =============================================================================
+
+(use-package claude-code-ide
+  :ensure t
+  :vc (:url "https://github.com/manzaltu/claude-code-ide.el" :rev :newest)
+  :bind ("C-c C-'" . claude-code-ide-menu) ; Set your favorite keybinding
+  :config
+  ;; Configure diff view behavior to prevent "session reload" appearance
+  (setq claude-code-ide-show-claude-window-in-ediff t)  ; Keep Claude visible during diff
+  (setq claude-code-ide-focus-claude-after-ediff nil)   ; Don't switch focus to Claude after diff opens
+  (setq claude-code-ide-switch-tab-on-ediff nil)        ; Don't switch tabs when opening diff
+  (claude-code-ide-emacs-tools-setup)) ; Optionally enable Emacs MCP tools
+
+
+(use-package ai-code
+  :ensure t
+  :config
+  ;; use codex as backend, other options are 'claude-code, 'gemini, 'github-copilot-cli, 'opencode, 'grok, 'cursor, 'kiro, 'codebuddy, 'aider, 'claude-code-ide, 'claude-code-el
+  (ai-code-set-backend 'claude-code-ide)
+  ;; Enable global keybinding for the main menu
+  (global-set-key (kbd "C-c a") #'ai-code-menu)
+  ;; Optional: Use eat if you prefer, by default it is vterm
+  ;; (setq ai-code-backends-infra-terminal-backend 'eat) ;; the way to config all native supported CLI. for external backend such as claude-code-ide.el and claude-code.el, please check their config
+  ;; Optional: Enable @ file completion in comments and AI sessions
+  (ai-code-prompt-filepath-completion-mode 1)
+  ;; Optional: Ask AI to run test after code changes, for a tighter build-test loop
+  (setq ai-code-auto-test-type 'test-after-change)
+  ;; Optional: In AI session buffers, SPC in Evil normal state triggers the prompt-enter UI
+  (with-eval-after-load 'evil (ai-code-backends-infra-evil-setup))
+  ;; Optional: Turn on auto-revert buffer, so that the AI code change automatically appears in the buffer
+  (global-auto-revert-mode 1)
+  (setq auto-revert-interval 1) ;; set to 1 second for faster update
+  ;; Optional: Set up Magit integration for AI commands in Magit popups
+  (with-eval-after-load 'magit
+    (ai-code-magit-setup-transients)))
+
+
+(provide 'ai)
+;;; ai.el ends here

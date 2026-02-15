@@ -47,10 +47,13 @@
 
   (use-package general
     :ensure t
+    :after evil
     :requires which-key
     :config
+    (general-override-mode)
     (general-create-definer leader-key-def
-      :states '(normal visual insert emacs)
+      :keymaps 'override
+      :states '(normal visual motion emacs)
       :prefix "SPC"
       :non-normal-prefix "M-SPC")
     (leader-key-def
