@@ -39,6 +39,20 @@
   :ensure t)
 
 ;; =============================================================================
+;; Ediff Configuration
+;; =============================================================================
+
+;; Split windows side-by-side (left/right) instead of top/bottom
+(setq ediff-split-window-function 'split-window-horizontally)
+
+;; Put Ediff control panel in the same frame (not a separate window)
+;; This works better with Evil mode and window management
+(setq ediff-window-setup-function 'ediff-setup-windows-plain)
+
+;; Restore window config after quitting ediff
+(add-hook 'ediff-quit-hook 'winner-undo)
+
+;; =============================================================================
 ;; Markdown Mode
 ;; =============================================================================
 

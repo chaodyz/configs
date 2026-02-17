@@ -145,10 +145,13 @@
   ;; Enable global keybinding for the main menu
   (global-set-key (kbd "C-c a") #'ai-code-menu)
   ;; Optional: Use eat if you prefer, by default it is vterm
-  ;; (setq ai-code-backends-infra-terminal-backend 'eat) ;; the way to config all native supported CLI. for external backend such as claude-code-ide.el and claude-code.el, please check their config
+  ;; (setq ai-code-backends-infra-terminal-backend 'eat)
+  ;; Note: This configures terminal backend for native CLI support.
+  ;; For external backends (claude-code-ide.el, claude-code.el), check their config
   ;; Optional: Enable @ file completion in comments and AI sessions
   (ai-code-prompt-filepath-completion-mode 1)
   ;; Optional: Ask AI to run test after code changes, for a tighter build-test loop
+  (defvar ai-code-auto-test-type)  ; Silence byte-compiler warning
   (setq ai-code-auto-test-type 'test-after-change)
   ;; Optional: In AI session buffers, SPC in Evil normal state triggers the prompt-enter UI
   (with-eval-after-load 'evil (ai-code-backends-infra-evil-setup))
