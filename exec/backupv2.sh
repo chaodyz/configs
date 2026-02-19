@@ -54,6 +54,7 @@ backup_action() {
     # Claude configs
     cp ~/.claude/CLAUDE.md "$DOTFILES_DIR/claude/CLAUDE.md"
     [[ -f ~/.claude/settings.json ]] && cp ~/.claude/settings.json "$DOTFILES_DIR/claude/settings.json"
+    [[ -f ~/.claude/statusline-command.sh ]] && cp ~/.claude/statusline-command.sh "$DOTFILES_DIR/claude/statusline-command.sh"
     if [ -d "$HOME/.claude/commands" ]; then
         rsync -av "$HOME/.claude/commands/" "$DOTFILES_DIR/claude/commands"
     fi
@@ -107,6 +108,8 @@ install_symlinks() {
     ln -sf "$DOTFILES_DIR/claude/CLAUDE.md" ~/.claude/CLAUDE.md
     [[ -f "$DOTFILES_DIR/claude/settings.json" ]] && \
         ln -sf "$DOTFILES_DIR/claude/settings.json" ~/.claude/settings.json
+    [[ -f "$DOTFILES_DIR/claude/statusline-command.sh" ]] && \
+        ln -sf "$DOTFILES_DIR/claude/statusline-command.sh" ~/.claude/statusline-command.sh
     if [ -e "$HOME/.claude/commands" ] || [ -L "$HOME/.claude/commands" ]; then
         rm -rf "$HOME/.claude/commands"
     fi

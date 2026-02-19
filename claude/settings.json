@@ -6,9 +6,10 @@
     "command": "bash ~/.claude/statusline-command.sh"
   },
   "enabledPlugins": {
+    "context7@claude-plugins-official": true,
     "typescript-lsp@claude-plugins-official": true,
-    "figma@claude-plugins-official": true,
     "atlassian@claude-plugins-official": true,
-    "plugin-dev@claude-plugins-official": true
-  }
+    "figma@claude-plugins-official": true
+  },
+  "effortLevel": "medium"
 }

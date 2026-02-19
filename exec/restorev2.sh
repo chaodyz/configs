@@ -40,6 +40,7 @@ restore_action() {
     mkdir -p ~/.claude
     cp "$DOTFILES_DIR/claude/CLAUDE.md" ~/.claude/CLAUDE.md
     [[ -f "$DOTFILES_DIR/claude/settings.json" ]] && cp "$DOTFILES_DIR/claude/settings.json" ~/.claude/settings.json
+    [[ -f "$DOTFILES_DIR/claude/statusline-command.sh" ]] && cp "$DOTFILES_DIR/claude/statusline-command.sh" ~/.claude/statusline-command.sh
     if [ -d "$DOTFILES_DIR/claude/commands" ]; then
         rm -rf ~/.claude/commands
         cp -rf "$DOTFILES_DIR/claude/commands" ~/.claude/
