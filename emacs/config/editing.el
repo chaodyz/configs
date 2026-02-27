@@ -53,12 +53,23 @@
   (define-key evil-normal-state-map "gc" 'evilnc-comment-or-uncomment-lines)
 
   (use-package evil-collection
-    :after (evil magit) ;; Ensure Magit is loaded before Evil-Collection initialized
+    :after evil
     :config
+    (delete 'magit evil-collection-mode-list) ;; defer magit to avoid load-order issues
     (evil-collection-init))
+
+  ;; Init magit evil bindings only after magit actually loads
+  (with-eval-after-load 'magit
+    (evil-collection-init '(magit magit-todos)))
 
   ;; Escape key to quit menu
   (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
+
+  ;; ;; Distinguish C-i from TAB in GUI Emacs so evil-jump-forward works
+  ;; (when (display-graphic-p)
+  ;;   (define-key input-decode-map "\C-i" [C-i])
+  ;;   (with-eval-after-load 'evil
+  ;;     (define-key evil-motion-state-map [C-i] 'evil-jump-forward)))
 
   ;; Xref keybindings for Evil mode
   (with-eval-after-load 'evil
