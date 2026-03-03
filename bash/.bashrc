@@ -133,7 +133,7 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
   # Personal
   # Only show ASCII art in interactive terminal sessions
   if [[ $- == *i* ]]; then
-    if [[ $USER == "diz" ]]; then
+    if [[ $USER == "chaodyz" ]]; then
       echo "你好，祝你好运！"
       echo "    *  / \\_ *  / \\_      _  *        *   /'__        *"
       echo "      /    \\  /    \\,   ((        .    _/  /  \\  *'."
@@ -186,8 +186,13 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
   # Java
   [ -s "/Users/$USER/.jabba/jabba.sh" ] && source "/Users/$USER/.jabba/jabba.sh"
 
+  # Go
+  export GOPATH="$HOME/go"; export GOROOT="$HOME/.go"; export PATH="$GOPATH/bin:$PATH"; # g-install: do NOT edit, see https://github.com/stefanmaric/g
+
   # GNU libtool
   PATH="/opt/homebrew/opt/libtool/libexec/gnubin:$PATH"
+
+  export PATH="/Library/PostgreSQL/18/bin:$PATH"
 
   # Terminal Prompt
   eval "$(starship init bash)"
