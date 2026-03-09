@@ -58,12 +58,13 @@
 ;; Download joplin-mode.el from:
 ;; https://discourse.joplinapp.org/t/note-for-emacs-users/623
 
-;; Load the major mode file
-(load-file "~/.emacs.d/lisp/joplin-mode.el")
-
-;; Declare and autoload the mode
-(autoload 'joplin-mode "joplin-mode"
-  "Major mode for editing Joplin files" t)
+;; Load the major mode file when available
+(let ((joplin-mode-file (expand-file-name "~/.emacs.d/lisp/joplin-mode.el")))
+  (when (file-exists-p joplin-mode-file)
+    (load-file joplin-mode-file)
+    ;; Declare and autoload the mode
+    (autoload 'joplin-mode "joplin-mode"
+      "Major mode for editing Joplin files" t)))
 
 ;; Note that joplin-mode will step down if it is not joplin data
 (add-to-list 'auto-mode-alist '("/[a-f0-9]\\{32\\}\\.md\\'" . joplin-mode))
