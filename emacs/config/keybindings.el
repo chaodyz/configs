@@ -23,16 +23,6 @@
     (setq which-key-allow-evil-operators t)
     )
 
-
-  ;; Switch buffer in current project
-  (global-set-key (kbd "C-S-b") 'counsel-projectile-switch-to-buffer)
-
-  ;; Switch between projects
-  (global-set-key (kbd "C-S-p") 'counsel-projectile-switch-project)
-
-  ;; Quick buffer switch (all buffers, not just project)
-  (global-set-key (kbd "C-b") 'counsel-ibuffer)
-
 ;; =============================================================================
 ;; General (Leader Key Configuration)
 ;; =============================================================================
