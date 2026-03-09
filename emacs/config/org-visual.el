@@ -23,32 +23,32 @@
               '((heading . auto)
                 (plain-list-item . auto))))
 
-;; (defun my/org-visual-apply-faces ()
-;;   "Apply Org face customizations without using `custom-set-faces'."
-;;   (require 'org-indent)
-;;   ;; Headings
-;;   (set-face-attribute 'org-level-1 nil :inherit 'outline-1 :height 1.15)
-;;   (set-face-attribute 'org-level-2 nil :inherit 'outline-2 :height 1.12)
-;;   (set-face-attribute 'org-level-3 nil :inherit 'outline-3 :height 1.09)
-;;   (set-face-attribute 'org-level-4 nil :inherit 'outline-4 :height 1.06)
-;;   (set-face-attribute 'org-default nil :inherit 'default :height 1.0)
-;;   (set-face-attribute 'org-link nil :inherit 'link :height 1.0)
-;;   (set-face-attribute 'org-ellipsis nil :inherit 'default :weight 'normal :height 1.0 :underline nil)
-;;   ;; Fixed-pitch elements
-;;   (set-face-attribute 'org-block nil :inherit 'fixed-pitch :height 0.9)
-;;   (set-face-attribute 'org-code nil :inherit '(shadow fixed-pitch) :height 0.9)
-;;   (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
-;;   (set-face-attribute 'org-table nil :inherit 'fixed-pitch)
-;;   (set-face-attribute 'org-formula nil :inherit 'fixed-pitch)
-;;   (set-face-attribute 'org-indent nil :inherit '(org-hide fixed-pitch))
-;;   (set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch)
-;;   (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
-;;   (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
-;;   (set-face-attribute 'org-column nil :background nil)
-;;   (set-face-attribute 'org-column-title nil :background nil))
+(defun my/org-visual-apply-faces ()
+  "Apply Org face customizations without using `custom-set-faces'."
+  (require 'org-indent)
+  ;; Headings
+  (set-face-attribute 'org-level-1 nil :inherit 'outline-1 :height 1.15)
+  (set-face-attribute 'org-level-2 nil :inherit 'outline-2 :height 1.12)
+  (set-face-attribute 'org-level-3 nil :inherit 'outline-3 :height 1.09)
+  (set-face-attribute 'org-level-4 nil :inherit 'outline-4 :height 1.06)
+  (set-face-attribute 'org-default nil :inherit 'default :height 1.0)
+  (set-face-attribute 'org-link nil :inherit 'link :height 1.0)
+  (set-face-attribute 'org-ellipsis nil :inherit 'default :weight 'normal :height 1.0 :underline nil)
+  ;; Fixed-pitch elements
+  (set-face-attribute 'org-block nil :inherit 'fixed-pitch :height 0.9)
+  (set-face-attribute 'org-code nil :inherit '(shadow fixed-pitch) :height 0.9)
+  (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
+  (set-face-attribute 'org-table nil :inherit 'fixed-pitch)
+  (set-face-attribute 'org-formula nil :inherit 'fixed-pitch)
+  (set-face-attribute 'org-indent nil :inherit '(org-hide fixed-pitch))
+  (set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch)
+  (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
+  (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
+  (set-face-attribute 'org-column nil :background nil)
+  (set-face-attribute 'org-column-title nil :background nil))
 
-;; (with-eval-after-load 'org
-;;   (my/org-visual-apply-faces))
+(with-eval-after-load 'org
+  (my/org-visual-apply-faces))
 
 ;; This enables company-mode (autocomplete) when you’re editing Org files.
 (add-hook 'org-mode-hook #'company-mode)
@@ -76,16 +76,13 @@
   	    org-superstar-leading-bullet " "
         org-hide-leading-stars t
         org-indent-mode-turns-on-hiding-stars t
-        org-superstar-prettify-item-bullets t
-        org-superstar-headline-bullets-list '("☵" "○" "✻" "✿" "◆" "▶" "◉" "⚛" "♠" "☯" "✦" "⚝" "♢" "✸" "⬢"))
+        org-superstar-prettify-item-bullets t)
   :config
   ;; consistent size for list bullets
   (set-face-attribute 'org-superstar-item nil :height 1.0))
 
 ;; Hook to enable visual settings
 (add-hook 'org-mode-hook 'my-org-mode-setup)
-
-
 
 ;; Declare a wrap with function that wraps selection with CHAR pairs
 (defun my/wrap-with (char)
