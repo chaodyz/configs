@@ -5,6 +5,7 @@
 ;; - Package manager setup (package.el, use-package)
 ;; - Basic UI configuration (disable scrollbar, toolbar, etc.)
 ;; - Line numbers and visual settings
+;; - Built-in quality-of-life defaults
 
 ;;; Code:
 
@@ -47,10 +48,17 @@
   (setq resize-mini-windows t) ; Grow and shrink the mini window as needed
   (setq max-mini-window-height 0.35) ; Cap 35% of frame height
 
-  (setq split-width-threshold 160) ; the minimum width of a window that Emacs should split horizontally instead of vertically.
-  (setq split-height-threshold 80)
+   (setq split-width-threshold 160) ; the minimum width of a window that Emacs should split horizontally instead of vertically.
+   (setq split-height-threshold 80)
 
-  (column-number-mode)
+   ;; Built-in quality-of-life defaults
+   (savehist-mode 1)
+   (recentf-mode 1)
+   (winner-mode 1)
+   (when (fboundp 'pixel-scroll-precision-mode)
+     (pixel-scroll-precision-mode 1))
+
+   (column-number-mode)
   ;; Enable line numbers for some modes
   (dolist (mode '(text-mode-hook
                   prog-mode-hook
