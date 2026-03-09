@@ -9,6 +9,15 @@
 ;; - Hydra for text scaling
 ;; - French typing support (right Option key)
 
+
+;; VIM key repeat settings:
+;; Linux
+;; Configure to 180ms delay and 50 repeats/second 
+
+;; macOS
+;; defaults write -g InitialKeyRepeat -int 12
+;; defaults write -g KeyRepeat -int 1
+
 ;;; Code:
 (setq show-paren-delay 0) ;; Remove delay for showing matching parentheses
 (show-paren-mode 1) ;; Highlight matching parentheses
