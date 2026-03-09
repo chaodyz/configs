@@ -16,29 +16,39 @@
 ;; - variable-pitch-mode 1: sets the font face to a variable-width font for a more natural and aesthetically pleasing look
 (defun my-org-mode-setup ()
   "Setup visual line and variable pitch modes for Org mode."
-  (visual-line-mode)  
-  (variable-pitch-mode 1) 
+  (visual-line-mode)
+  (variable-pitch-mode 1)
   (setq-local line-spacing 0.2)
-  ;;smartly decide when to insert a blank line based on context.
   (setq-local org-blank-before-new-entry
               '((heading . auto)
-                (plain-list-item . auto)))
-  ;; (my/org-fixed-pitch-faces)
-  )
-(defun my/org-visual-apply-faces ()
-  "Apply Org face customizations without using `custom-set-faces'."
-  (set-face-attribute 'org-level-1 nil :inherit 'outline-1 :height 1.15)
-  (set-face-attribute 'org-level-2 nil :inherit 'outline-2 :height 1.12)
-  (set-face-attribute 'org-level-3 nil :inherit 'outline-3 :height 1.09)
-  (set-face-attribute 'org-level-4 nil :inherit 'outline-4 :height 1.06)
-  (set-face-attribute 'org-default nil :inherit 'default :height 1.0)
-  (set-face-attribute 'org-block nil :inherit 'fixed-pitch :height 0.9)
-  (set-face-attribute 'org-code nil :inherit '(shadow fixed-pitch) :height 0.9)
-  (set-face-attribute 'org-link nil :inherit 'link :height 1.0)
-  (set-face-attribute 'org-ellipsis nil :inherit 'default :weight 'normal :height 1.0 :underline nil))
+                (plain-list-item . auto))))
 
-(with-eval-after-load 'org
-  (my/org-visual-apply-faces))
+;; (defun my/org-visual-apply-faces ()
+;;   "Apply Org face customizations without using `custom-set-faces'."
+;;   (require 'org-indent)
+;;   ;; Headings
+;;   (set-face-attribute 'org-level-1 nil :inherit 'outline-1 :height 1.15)
+;;   (set-face-attribute 'org-level-2 nil :inherit 'outline-2 :height 1.12)
+;;   (set-face-attribute 'org-level-3 nil :inherit 'outline-3 :height 1.09)
+;;   (set-face-attribute 'org-level-4 nil :inherit 'outline-4 :height 1.06)
+;;   (set-face-attribute 'org-default nil :inherit 'default :height 1.0)
+;;   (set-face-attribute 'org-link nil :inherit 'link :height 1.0)
+;;   (set-face-attribute 'org-ellipsis nil :inherit 'default :weight 'normal :height 1.0 :underline nil)
+;;   ;; Fixed-pitch elements
+;;   (set-face-attribute 'org-block nil :inherit 'fixed-pitch :height 0.9)
+;;   (set-face-attribute 'org-code nil :inherit '(shadow fixed-pitch) :height 0.9)
+;;   (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
+;;   (set-face-attribute 'org-table nil :inherit 'fixed-pitch)
+;;   (set-face-attribute 'org-formula nil :inherit 'fixed-pitch)
+;;   (set-face-attribute 'org-indent nil :inherit '(org-hide fixed-pitch))
+;;   (set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch)
+;;   (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
+;;   (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
+;;   (set-face-attribute 'org-column nil :background nil)
+;;   (set-face-attribute 'org-column-title nil :background nil))
+
+;; (with-eval-after-load 'org
+;;   (my/org-visual-apply-faces))
 
 ;; This enables company-mode (autocomplete) when you’re editing Org files.
 (add-hook 'org-mode-hook #'company-mode)
@@ -75,20 +85,6 @@
 ;; Hook to enable visual settings
 (add-hook 'org-mode-hook 'my-org-mode-setup)
 
-;; =============================================================================
-;; Helper Functions
-;; =============================================================================
-
-(defun my/org-fixed-pitch-faces ()
-  (require 'org-indent)
-  (dolist (face '(org-block org-table org-formula org-code org-indent org-verbatim org-special-keyword org-meta-line org-checkbox))
-    (set-face-attribute face nil :inherit 'fixed-pitch))
-  (set-face-attribute 'org-code nil :inherit '(shadow fixed-pitch))
-  (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
-  (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
-  (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
-  (set-face-attribute 'org-column nil :background nil)
-  (set-face-attribute 'org-column-title nil :background nil))
 
 
 ;; Declare a wrap with function that wraps selection with CHAR pairs

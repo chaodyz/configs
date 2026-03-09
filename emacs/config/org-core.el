@@ -43,8 +43,7 @@
     ;; Set to the name of the file where new notes will be stored
     (setq org-mobile-inbox-for-pull my/org-flagged-file)
     ;; Set to <your Dropbox root directory>/MobileOrg.
-    (setq org-mobile-directory "~/Dropbox/Apps/MobileOrg")
-    (setq org-startup-indented 1))
+    (setq org-mobile-directory "~/Dropbox/Apps/MobileOrg"))
 
 ;; =============================================================================
 ;; Org Babel
@@ -86,7 +85,7 @@
     (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp")))
 
 ;; Org writing experience settings
-(setq org-startup-indented t)  ;; Auto-indent headlines and content
+(setq org-startup-indented nil)  ;; Disable auto-indentation for a more traditional Org experience
 (setq org-startup-folded t)    ;; Fold content on startup for better readability
 
 ;; =============================================================================
