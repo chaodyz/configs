@@ -13,14 +13,35 @@
 ;; Core Org Configuration
 ;; =============================================================================
 
+(defvar my/org-root-directory "~/eSync/org/"
+  "Root directory for Org files.")
+
+(defvar my/org-roam-directory (expand-file-name "roam" my/org-root-directory)
+  "Directory for Org Roam files.")
+
+(defvar my/org-default-notes-path (expand-file-name "index.org" my/org-root-directory)
+  "Default capture file for Org notes.")
+
+(defvar my/org-tasks-file (expand-file-name "tasks.org" my/org-root-directory)
+  "Primary tasks file.")
+
+(defvar my/org-journal-file (expand-file-name "journal.org" my/org-root-directory)
+  "Journal file.")
+
+(defvar my/org-french-file (expand-file-name "french.org" my/org-root-directory)
+  "French notes file.")
+
+(defvar my/org-flagged-file (expand-file-name "flagged.org" my/org-root-directory)
+  "MobileOrg inbox file.")
+
   (use-package org
     :ensure t
     :init
-    (setq org-directory "~/eSync/org/"
-          org-default-notes-file "~/eSync/org/index.org")
-    (setq org-agenda-files '("~/eSync/org" "~/eSync/org/roam"))
+    (setq org-directory my/org-root-directory
+          org-default-notes-file my/org-default-notes-path)
+    (setq org-agenda-files (list my/org-root-directory my/org-roam-directory))
     ;; Set to the name of the file where new notes will be stored
-    (setq org-mobile-inbox-for-pull "~/eSync/org/flagged.org")
+    (setq org-mobile-inbox-for-pull my/org-flagged-file)
     ;; Set to <your Dropbox root directory>/MobileOrg.
     (setq org-mobile-directory "~/Dropbox/Apps/MobileOrg")
     (setq org-startup-indented 1))

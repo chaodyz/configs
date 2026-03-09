@@ -63,11 +63,11 @@
 (setq org-agenda-custom-commands
       '(("p" "Planning"
              ((tags-todo "+planning"
-                         ((org-agenda-overriding-header "Planning Tasks")))
-              (tags-todo "-{.*}"
-                         ((org-agenda-overriding-header "Untagged Tasks")))
-              (todo ".*" ((org-agenda-files '("~/eSync/org/tasks.org"))
-                          (org-agenda-overriding-header "Unprocessed TODO Items")))))
+                          ((org-agenda-overriding-header "Planning Tasks")))
+               (tags-todo "-{.*}"
+                          ((org-agenda-overriding-header "Untagged Tasks")))
+               (todo ".*" ((org-agenda-files (list my/org-tasks-file))
+                           (org-agenda-overriding-header "Unprocessed TODO Items")))))
 
         ("d" "Daily Agenda"
          ((agenda "" ((org-agenda-span 'day)
@@ -91,16 +91,16 @@
 ;; =============================================================================
 
     (setq org-capture-templates
-          '(("t" "Task" entry (file+olp "~/eSync/org/tasks.org" "Inbox")
+          `(("t" "Task" entry (file+olp ,my/org-tasks-file "Inbox")
              "* TODO %?\n  %U\n  %a\n  %i" :empty-lines 1)
 
             ("j" "Journal" entry
-             (file+olp+datetree "~/eSync/org/journal.org")
+             (file+olp+datetree ,my/org-journal-file)
              "\n* %<%I:%M %p> - Journal :journal:\n\n%?\n\n"
              :clock-in :clock-resume :empty-lines 1)
     	
             ("f" "French Class Notes" entry
-    	 (file+olp+datetree "~/eSync/org/french.org")
+	     (file+olp+datetree ,my/org-french-file)
  	 "* French Class Notes: %T
  ** General
  %?
@@ -110,8 +110,8 @@
  ** Grammar
  - Rule 1: 
  - Rule 2: 
- ")             
-   	))
+	  ")
+    	))
 
 (provide 'org-workflow)
 ;;; org-workflow.el ends here
