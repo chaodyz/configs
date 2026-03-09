@@ -198,9 +198,31 @@
 
 (use-package apheleia
   :ensure t
+  :hook ((js-mode . apheleia-mode)
+         (js-ts-mode . apheleia-mode)
+         (typescript-mode . apheleia-mode)
+         (typescript-ts-mode . apheleia-mode)
+         (tsx-ts-mode . apheleia-mode)
+         (json-mode . apheleia-mode)
+         (json-ts-mode . apheleia-mode)
+         (css-mode . apheleia-mode)
+         (html-mode . apheleia-mode)
+         (html-ts-mode . apheleia-mode)
+         (mhtml-mode . apheleia-mode))
   :config
-  ;; Enable global mode for format-on-save
-  ;; (apheleia-global-mode +1)
+  ;; Format on save for the modes above.
+  (setq apheleia-mode-alist
+        '((js-mode . prettier)
+          (js-ts-mode . prettier)
+          (typescript-mode . prettier)
+          (typescript-ts-mode . prettier)
+          (tsx-ts-mode . prettier)
+          (json-mode . prettier)
+          (json-ts-mode . prettier)
+          (css-mode . prettier)
+          (html-mode . prettier)
+          (html-ts-mode . prettier)
+          (mhtml-mode . prettier)))
 
   ;; Optional: Customize prettier command if needed
   (setf (alist-get 'prettier apheleia-formatters)
