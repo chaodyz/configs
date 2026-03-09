@@ -26,15 +26,6 @@
 ;; =============================================================================
 ;; General (Leader Key Configuration)
 ;; =============================================================================
-
-  ;; Smart quit: close buffer if only window, otherwise close window
-  (defun my/smart-quit ()
-    "Close window if multiple windows exist, otherwise kill buffer."
-    (interactive)
-    (if (one-window-p)
-        (kill-buffer)
-      (delete-window)))
-
   (use-package general
     :ensure t
     :after evil
@@ -51,7 +42,7 @@
       "f" 'counsel-find-file
       "h" 'counsel-command-history
       "p" 'projectile-command-map
-      "q" 'my/smart-quit :which-key "Close buffer/window"
+      "q" 'delete-window
       "r" 'counsel-recentf
       "s" 'counsel-projectile-rg :which-key " Search in project"
       "w" 'save-buffer
