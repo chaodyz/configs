@@ -77,7 +77,16 @@
 ;; Helper Functions
 ;; =============================================================================
 
-(defun my/org-fixed-pitch-faces () (require 'org-indent) (dolist (face '(org-block org-table org-formula org-code org-indent org-verbatim org-special-keyword org-meta-line org-checkbox)) (set-face-attribute face nil :inherit 'fixed-pitch)) (set-face-attribute 'org-code nil :inherit '(shadow fixed-pitch)) (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch)) (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch)) (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch)) (set-face-attribute 'org-column nil :background nil) (set-face-attribute 'org-column-title nil :background nil))
+(defun my/org-fixed-pitch-faces ()
+  (require 'org-indent)
+  (dolist (face '(org-block org-table org-formula org-code org-indent org-verbatim org-special-keyword org-meta-line org-checkbox))
+    (set-face-attribute face nil :inherit 'fixed-pitch))
+  (set-face-attribute 'org-code nil :inherit '(shadow fixed-pitch))
+  (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
+  (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
+  (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
+  (set-face-attribute 'org-column nil :background nil)
+  (set-face-attribute 'org-column-title nil :background nil))
 
 
 ;; Declare a wrap with function that wraps selection with CHAR pairs
