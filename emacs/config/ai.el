@@ -103,8 +103,7 @@
             (markdown-mode . 2)))
 
     ;; Customize ghost text appearance (optional)
-    (custom-set-faces
-     '(copilot-overlay-face ((t (:foreground "#6c7086" :italic t)))))))
+    (set-face-attribute 'copilot-overlay-face nil :foreground "#6c7086" :italic t)))
 
 ;; =============================================================================
 ;; Integration with Company

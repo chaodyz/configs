@@ -25,18 +25,20 @@
                 (plain-list-item . auto)))
   ;; (my/org-fixed-pitch-faces)
   )
-;; Set faces for headings, lists, and other elements
-(custom-set-faces
- ;; Set font and size for headlines
- '(org-level-1 ((t (:inherit outline-1 :height 1.15))))
- '(org-level-2 ((t (:inherit outline-2 :height 1.12))))
- '(org-level-3 ((t (:inherit outline-3 :height 1.09))))
- '(org-level-4 ((t (:inherit outline-4 :height 1.06))))
- '(org-default ((t (:inherit default :height 1.0))))
- '(org-block ((t (:inherit fixed-pitch :height 0.9))))
- '(org-code ((t (:inherit (shadow fixed-pitch) :height 0.9))))
- '(org-link ((t (:inherit link :height 1.0))))
- '(org-ellipsis ((t (:inherit default :weight normal :height 1.0 :underline nil)))))
+(defun my/org-visual-apply-faces ()
+  "Apply Org face customizations without using `custom-set-faces'."
+  (set-face-attribute 'org-level-1 nil :inherit 'outline-1 :height 1.15)
+  (set-face-attribute 'org-level-2 nil :inherit 'outline-2 :height 1.12)
+  (set-face-attribute 'org-level-3 nil :inherit 'outline-3 :height 1.09)
+  (set-face-attribute 'org-level-4 nil :inherit 'outline-4 :height 1.06)
+  (set-face-attribute 'org-default nil :inherit 'default :height 1.0)
+  (set-face-attribute 'org-block nil :inherit 'fixed-pitch :height 0.9)
+  (set-face-attribute 'org-code nil :inherit '(shadow fixed-pitch) :height 0.9)
+  (set-face-attribute 'org-link nil :inherit 'link :height 1.0)
+  (set-face-attribute 'org-ellipsis nil :inherit 'default :weight 'normal :height 1.0 :underline nil))
+
+(with-eval-after-load 'org
+  (my/org-visual-apply-faces))
 
 ;; This enables company-mode (autocomplete) when you’re editing Org files.
 (add-hook 'org-mode-hook #'company-mode)
