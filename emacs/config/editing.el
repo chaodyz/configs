@@ -10,8 +10,10 @@
 ;; - French typing support (right Option key)
 
 ;;; Code:
+(setq show-paren-delay 0) ;; Remove delay for showing matching parentheses
+(show-paren-mode 1) ;; Highlight matching parentheses
 
-;; Improve Terminal Emacs with system clipboard
+;; Improve Terminal Emacs with system clipboard integration
 (setq select-enable-clipboard t) ;; Enable system clipboard integration
 (setq select-enable-clipboard t) ;; Enable system clipboard integration
 

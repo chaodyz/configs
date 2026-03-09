@@ -132,9 +132,12 @@
   :config
   ;; Configure diff view behavior to prevent "session reload" appearance
   (setq claude-code-ide-show-claude-window-in-ediff t)  ; Keep Claude visible during diff
-  (setq claude-code-ide-focus-claude-after-ediff nil)   ; Don't switch focus to Claude after diff opens
-  (setq claude-code-ide-switch-tab-on-ediff nil)        ; Don't switch tabs when opening diff
-  (claude-code-ide-emacs-tools-setup)) ; Optionally enable Emacs MCP tools
+  ;; Enable/disable vterm anti-flicker optimization (enabled by default)
+  (setq claude-code-ide-vterm-anti-flicker t)
+  ;; Adjust the render delay for batching updates (default is 0.005 seconds)
+  (setq claude-code-ide-vterm-render-delay 0.01)  ; Increase for smoother but less responsive
+  (claude-code-ide-emacs-tools-setup)
+  ) ; Optionally enable Emacs MCP tools
 
 
 (use-package ai-code

@@ -16,9 +16,7 @@
   (use-package org
     :ensure t
     :init
-    (setq org-ellipsis " ▼"
-          org-hide-emphasis-markers t
-          org-directory "~/eSync/org/"
+    (setq org-directory "~/eSync/org/"
           org-default-notes-file "~/eSync/org/index.org")
     (setq org-agenda-files '("~/eSync/org" "~/eSync/org/roam"))
     ;; Set to the name of the file where new notes will be stored

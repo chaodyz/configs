@@ -5,6 +5,9 @@
 ## GitLab
 - Always use `glab` CLI instead of GitLab MCP tools for all GitLab operations (MRs, issues, pipelines, API calls, etc.)
 
+## Github
+- Always use `gh` for Github operations
+
 ## Emacs
-- Main editor, has emacs-claude-ide.el integration
+- I update regularly, consider use latest version references.
 - Config location: `~/projects/configs/emacs/` this is a symlinked address, and init.el is loading .el files in different files. You may refer to `~/project/configs/emacs/config/` to see all the file 

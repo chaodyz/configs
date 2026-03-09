@@ -34,7 +34,7 @@
 ;;(require 'org-roam)       ; Roam configuration
 
 ;; Development tools
-(require 'development)    ; LSP, treesitter, projectile, magit
+(require 'coding)         ; LSP, treesitter, projectile, magit
 
 ;; Language-specific
 (require 'chinese)        ; Pyim (拼音)
@@ -49,6 +49,10 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(custom-safe-themes
+   '("00445e6f15d31e9afaa23ed0d765850e9cd5e929be5e8e63b114a3346236c44c"
+     "09b833239444ac3230f591e35e3c28a4d78f1556b107bafe0eb32b5977204d93"
+     default))
  '(package-selected-packages nil)
  '(package-vc-selected-packages
    '((claude-code-ide :url
