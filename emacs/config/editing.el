@@ -24,7 +24,6 @@
 
 ;; Improve Terminal Emacs with system clipboard integration
 (setq select-enable-clipboard t) ;; Enable system clipboard integration
-(setq select-enable-clipboard t) ;; Enable system clipboard integration
 
 ;; =============================================================================
 ;; Undo Tree
