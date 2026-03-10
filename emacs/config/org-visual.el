@@ -55,6 +55,20 @@
 ;;This tells Org to display inline images at their natural size (actual pixel width), rather than scaling them down.
 (setq org-image-actual-width nil)
 
+;; Paste/download images into Org buffers
+(use-package org-download
+  :ensure t
+  :after org
+  :custom
+  (org-download-method 'directory)
+  (org-download-image-dir "~/eSync/org/pictures")
+  (org-download-heading-lvl nil)
+  (org-download-display-inline-images t)
+  :config
+  (setq-default org-download-image-org-width 800)
+  (setq-default org-download-image-html-width 800)
+  (add-hook 'dired-mode-hook 'org-download-enable))
+
 
 
 ;; feat(visual): center text

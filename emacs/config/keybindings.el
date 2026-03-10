@@ -70,6 +70,7 @@
       "o ri" '(org-roam-node-insert :which-key "Insert a Node")
       "o rr" '(org-roam-buffer-toggle :which-key "Toggle Org Roam Buffer")
       "o it" '(org-toggle-inline-images :which-key "Toggle inline image")
+      "o ip" '(org-download-clipboard :which-key "Paste image")
       )
     (leader-key-def
       "c" '(:ignore t :which-key " Claude Console...")
