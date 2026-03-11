@@ -195,38 +195,36 @@
 ;; =============================================================================
 ;; Apheleia
 ;; =============================================================================
-
 (use-package apheleia
   :ensure t
-  :hook ((js-mode . apheleia-mode)
-         (js-ts-mode . apheleia-mode)
-         (typescript-mode . apheleia-mode)
-         (typescript-ts-mode . apheleia-mode)
-         (tsx-ts-mode . apheleia-mode)
-         (json-mode . apheleia-mode)
-         (json-ts-mode . apheleia-mode)
-         (css-mode . apheleia-mode)
-         (html-mode . apheleia-mode)
-         (html-ts-mode . apheleia-mode)
-         (mhtml-mode . apheleia-mode))
+  :init
+  (setq apheleia-log-debug-info t)
   :config
-  ;; Format on save for the modes above.
-  (setq apheleia-mode-alist
-        '((js-mode . prettier)
-          (js-ts-mode . prettier)
-          (typescript-mode . prettier)
-          (typescript-ts-mode . prettier)
-          (tsx-ts-mode . prettier)
-          (json-mode . prettier)
-          (json-ts-mode . prettier)
-          (css-mode . prettier)
-          (html-mode . prettier)
-          (html-ts-mode . prettier)
-          (mhtml-mode . prettier)))
+  ;; Use explicit formatter mappings for the modes used in this config so
+  ;; format-on-save is predictable across JS/TS, markup, shell, and Python.
+  (setf (alist-get 'javascript-mode apheleia-mode-alist) 'prettier
+        (alist-get 'js-mode apheleia-mode-alist) 'prettier
+        (alist-get 'js-ts-mode apheleia-mode-alist) 'prettier
+        (alist-get 'typescript-mode apheleia-mode-alist) 'prettier
+        (alist-get 'typescript-ts-mode apheleia-mode-alist) 'prettier
+        (alist-get 'tsx-ts-mode apheleia-mode-alist) 'prettier
+        (alist-get 'json-mode apheleia-mode-alist) 'prettier
+        (alist-get 'json-ts-mode apheleia-mode-alist) 'prettier
+        (alist-get 'css-mode apheleia-mode-alist) 'prettier
+        (alist-get 'css-ts-mode apheleia-mode-alist) 'prettier
+        (alist-get 'html-mode apheleia-mode-alist) 'prettier
+        (alist-get 'html-ts-mode apheleia-mode-alist) 'prettier
+        (alist-get 'mhtml-mode apheleia-mode-alist) 'prettier
+        (alist-get 'markdown-mode apheleia-mode-alist) 'prettier
+        (alist-get 'yaml-mode apheleia-mode-alist) 'prettier
+        (alist-get 'yaml-ts-mode apheleia-mode-alist) 'prettier
+        (alist-get 'sh-mode apheleia-mode-alist) 'shfmt
+        (alist-get 'bash-ts-mode apheleia-mode-alist) 'shfmt
+        (alist-get 'python-mode apheleia-mode-alist) 'black
+        (alist-get 'python-ts-mode apheleia-mode-alist) 'black)
 
-  ;; Optional: Customize prettier command if needed
-  (setf (alist-get 'prettier apheleia-formatters)
-        '("prettier" "--stdin-filepath" filepath)))
+  (apheleia-global-mode +1))
+
 
 (provide 'coding)
 ;;; coding.el ends here
