@@ -23,6 +23,9 @@
     (setq solarized-high-contrast-mode-line 0)
     )
 
+  (use-package doom-themes
+    :ensure t)
+
   ;; Load Theme by location's sunrise and sunset
   (use-package circadian
     :ensure t

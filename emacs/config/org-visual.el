@@ -26,7 +26,11 @@
 (defun my/org-visual-apply-faces ()
   "Apply Org face customizations without using `custom-set-faces'."
   (require 'org-indent)
+
   ;; Headings
+  ;; (dolist (face '(org-level-1 org-level-2 org-level-3 org-level-4))
+  ;;   (face-spec-reset-face face))
+  ;; thin, light, regular, medium, semi-bold,bold, extra-bold. semi-bold
   (set-face-attribute 'org-level-1 nil :inherit 'outline-1 :height 1.15)
   (set-face-attribute 'org-level-2 nil :inherit 'outline-2 :height 1.12)
   (set-face-attribute 'org-level-3 nil :inherit 'outline-3 :height 1.09)
