@@ -1,7 +1,10 @@
-- Never pop out code change on question, talk about the solution and explain it first
-- Plans location ~/eSync/org/notes/{topic_folder}/{topic_name}.org
-- Dotfiles location: ~/projects/configs/
-- Always use `gh` for Github operations
-- Always use `glab` for Gitlab operations
-- When Brainstorming,try ask me if i need to do it in broad level or be more specific, interview me if it needs to be specific.
-- When CodeReview, Do not post the review as comment if i never asked you to do so.
+- Emacs: config split into ~/.emacs.d/config/{area}.el modules (e.g. ai.el, editing.el)
+- Neovim: streamlined config for VSCode-Neovim integration (nvim/)
+- Scripts: exec/backupv2.sh copies configs, symlinks used to sync claude skills and settings
+- Alacritty: alacritty/alacritty.toml
+- Starship: starship/starship.toml
+- Tmux: tmux/.tmux.conf
+- Bash: bash/.bashrc
+- Joplin: joplin/keymap.json
+- VSCode: vscode/
+- Cursor: cursor/

@@ -2,11 +2,18 @@ You are helping plan implementation work. Follow these steps exactly — do NOT 
 
 ## Step 1: Gather Context
 
-If the user provided a ticket number (e.g. NOJ-1234, JRA-5678):
+If the user provided a ticket number (e.g. ABC-1234, JRA-5678):
 - Use the Jira MCP tool (`mcp__plugin_atlassian_atlassian__getJiraIssue`) to fetch the ticket
 - Extract: title, description, acceptance criteria, priority, labels, linked issues
 
-If no ticket number was given, use the user's description as the context.
+If no ticket number was given, **interview the user** to gather enough context before proceeding. Do NOT guess or assume missing information. Ask about:
+- What problem is being solved?
+- What is the expected outcome?
+- Are there any constraints, dependencies, or out-of-scope areas?
+- Which files or parts of the codebase are involved (if known)?
+- How should this be tested? (manual steps, automated tests, edge cases to verify)
+
+Only proceed to Step 2 once you have sufficient context to write a meaningful plan.
 
 ## Step 2: Write Ticket Summary
 
@@ -18,7 +25,7 @@ Write a file `./plan/TICKET.md` (or `./plan/TICKET-{NUMBER}.md` if a ticket numb
 # {TICKET-NUMBER}: {Title}
 
 ## Summary
-{1-3 sentence summary of what needs to be done and why}
+{Descriptive summary of what needs to be done and why. Cover the problem being solved, the expected outcome, and any important constraints or context. Be specific enough that someone unfamiliar with the ticket can understand the scope and motivation.}
 
 ## Acceptance Criteria
 {List from ticket, or inferred from description}

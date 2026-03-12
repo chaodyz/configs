@@ -9,7 +9,7 @@ Parse the `* Tickets` section. For each `** heading`:
 - **Placeholder**: has `TODO` keyword → create with `[Placeholder]` prefix and minimal description
 - **Skip**: already has a ticket number pattern like `[ABC-1234]` → skip, already created
 
-> **Note:** `ABC` here represents the Jira project board key (e.g. `NOJ`, `LPCR`). Ask the user which project to use if not obvious from context.
+> **Note:** `ABC` here represents the Jira project board key (e.g. `ABC`). Ask the user which project to use if not obvious from context.
 
 ## Step 2: Confirm the Plan with the User
 
@@ -20,7 +20,7 @@ Before creating anything, present a table:
 | 1 | Heading text | Ready / Placeholder | Any notes |
 
 Ask the user to confirm:
-1. The **Jira project key** (e.g. `NOJ`)
+1. The **Jira project key** (e.g. `ABC`)
 2. The **Epic** to link tickets to (search Jira first — ask user to confirm or create new)
 3. The **assignee** (default: unassigned unless user specifies)
 4. The **issue type** available in the project (check `getJiraProjectIssueTypesMetadata` — prefer Story, fallback to New Feature or Task)
