@@ -14,17 +14,18 @@
 ;; =============================================================================
 
 (require 'package)
-(setq package-archives '(("melpa" . "https://melpa.org/packages/")
-                         ("melpa-stable" . "https://stable.melpa.org/packages/")
-                         ("org" . "https://orgmode.org/elpa/")
-                         ("elpa" . "https://elpa.gnu.org/packages/")))
-(package-initialize)
-(unless (package-installed-p 'use-package)
-  (package-refresh-contents)
-  (package-install 'use-package))
 
-;; ensures that the Emacs package archive is up-to-date before installing any new packages, by refreshing the package list if necessary.
-(unless package-archive-contents (package-refresh-contents))
+(setq package-archives
+      '(("gnu"   . "https://elpa.gnu.org/packages/")
+        ("melpa" . "https://melpa.org/packages/")))
+
+(package-initialize)
+
+(unless package-archive-contents
+  (package-refresh-contents))
+
+(unless (package-installed-p 'use-package)
+  (package-install 'use-package))
 
 (require 'use-package)
 (setq use-package-always-ensure t)
