@@ -125,5 +125,20 @@
 ;; keymap("x", "<A-j>", ":move '>+1<CR>gv-gv", opts)
 ;; keymap("x", "<A-k>", ":move '<-2<CR>gv-gv", opts)
 
+
+;; =============================================================================
+;; EditorConfig Support
+;; =============================================================================
+
+;; Automatically apply .editorconfig settings (indent_size, indent_style, etc.)
+(use-package editorconfig
+  :ensure t
+  :config
+  (editorconfig-mode 1))
+
+;; Minimal fallback for files without .editorconfig
+(setq-default indent-tabs-mode nil)      ; Use spaces by default
+(setq-default tab-width 2)               ; Display tabs as 2 spaces
+
 (provide 'editing)
 ;;; editing.el ends here

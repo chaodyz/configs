@@ -50,8 +50,11 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes
-   '("00445e6f15d31e9afaa23ed0d765850e9cd5e929be5e8e63b114a3346236c44c"
-     "09b833239444ac3230f591e35e3c28a4d78f1556b107bafe0eb32b5977204d93"
+   '("972f792651d32b0506481b9e87b2fbc9b732ae9da2527562668c6e7d149fefda"
+     "5a4cdc4365122d1a17a7ad93b6e3370ffe95db87ed17a38a94713f6ffe0d8ceb"
+     "3613617b9953c22fe46ef2b593a2e5bc79ef3cc88770602e7e569bbd71de113b"
+     "42a6583a45e0f413e3197907aa5acca3293ef33b4d3b388f54fa44435a494739"
+     "87fa3605a6501f9b90d337ed4d832213155e3a2e36a512984f83e847102a42f4"
      default))
  '(package-selected-packages nil)
  '(package-vc-selected-packages

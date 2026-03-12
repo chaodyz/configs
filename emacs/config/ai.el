@@ -32,20 +32,6 @@
 ;;; Code:
 
 ;; =============================================================================
-;; EditorConfig Support
-;; =============================================================================
-
-;; Automatically apply .editorconfig settings (indent_size, indent_style, etc.)
-(use-package editorconfig
-  :ensure t
-  :config
-  (editorconfig-mode 1))
-
-;; Minimal fallback for files without .editorconfig
-(setq-default indent-tabs-mode nil)      ; Use spaces by default
-(setq-default tab-width 2)               ; Display tabs as 2 spaces
-
-;; =============================================================================
 ;; GitHub Copilot Integration
 ;; =============================================================================
 
@@ -118,6 +104,18 @@
   ;; Use C-n/C-p for company completion instead
   (define-key company-active-map (kbd "C-n") 'company-select-next)
   (define-key company-active-map (kbd "C-p") 'company-select-previous))
+
+
+
+;; =============================================================================
+;; Minuet AI Completion (OpenAI backend)
+;; =============================================================================
+
+(use-package minuet
+  :ensure t
+  :config
+  (setq minuet-provider 'claude)
+  (plist-put minuet-claude-options :model "claude-haiku-4-5-20251001"))
 
 
 ;; =============================================================================
