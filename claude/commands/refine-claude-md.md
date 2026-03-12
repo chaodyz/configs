@@ -30,9 +30,25 @@ Refine a project's CLAUDE.md to be lean and high-value for LLM context.
 
 ## Steps
 
+### Phase 1: Read
 1. Read the current CLAUDE.md (project-level) and ~/.claude/CLAUDE.md (global)
-2. Identify what's redundant with global, what's derivable from code, and what's actually useful
-3. Present findings to the user: what to keep, what to remove, what to move to README
-4. Confirm with user before making changes
-5. Rewrite CLAUDE.md — concise, one line per topic where possible
-6. Move any stripped but still valuable info to README.md if it doesn't already exist there
+2. Read README.md to understand what's already documented there
+
+### Phase 2: Analyze and suggest
+3. Identify what's redundant with global, what's derivable from code, and what's actually useful
+4. For each piece of content being removed from CLAUDE.md, reason about where it should live:
+   - **README.md** — project overview, setup guides, human-oriented explanations
+   - **Dedicated doc** (e.g. Style.md, Test.md) — lengthy topic-specific content
+   - **Nowhere** — truly redundant or derivable from code/git
+5. Present findings to the user as a single proposal:
+   - CLAUDE.md: what to keep, what to remove
+   - README.md / other docs: what to add or move there
+
+### Phase 3: Feedback loop
+6. Iterate with the user on the proposed CLAUDE.md and README.md changes — tweak details, adjust wording, resolve disagreements on what stays where
+7. Once the user is satisfied, apply the agreed-upon changes to CLAUDE.md and README.md
+
+### Phase 4: Referenced docs
+8. Read any documents referenced/linked from CLAUDE.md or README.md (e.g. FRONTEND_ONLY_DEVELOPMENT.md, CONTRIBUTING.md, etc.)
+9. Verify they are accurate, consistent with the updated CLAUDE.md and README.md, and properly formatted
+10. Present any issues found and apply fixes after user confirmation
