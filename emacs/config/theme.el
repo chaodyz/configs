@@ -38,7 +38,7 @@
         calendar-longitude -79.3832
         calendar-location-name "Toronto, Canada")
   (setq circadian-themes '((:sunrise . solarized-light-high-contrast)
-                           (:sunset  . nord)))
+                           (:sunset  . zenburn)))
   (circadian-setup))
 
 (provide 'theme)

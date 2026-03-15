@@ -5,26 +5,17 @@
 
 ;; This module provides AI-powered code completion using GitHub Copilot
 ;; Uses official GitHub Copilot with existing license
-;; Also includes EditorConfig support for consistent formatting
 ;;
 ;; INSTALLATION (One-time setup):
-;;
-;;   1. Clone the repository:
-;;      git clone https://github.com/copilot-emacs/copilot.el ~/.emacs.d/copilot.el
-;;
-;;   2. Install Node.js (required by Copilot):
+;;   1. Install Node.js (required by Copilot):
 ;;      brew install node  # macOS
-;;      # or use your system's package manager
-;;
-;;   3. Restart Emacs
-;;
-;;   4. Run: M-x copilot-install-server (one-time setup)
-;;
-;;   5. Run: M-x copilot-login (authenticate with GitHub)
+;;   2. Run: M-x copilot-install-server
+;;   3. Run: M-x copilot-login (authenticate with GitHub)
 ;;
 ;; USAGE:
 ;;   - Ghost text appears as you type
 ;;   - Tab to accept suggestion (in insert mode)
+
 ;;   - M-n / M-p to cycle through alternatives
 ;;   - M-[ / M-] to accept word-by-word
 ;;   - C-g to dismiss
@@ -35,15 +26,13 @@
 ;; GitHub Copilot Integration
 ;; =============================================================================
 
-;; Add copilot to load path (requires manual clone)
-(add-to-list 'load-path "~/.emacs.d/copilot.el")
-
-;; Load copilot if available
-(when (file-directory-p "~/.emacs.d/copilot.el")
-  (use-package copilot
-    :ensure nil
-    :hook (prog-mode . copilot-mode)
-    :bind (:map copilot-completion-map
+(use-package copilot
+  :ensure t
+  :vc (:url "https://github.com/copilot-emacs/copilot.el"
+            :rev :newest
+            :branch "main")
+  :hook (prog-mode . copilot-mode)
+  :bind (:map copilot-completion-map
                 ;; Tab to accept (works in insert mode)
                 ("<tab>" . copilot-accept-completion)
                 ("TAB" . copilot-accept-completion)
@@ -89,7 +78,7 @@
             (markdown-mode . 2)))
 
     ;; Customize ghost text appearance (optional)
-    (set-face-attribute 'copilot-overlay-face nil :foreground "#6c7086" :italic t)))
+    (set-face-attribute 'copilot-overlay-face nil :foreground "#6c7086" :italic t))
 
 ;; =============================================================================
 ;; Integration with Company

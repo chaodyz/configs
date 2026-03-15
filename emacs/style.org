@@ -1,0 +1,95 @@
+#+Title: Style
+* Avoid automatic package activation at startup
+
+Emacs normally activates installed packages during startup. If you want to
+control package activation yourself, set ~package-enable-at-startup~ to nil in
+~early-init.el~. This avoids automatic activation before your own setup runs.
+
+#+begin_src emacs-lisp
+(setq package-enable-at-startup nil) ; in early-init.el
+
+(require 'package)
+(setq package-archives
+      ...)
+(package-initialize)
+#+end_src
+
+* Declare package priorities
+
+#+begin_src emacs-lisp
+(setq package-archives
+      '(("gnu"    . "https://elpa.gnu.org/packages/")
+        ("nongnu" . "https://elpa.nongnu.org/nongnu/")
+        ("melpa"  . "https://melpa.org/packages/")))
+
+(setq package-archive-priorities
+      '(("gnu" . 3)
+        ("nongnu" . 2)
+        ("melpa" . 1)))
+#+end_src
+
+Emacs chooses the highest version of a package unless archive priorities are set.
+
+* Enabling a global mode in :init is often fine
+
+#+begin_src emacs-lisp
+(use-package vertico
+  :init
+  (vertico-mode))
+#+end_src
+
+~vertico-mode~ is autoloaded, so calling it in ~:init~ automatically loads
+Vertico and enables the mode.
+
+Putting this in ~:config~ also works:
+
+#+begin_src emacs-lisp
+(use-package vertico
+  :config
+  (vertico-mode))
+#+end_src
+
+but ~:config~ runs after the package is already loaded. For global modes,
+~:init~ is often used because it expresses startup intent more clearly.
+
+* Prefer :hook over manual add-hook boilerplate
+
+Instead of
+
+#+begin_src emacs-lisp
+(use-package eglot
+  :init
+  (add-hook 'python-mode-hook #'eglot-ensure))
+#+end_src
+
+use
+
+#+begin_src emacs-lisp
+(use-package eglot
+  :hook (python-mode . eglot-ensure))
+#+end_src
+
+They achieve the same result, but ~:hook~ is shorter, clearer, and sets up
+autoloading for you.
+
+* Prefer autoloading keywords over :defer
+
+Use ~:bind~, ~:hook~, ~:commands~, and ~:mode~ naturally.
+
+Use ~:defer t~ when there is no autoloading keyword, but you still want to
+avoid loading a package at startup.
+
+Don't do
+
+#+begin_src emacs-lisp
+(setq use-package-always-defer t)
+#+end_src
+
+Do
+
+#+begin_src emacs-lisp
+(use-package magit
+  :bind ("C-x g" . magit-status))
+#+end_src
+
+This block loads Magit when the bound command is invoked.

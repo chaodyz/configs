@@ -16,8 +16,14 @@
 (require 'package)
 
 (setq package-archives
-      '(("gnu"   . "https://elpa.gnu.org/packages/")
-        ("melpa" . "https://melpa.org/packages/")))
+      '(("gnu"    . "https://elpa.gnu.org/packages/")
+        ("nongnu" . "https://elpa.nongnu.org/nongnu/")
+        ("melpa"  . "https://melpa.org/packages/")))
+
+(setq package-archive-priorities
+      '(("gnu" . 3)
+        ("nongnu" . 2)
+        ("melpa" . 1)))
 
 (package-initialize)
 
@@ -28,47 +34,49 @@
   (package-install 'use-package))
 
 (require 'use-package)
-(setq use-package-always-ensure t)
 
 ;; =============================================================================
 ;; Basic UI Configuration
 ;; =============================================================================
 
 ;; Enable visible bell
-(setq visible-bell t)
 (setq ring-bell-function 'ignore)
-
 (setq inhibit-startup-message t)
-(scroll-bar-mode -1) ; Disable visible scrollbar
-(tool-bar-mode -1)   ; Disable the toolbar
-(tooltip-mode -1)    ; Disable tooltips
-(set-fringe-mode 10) ; Give some breathing room
-(menu-bar-mode -1)  ; Disable the menu bar
+(setq resize-mini-windows t)
 
-
-(setq resize-mini-windows t) ; Grow and shrink the mini window as needed
-(setq max-mini-window-height 0.35) ; Cap 35% of frame height
-
-(setq split-width-threshold 160) ; the minimum width of a window that Emacs should split horizontally instead of vertically.
-(setq split-height-threshold 80)
-
-;; Built-in quality-of-life defaults
-(savehist-mode 1)
-(recentf-mode 1)
-(winner-mode 1)
-(when (fboundp 'pixel-scroll-precision-mode)
-  (pixel-scroll-precision-mode 1))
+(scroll-bar-mode -1)
+(tool-bar-mode -1)  
+(menu-bar-mode -1)  
 
 (column-number-mode)
-;; Enable line numbers for some modes
-(dolist (mode '(text-mode-hook
-                prog-mode-hook
-                conf-mode-hook))
-  (add-hook mode (lambda () (display-line-numbers-mode 1))))
 
-;; Override some modes which derive from the above
-(dolist (mode '(org-mode-hook))
-  (add-hook mode (lambda () (display-line-numbers-mode 0))))
+(global-auto-revert-mode 1)
+;;  M-x cycle through commands
+;;  M-p: previous-history-element
+;;  M-x: next-history-element
+(setq history-length 100)
+(savehist-mode 1) 
+
+(recentf-mode 1)
+
+(winner-mode 1) ;; undo and redo window layout
+
+(setq enable-recursive-minibuffers t)
+(setq max-mini-window-height 0.39) ; Cap 39% of frame height
+
+(save-place-mode 1) ;; remember the last file cursor position
+
+
+(dolist (hook '(prog-mode-hook conf-mode-hook))
+  (add-hook hook #'display-line-numbers-mode))
+
+(setq use-short-answers t)
+
+;; Scroll UX
+(when (fboundp 'pixel-scroll-precision-mode)
+  (pixel-scroll-precision-mode 1))
+(setq scroll-margin 5
+      scroll-conservatively 101)
 
 (provide 'base)
 ;;; base.el ends here
