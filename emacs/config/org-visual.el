@@ -31,10 +31,15 @@
   ;; (dolist (face '(org-level-1 org-level-2 org-level-3 org-level-4))
   ;;   (face-spec-reset-face face))
   ;; thin, light, regular, medium, semi-bold,bold, extra-bold. semi-bold
-  (set-face-attribute 'org-level-1 nil :inherit 'outline-1 :height 1.15)
-  (set-face-attribute 'org-level-2 nil :inherit 'outline-2 :height 1.12)
-  (set-face-attribute 'org-level-3 nil :inherit 'outline-3 :height 1.09)
-  (set-face-attribute 'org-level-4 nil :inherit 'outline-4 :height 1.06)
+  (set-face-attribute 'org-level-1 nil :inherit 'outline-1 :height 1.03)
+  (set-face-attribute 'org-level-2 nil :inherit 'outline-2 :height 1.01)
+  (set-face-attribute 'org-level-3 nil :inherit 'outline-3 :height 1.005)
+  (set-face-attribute 'org-level-4 nil :inherit 'outline-4 :height 1.0)
+
+  ;; Headline weight (Source Sans 3 looks thin at large sizes)
+  (dolist (face '(org-level-1 org-level-2 org-level-3 org-level-4))
+    (set-face-attribute face nil :weight 'semibold))
+
   ;; Fixed-pitch elements (critical for alignment in variable-pitch mode)
   (set-face-attribute 'org-block            nil :inherit 'fixed-pitch)
   (set-face-attribute 'org-table            nil :inherit 'fixed-pitch)
@@ -49,7 +54,8 @@
 (with-eval-after-load 'org
   (my/org-visual-apply-faces)
   (setq org-startup-indented t
-        org-image-actual-width nil))
+        org-image-actual-width nil)
+  (add-hook 'org-mode-hook #'my-org-mode-setup))
 
 ;;; --- Packages ---
 
@@ -69,7 +75,7 @@
 
 ;; Centered text layout
 (defun efs/org-mode-visual-fill ()
-  (setq visual-fill-column-width 100
+  (setq visual-fill-column-width 120
         visual-fill-column-center-text t)
   (visual-fill-column-mode 1))
 
@@ -87,32 +93,6 @@
         org-indent-mode-turns-on-hiding-stars t
         org-superstar-prettify-item-bullets t)
   :config
-  (set-face-attribute 'org-superstar-item nil :height 1.0))
-
-;;; --- Hooks ---
-
-(add-hook 'org-mode-hook #'my-org-mode-setup)
-(add-hook 'org-mode-hook #'company-mode)
-
-;;; --- Emphasis Markup Helpers ---
-
-(defun my/wrap-with (char)
-  "Wrap the visual selection with CHAR on both sides."
-  (interactive "sWrap with: ")
-  (let ((selection (buffer-substring (region-beginning) (region-end))))
-    (delete-region (region-beginning) (region-end))
-    (insert (concat char selection char))))
-
-(define-key evil-visual-state-map (kbd "C-*") (lambda () (interactive) (my/wrap-with "*")))
-(define-key evil-visual-state-map (kbd "C-~") (lambda () (interactive) (my/wrap-with "~")))
-(define-key evil-visual-state-map (kbd "C-=") (lambda () (interactive) (my/wrap-with "=")))
-(define-key evil-visual-state-map (kbd "C-/") (lambda () (interactive) (my/wrap-with "/")))
-(define-key evil-visual-state-map (kbd "C-+") (lambda () (interactive) (my/wrap-with "+")))
-
-(general-define-key
- :states '(visual)
- :keymaps 'override
- "s" 'surround-with-key)
-
+  (set-face-attribute 'org-superstar-item nil :height 0.9))
 (provide 'org-visual)
 ;;; org-visual.el ends here

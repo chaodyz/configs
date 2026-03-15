@@ -4,18 +4,10 @@
 ;; This module contains development tools:
 ;; - Treesitter for syntax highlighting
 ;; - Eglot for LSP support
-;; - Projectile for project management
 ;; - Counsel-projectile integration
 ;; - Magit for git integration
 ;; - Markdown mode
 ;;; Code:
-
-;; =============================================================================
-;; Project.el (Project Management)
-;; =============================================================================
-
-;; Discover projects under these directories
-(project-remember-projects-under "~/projects/" t)
 
 ;; =============================================================================
 ;; Magit (Git Interface)
@@ -77,9 +69,6 @@
         (tsx "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src")
         (typescript "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src")
         (yaml "https://github.com/ikatyang/tree-sitter-yaml")))
-
-;; Maximum tree-sitter font-lock detail (level 4 = operators, brackets, numbers, etc.)
-(setq treesit-font-lock-level 4)
 
 (use-package treesit-auto
   :custom
