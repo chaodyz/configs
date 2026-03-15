@@ -1,7 +1,8 @@
 # ~/.bashrc
 ### EXPORT
-export TERM_PROGRAM=emacs
-export TERM="xterm-256color"            # getting proper colors
+if [ -n "$INSIDE_EMACS" ]; then
+    export TERM_PROGRAM=emacs
+fi
 export HISTCONTROL=ignoredups:erasedups # no duplicate entries
 # export TERMINFO=/usr/share/terminfo
 ### SET VI MODE ###
