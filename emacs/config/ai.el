@@ -33,52 +33,52 @@
             :branch "main")
   :hook (prog-mode . copilot-mode)
   :bind (:map copilot-completion-map
-                ;; Tab to accept (works in insert mode)
-                ("<tab>" . copilot-accept-completion)
-                ("TAB" . copilot-accept-completion)
+              ;; Tab to accept (works in insert mode)
+              ("<tab>" . copilot-accept-completion)
+              ("TAB" . copilot-accept-completion)
 
-                ;; Word-by-word acceptance
-                ("M-<right>" . copilot-accept-completion-by-word)
-                ("M-]" . copilot-accept-completion-by-word)
+              ;; Word-by-word acceptance
+              ("M-<right>" . copilot-accept-completion-by-word)
+              ("M-]" . copilot-accept-completion-by-word)
 
-                ;; Line-by-line acceptance
-                ("M-<down>" . copilot-accept-completion-by-line)
+              ;; Line-by-line acceptance
+              ("M-<down>" . copilot-accept-completion-by-line)
 
-                ;; Cycle through suggestions
-                ("M-n" . copilot-next-completion)
-                ("M-p" . copilot-previous-completion)
+              ;; Cycle through suggestions
+              ("M-n" . copilot-next-completion)
+              ("M-p" . copilot-previous-completion)
 
-                ;; Dismiss
-                ("C-g" . copilot-clear-overlay))
+              ;; Dismiss
+              ("C-g" . copilot-clear-overlay))
 
-    :config
-    ;; Show copilot status in mode line
-    (setq copilot-mode-line-format " Copilot")
+  :config
+  ;; Show copilot status in mode line
+  (setq copilot-mode-line-format " Copilot")
 
-    ;; Suppress indentation warning (harmless)
-    (setq copilot-indent-offset-warning-disable t)
+  ;; Suppress indentation warning (harmless)
+  (setq copilot-indent-offset-warning-disable t)
 
-    ;; Set default indentation to match .editorconfig (2 spaces)
-    (setq copilot-indent-offset-alist
-          '((c-mode . 2)
-            (c++-mode . 2)
-            (java-mode . 2)
-            (js-mode . 2)
-            (js-ts-mode . 2)
-            (typescript-mode . 2)
-            (typescript-ts-mode . 2)
-            (tsx-ts-mode . 2)
-            (python-mode . 2)
-            (go-mode . 2)
-            (rust-mode . 2)
-            (json-mode . 2)
-            (json-ts-mode . 2)
-            (css-mode . 2)
-            (sh-mode . 2)
-            (markdown-mode . 2)))
+  ;; Set default indentation to match .editorconfig (2 spaces)
+  (setq copilot-indent-offset-alist
+        '((c-mode . 2)
+          (c++-mode . 2)
+          (java-mode . 2)
+          (js-mode . 2)
+          (js-ts-mode . 2)
+          (typescript-mode . 2)
+          (typescript-ts-mode . 2)
+          (tsx-ts-mode . 2)
+          (python-mode . 2)
+          (go-mode . 2)
+          (rust-mode . 2)
+          (json-mode . 2)
+          (json-ts-mode . 2)
+          (css-mode . 2)
+          (sh-mode . 2)
+          (markdown-mode . 2)))
 
-    ;; Customize ghost text appearance (optional)
-    (set-face-attribute 'copilot-overlay-face nil :foreground "#6c7086" :italic t))
+  ;; Customize ghost text appearance (optional)
+  (set-face-attribute 'copilot-overlay-face nil :foreground "#6c7086" :italic t))
 
 ;; =============================================================================
 ;; Integration with Company
@@ -100,11 +100,11 @@
 ;; Minuet AI Completion (OpenAI backend)
 ;; =============================================================================
 
-(use-package minuet
-  :ensure t
-  :config
-  (setq minuet-provider 'claude)
-  (plist-put minuet-claude-options :model "claude-haiku-4-5-20251001"))
+;; (use-package minuet
+;;   :ensure t
+;;   :config
+;;   (setq minuet-provider 'claude)
+;;   (plist-put minuet-claude-options :model "claude-haiku-4-5-20251001"))
 
 
 ;; =============================================================================
@@ -126,30 +126,26 @@
   ) ; Optionally enable Emacs MCP tools
 
 
-(use-package ai-code
-  :ensure t
-  :config
-  ;; use codex as backend, other options are 'claude-code, 'gemini, 'github-copilot-cli, 'opencode, 'grok, 'cursor, 'kiro, 'codebuddy, 'aider, 'claude-code-ide, 'claude-code-el
-  (ai-code-set-backend 'claude-code-ide)
-  ;; Enable global keybinding for the main menu
-  (global-set-key (kbd "C-c a") #'ai-code-menu)
-  ;; Optional: Use eat if you prefer, by default it is vterm
-  ;; (setq ai-code-backends-infra-terminal-backend 'eat)
-  ;; Note: This configures terminal backend for native CLI support.
-  ;; For external backends (claude-code-ide.el, claude-code.el), check their config
-  ;; Optional: Enable @ file completion in comments and AI sessions
-  (ai-code-prompt-filepath-completion-mode 1)
-  ;; Optional: Ask AI to run test after code changes, for a tighter build-test loop
-  (defvar ai-code-auto-test-type)  ; Silence byte-compiler warning
-  (setq ai-code-auto-test-type 'test-after-change)
-  ;; Optional: In AI session buffers, SPC in Evil normal state triggers the prompt-enter UI
-  (with-eval-after-load 'evil (ai-code-backends-infra-evil-setup))
-  ;; Optional: Turn on auto-revert buffer, so that the AI code change automatically appears in the buffer
-  (global-auto-revert-mode 1)
-  (setq auto-revert-interval 1) ;; set to 1 second for faster update
-  ;; Optional: Set up Magit integration for AI commands in Magit popups
-  (with-eval-after-load 'magit
-    (ai-code-magit-setup-transients)))
+;; (use-package ai-code
+;;   :ensure t
+;;   :config
+;;   ;; Enable global keybinding for the main menu
+;;   (global-set-key (kbd "C-c a") #'ai-code-menu)
+;;   ;; Optional: Use eat if you prefer, by default it is vterm
+;;   ;; (setq ai-code-backends-infra-terminal-backend 'eat)
+;;   ;; Note: This configures terminal backend for native CLI support.
+;;   ;; For external backends (claude-code-ide.el, claude-code.el), check their config
+;;   ;; Optional: Enable @ file completion in comments and AI sessions
+;;   (ai-code-prompt-filepath-completion-mode 1)
+;;   ;; Optional: Ask AI to run test after code changes, for a tighter build-test loop
+;;   (defvar ai-code-auto-test-type)  ; Silence byte-compiler warning
+;;   (setq ai-code-auto-test-type 'test-after-change)
+;;   ;; Optional: In AI session buffers, SPC in Evil normal state triggers the prompt-enter UI
+;;   (with-eval-after-load 'evil (ai-code-backends-infra-evil-setup))
+;;   ;; Optional: Turn on auto-revert buffer, so that the AI code change automatically appears in the buffer
+;;   (global-auto-revert-mode 1)
+;;   (setq auto-revert-interval 1) ;; set to 1 second for faster update
+;;   )
 
 
 (provide 'ai)
