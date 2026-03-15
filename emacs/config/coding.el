@@ -2,11 +2,12 @@
 
 ;;; Commentary:
 ;; This module contains development tools:
+;; - Project.el for project management
 ;; - Treesitter for syntax highlighting
 ;; - Eglot for LSP support
-;; - Counsel-projectile integration
 ;; - Magit for git integration
 ;; - Markdown mode
+;; - Apheleia for format-on-save
 ;;; Code:
 
 ;; =============================================================================
@@ -14,21 +15,8 @@
 ;; =============================================================================
 
 (use-package magit
-  :ensure t)
-
-;; =============================================================================
-;; Ediff Configuration
-;; =============================================================================
-
-;; Split windows side-by-side (left/right) instead of top/bottom
-(setq ediff-split-window-function 'split-window-horizontally)
-
-;; Put Ediff control panel in the same frame (not a separate window)
-;; This works better with Evil mode and window management
-(setq ediff-window-setup-function 'ediff-setup-windows-plain)
-
-;; Restore window config after quitting ediff
-(add-hook 'ediff-quit-hook 'winner-undo)
+  :ensure t
+  :bind ("C-x g" . magit-status))
 
 ;; =============================================================================
 ;; Markdown Mode
@@ -41,7 +29,6 @@
   :init (setq markdown-command "multimarkdown")
   :bind (:map markdown-mode-map
               ("C-c C-e" . markdown-export)))
-
 
 ;; =============================================================================
 ;; Tree-sitter (Syntax Highlighting)
@@ -164,12 +151,6 @@
   ;; Show documentation on hover (like VS Code)
   (setq eldoc-echo-area-use-multiline-p nil))  ; Keep it concise
 
-;; Format on save (optional, uncomment if you want this)
-;; (add-hook 'before-save-hook
-;;           (lambda ()
-;;             (when (eglot-managed-p)
-;;               (eglot-format-buffer))))
-
 ;; gd replaces current window instead of splitting (default is 'other-window)
 (setq xref-window-type 'same-window)
 
@@ -184,8 +165,6 @@
 ;; =============================================================================
 (use-package apheleia
   :ensure t
-  :init
-  (setq apheleia-log-debug-info t)
   :config
   ;; Use explicit formatter mappings for the modes used in this config so
   ;; format-on-save is predictable across JS/TS, markup, shell, and Python.
