@@ -41,10 +41,10 @@
       "d" 'describe-thing-at-point
       "f" 'counsel-find-file
       "h" 'counsel-command-history
-      "p" 'projectile-command-map
+      "p" 'project-switch-project
       "q" 'delete-window
       "r" 'counsel-recentf
-      "s" 'counsel-projectile-rg :which-key " Search in project"
+      "s" '(counsel-rg :which-key " Search in project")
       "w" 'save-buffer
       "R" 'restart-emacs
       "v" 'vterm :which-key " Vterm"

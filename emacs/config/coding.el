@@ -8,28 +8,14 @@
 ;; - Counsel-projectile integration
 ;; - Magit for git integration
 ;; - Markdown mode
-;; - Claude Code IDE
-
 ;;; Code:
 
 ;; =============================================================================
-;; Projectile (Project Management)
+;; Project.el (Project Management)
 ;; =============================================================================
 
-;; Projectile
-(use-package projectile
-  :ensure t
-  :init
-  (setq projectile-completion-system 'ivy)
-  :config
-  (projectile-mode 1)
-  (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
-  (setq projectile-project-search-path '("~/projects/" "~/projects/backup/"))
-  (setq projectile-switch-project-action #'projectile-dired))
-
-(use-package counsel-projectile
-  :ensure t
-  :config (counsel-projectile-mode))
+;; Discover projects under these directories
+(project-remember-projects-under "~/projects/" t)
 
 ;; =============================================================================
 ;; Magit (Git Interface)
