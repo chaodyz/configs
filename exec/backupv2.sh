@@ -1,15 +1,17 @@
 #!/usr/bin/env bash
 
+set -euo pipefail
+
 DOTFILES_DIR=~/projects/configs
 
 # ----------------------------------------------------------
-# Backup function
+# Export local configs into repo
 # ----------------------------------------------------------
-backup_action() {
-    echo "📦 Backing up current config to: $DOTFILES_DIR"
+export_to_repo() {
+    echo "📦 Exporting local configs into repo: $DOTFILES_DIR"
 
     # Ensure folder structure exists
-    mkdir -p "$DOTFILES_DIR"/{vscode,cursor,starship,alacritty,emacs,nvim,joplin,tmux,claude}
+    mkdir -p "$DOTFILES_DIR"/{bash,vscode,cursor,starship,alacritty,emacs,nvim,joplin,tmux,claude}
 
     # Platform specific
     if [[ "$(uname)" == "Darwin" ]]; then
@@ -45,6 +47,7 @@ backup_action() {
     fi
 
     cp ~/.emacs.d/init.el "$DOTFILES_DIR/emacs/init.el"
+    [[ -f ~/.emacs.d/early-init.el ]] && cp ~/.emacs.d/early-init.el "$DOTFILES_DIR/emacs/early-init.el"
 
     # Backup emacs config directory
     if [ -d "$HOME/.emacs.d/config" ]; then
@@ -59,14 +62,16 @@ backup_action() {
         rsync -av "$HOME/.claude/commands/" "$DOTFILES_DIR/claude/commands"
     fi
 
-    echo "✅ Backup complete."
+    echo "✅ Export complete."
 }
 
 # ----------------------------------------------------------
-# Symlink install function
+# Symlink local config paths to repo files
 # ----------------------------------------------------------
-install_symlinks() {
-    echo "🔗 Installing symlinks from: $DOTFILES_DIR"
+link_from_repo() {
+    echo "🔗 Linking local config paths to repo files in: $DOTFILES_DIR"
+
+    mkdir -p ~/.config ~/.config/alacritty ~/.config/joplin ~/.emacs.d ~/.claude
 
     # Backup old files if they are not symlinks
     backup_if_not_symlink() {
@@ -98,7 +103,9 @@ install_symlinks() {
     # Emacs config
     echo "🔗 Symlinking Emacs config ..."
     ln -sf "$DOTFILES_DIR/emacs/init.el" ~/.emacs.d/init.el
+    [[ -f "$DOTFILES_DIR/emacs/early-init.el" ]] && ln -sf "$DOTFILES_DIR/emacs/early-init.el" ~/.emacs.d/early-init.el
     if [ -e "$HOME/.emacs.d/config" ] || [ -L "$HOME/.emacs.d/config" ]; then
+        echo "🧹 Replacing existing ~/.emacs.d/config"
         rm -rf "$HOME/.emacs.d/config"
     fi
     ln -s "$DOTFILES_DIR/emacs/config" "$HOME/.emacs.d/config"
@@ -111,6 +118,7 @@ install_symlinks() {
     [[ -f "$DOTFILES_DIR/claude/statusline-command.sh" ]] && \
         ln -sf "$DOTFILES_DIR/claude/statusline-command.sh" ~/.claude/statusline-command.sh
     if [ -e "$HOME/.claude/commands" ] || [ -L "$HOME/.claude/commands" ]; then
+        echo "🧹 Replacing existing ~/.claude/commands"
         rm -rf "$HOME/.claude/commands"
     fi
     ln -s "$DOTFILES_DIR/claude/commands" "$HOME/.claude/commands"
@@ -138,16 +146,16 @@ install_symlinks() {
                    "$HOME/.config/Cursor/User/keybindings.json"
     fi
 
-    echo "✅ Symlink install complete."
+    echo "✅ Symlink setup complete."
 }
 
 # ----------------------------------------------------------
 # Menu
 # ----------------------------------------------------------
-read -p "Backup (b) or Install Symlinks (i)? " choice
+read -p "Export local configs to repo (e) or link local paths to repo files (l)? " choice
 
 case "$choice" in
-    b|B ) backup_action ;;
-    i|I ) install_symlinks ;;
+    e|E ) export_to_repo ;;
+    l|L ) link_from_repo ;;
     * ) echo "❌ Invalid choice." && exit 1 ;;
 esac

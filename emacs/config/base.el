@@ -27,10 +27,8 @@
 
 (package-initialize)
 
-(unless package-archive-contents
-  (package-refresh-contents))
-
 (unless (package-installed-p 'use-package)
+  (package-refresh-contents)
   (package-install 'use-package))
 
 (require 'use-package)
@@ -43,10 +41,6 @@
 (setq ring-bell-function 'ignore)
 (setq inhibit-startup-message t)
 (setq resize-mini-windows t)
-
-(scroll-bar-mode -1)
-(tool-bar-mode -1)  
-(menu-bar-mode -1)  
 
 (column-number-mode)
 

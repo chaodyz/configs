@@ -82,10 +82,8 @@
   :ensure t
   :mode (("\\.yml\\'" . yaml-mode)
          ("\\.yaml\\'" . yaml-mode))
-  :config
-  (add-hook 'yaml-mode-hook
-            '(lambda ()
-               (define-key yaml-mode-map "\C-m" 'newline-and-indent))))
+  :hook (yaml-mode . (lambda ()
+                       (define-key yaml-mode-map "\C-m" 'newline-and-indent))))
 
 (provide 'misc)
 ;;; misc.el ends here

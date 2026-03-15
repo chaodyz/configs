@@ -57,6 +57,7 @@
 (use-package org-download
   :ensure t
   :after org
+  :hook (dired-mode . org-download-enable)
   :custom
   (org-download-method 'directory)
   (org-download-image-dir "~/eSync/org/pictures")
@@ -64,8 +65,7 @@
   (org-download-display-inline-images t)
   :config
   (setq-default org-download-image-org-width 800)
-  (setq-default org-download-image-html-width 800)
-  (add-hook 'dired-mode-hook 'org-download-enable))
+  (setq-default org-download-image-html-width 800))
 
 ;; Centered text layout
 (defun efs/org-mode-visual-fill ()

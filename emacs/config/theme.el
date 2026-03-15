@@ -10,12 +10,7 @@
 
 ;; Theme
 (use-package zenburn-theme
-  :ensure t
-  :config
-  (setq zenburn-use-variable-pitch 0)
-  (setq zenburn-scale-org-headlines 0)
-  (setq zenburn-scale-outline-headlines 0)
-  )
+  :ensure t)
 
 (use-package solarized-theme
   :ensure t
@@ -38,7 +33,7 @@
         calendar-longitude -79.3832
         calendar-location-name "Toronto, Canada")
   (setq circadian-themes '((:sunrise . solarized-light-high-contrast)
-                           (:sunset  . zenburn)))
+                           (:sunset  . nord)))
   (circadian-setup))
 
 (provide 'theme)

@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 
+set -euo pipefail
+
 DOTFILES_DIR=~/projects/configs
 
-restore_action() {
-    echo "Restoring config files from $DOTFILES_DIR..."
+apply_from_repo() {
+    echo "Applying repo configs from $DOTFILES_DIR to local machine..."
 
     # --- Shell configs ---
     if [[ "$(uname)" == "Darwin" ]]; then
@@ -23,12 +25,19 @@ restore_action() {
     cp "$DOTFILES_DIR/joplin/keymap.json" ~/.config/joplin/keymap.json
 
     # --- Neovim ---
-    rm -rf ~/.config/nvim/
+    if [ -e ~/.config/nvim ] && [ ! -L ~/.config/nvim ]; then
+        rm -rf ~/.config/nvim.bak
+        mv ~/.config/nvim ~/.config/nvim.bak
+        echo "Backed up existing ~/.config/nvim to ~/.config/nvim.bak"
+    else
+        rm -rf ~/.config/nvim/
+    fi
     cp -rf "$DOTFILES_DIR/nvim" ~/.config/
 
     # --- Emacs ---
     mkdir -p ~/.emacs.d
     cp "$DOTFILES_DIR/emacs/init.el" ~/.emacs.d/init.el
+    [[ -f "$DOTFILES_DIR/emacs/early-init.el" ]] && cp "$DOTFILES_DIR/emacs/early-init.el" ~/.emacs.d/early-init.el
 
     # Restore emacs config directory
     if [ -d "$DOTFILES_DIR/emacs/config" ]; then
@@ -66,13 +75,13 @@ restore_action() {
            "$HOME/.config/Cursor/User/keybindings.json" 2>/dev/null || true
     fi
 
-    echo "Restore complete."
+    echo "Apply complete."
 }
 
-read -p "Do you want to proceed with restore? This will overwrite your local configs. (y/n) " choice
+read -p "Apply repo configs to this machine? This will overwrite local configs. (y/n) " choice
 case "$choice" in
     y|Y ) echo "Proceeding..."
-          restore_action ;;
+          apply_from_repo ;;
     n|N ) echo "Exiting without changes." && exit ;;
     * ) echo "Invalid choice. Exiting." && exit ;;
 esac
