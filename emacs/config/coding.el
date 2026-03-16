@@ -133,12 +133,10 @@
   (add-to-list 'eglot-server-programs
                '((sh-mode bash-ts-mode) . ("bash-language-server" "start")))
 
-  ;; TypeScript Language Server for all TS/HTML projects.
-  ;; Angular projects: inject @angular/language-service as a global tsserver plugin
-  ;; via initializationOptions so tsconfig.json stays clean.
-  ;; Non-Angular projects: plain typescript-language-server.
+  ;; TS files: typescript-language-server for code actions.
+  ;; Angular projects get @angular/language-service injected as a tsserver plugin.
   (add-to-list 'eglot-server-programs
-               '((typescript-ts-mode tsx-ts-mode typescript-mode html-ts-mode mhtml-mode)
+               '((typescript-ts-mode tsx-ts-mode typescript-mode)
                  . (lambda (&optional _interactive)
                      (if-let ((project-root (locate-dominating-file default-directory "angular.json")))
                          (let ((node-modules (expand-file-name "node_modules" project-root)))
@@ -146,6 +144,21 @@
                                  :initializationOptions
                                  `(:plugins [(:name "@angular/language-service"
                                               :location ,node-modules)])))
+                       '("typescript-language-server" "--stdio")))))
+
+  ;; HTML files: Angular LS for template → TS navigation in Angular projects,
+  ;; plain typescript-language-server otherwise.
+  (add-to-list 'eglot-server-programs
+               '((html-ts-mode mhtml-mode)
+                 . (lambda (&optional _interactive)
+                     (if-let ((project-root (locate-dominating-file default-directory "angular.json")))
+                         (let* ((node-modules (expand-file-name "node_modules" project-root))
+                                (node-bin "/home/diz/.local/share/fnm/node-versions/v18.3.0/installation/bin/node")
+                                (ngserver "/home/diz/.local/share/fnm/node-versions/v18.3.0/installation/lib/node_modules/@angular/language-server/bin/ngserver"))
+                           (list node-bin ngserver
+                                 "--stdio"
+                                 "--tsProbeLocations" node-modules
+                                 "--ngProbeLocations" node-modules))
                        '("typescript-language-server" "--stdio")))))
 
   ;; Show documentation on hover (like VS Code)

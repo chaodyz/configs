@@ -3,6 +3,7 @@
 if [ -n "$INSIDE_EMACS" ]; then
     export TERM_PROGRAM=emacs
 fi
+export TERM="xterm-256color"
 export HISTCONTROL=ignoredups:erasedups # no duplicate entries
 # export TERMINFO=/usr/share/terminfo
 ### SET VI MODE ###
