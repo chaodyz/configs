@@ -133,20 +133,19 @@
   (add-to-list 'eglot-server-programs
                '((sh-mode bash-ts-mode) . ("bash-language-server" "start")))
 
-  ;; Angular Language Server for Angular projects, TypeScript LS for everything else.
-  ;; Uses Angular LS v14 (node v14) which matches Angular 14 / TypeScript 4.8 projects.
-  ;; Both TS and HTML files use the same server so template navigation has full TS context.
+  ;; TypeScript Language Server for all TS/HTML projects.
+  ;; Angular projects: inject @angular/language-service as a global tsserver plugin
+  ;; via initializationOptions so tsconfig.json stays clean.
+  ;; Non-Angular projects: plain typescript-language-server.
   (add-to-list 'eglot-server-programs
                '((typescript-ts-mode tsx-ts-mode typescript-mode html-ts-mode mhtml-mode)
                  . (lambda (&optional _interactive)
                      (if-let ((project-root (locate-dominating-file default-directory "angular.json")))
-                         (let* ((node-modules (expand-file-name "node_modules" project-root))
-                                (node-bin "/home/diz/.local/share/fnm/node-versions/v14.21.3/installation/bin/node")
-                                (ngserver "/home/diz/.local/share/fnm/node-versions/v14.21.3/installation/lib/node_modules/@angular/language-server/bin/ngserver"))
-                           (list node-bin ngserver
-                                 "--stdio"
-                                 "--tsProbeLocations" node-modules
-                                 "--ngProbeLocations" node-modules))
+                         (let ((node-modules (expand-file-name "node_modules" project-root)))
+                           (list "typescript-language-server" "--stdio"
+                                 :initializationOptions
+                                 `(:plugins [(:name "@angular/language-service"
+                                              :location ,node-modules)])))
                        '("typescript-language-server" "--stdio")))))
 
   ;; Show documentation on hover (like VS Code)
