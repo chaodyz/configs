@@ -16,14 +16,9 @@
 (require 'package)
 
 (setq package-archives
-      '(("gnu"    . "https://elpa.gnu.org/packages/")
+      '(("melpa"  . "https://melpa.org/packages/")
         ("nongnu" . "https://elpa.nongnu.org/nongnu/")
-        ("melpa"  . "https://melpa.org/packages/")))
-
-(setq package-archive-priorities
-      '(("gnu" . 3)
-        ("nongnu" . 2)
-        ("melpa" . 1)))
+        ("gnu"    . "https://elpa.gnu.org/packages/")))
 
 (package-initialize)
 

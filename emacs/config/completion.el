@@ -86,5 +86,15 @@
   :config
   (global-company-mode 1))
 
+;; =============================================================================
+;; Ivy-xref (xref results in Ivy minibuffer)
+;; =============================================================================
+
+(use-package ivy-xref
+  :ensure t
+  :init
+  (setq xref-show-xrefs-function #'ivy-xref-show-xrefs
+        xref-show-definitions-function #'ivy-xref-show-defs))
+
 (provide 'completion)
 ;;; completion.el ends here

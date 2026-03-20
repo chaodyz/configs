@@ -156,24 +156,14 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
       echo "  ^^^^^ ^^^^^^^^^^^^^^^^^^^^^          "
       echo "    ^^^^      ^^^^     ^^^    ^^        "
       echo "         ^^^^      ^^^^                "
+
+      export KUBECONFIG=$(ls ~/.kube/config/*.yaml | tr '\n' ':')                             
     fi
   fi
   # K8s
   alias k='kubectl'
 
   export NODE_OPTIONS=--max_old_space_size=8192
-
-  git-personal() {
-    eval "$(ssh-agent -s)"
-    ssh-add ~/.ssh/id_ed25519_personal
-    ssh -T git@github.com
-  }
-
-  git-work() {
-    eval "$(ssh-agent -s)"
-    ssh-add ~/.ssh/id_ed25519_work
-    ssh -T git@github.com
-  }
 
   # GPG
   export GPG_TTY=$(tty)
@@ -193,8 +183,6 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
 
   # GNU libtool
   PATH="/opt/homebrew/opt/libtool/libexec/gnubin:$PATH"
-
-  export PATH="/Library/PostgreSQL/18/bin:$PATH"
 
   # Terminal Prompt
   eval "$(starship init bash)"
