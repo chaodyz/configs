@@ -116,12 +116,10 @@
   :vc (:url "https://github.com/manzaltu/claude-code-ide.el" :rev :newest)
   :bind ("C-c a" . claude-code-ide-menu) ; Set your favorite keybinding
   :config
+  ;; Use eat terminal backend (better scrolling during Claude thinking)
+  (setq claude-code-ide-terminal-backend 'eat)
   ;; Configure diff view behavior to prevent "session reload" appearance
   (setq claude-code-ide-show-claude-window-in-ediff t)  ; Keep Claude visible during diff
-  ;; Enable/disable vterm anti-flicker optimization (enabled by default)
-  (setq claude-code-ide-vterm-anti-flicker t)
-  ;; Adjust the render delay for batching updates (default is 0.005 seconds)
-  (setq claude-code-ide-vterm-render-delay 0.01)  ; Increase for smoother but less responsive
   (claude-code-ide-emacs-tools-setup)
   ) ; Optionally enable Emacs MCP tools
 

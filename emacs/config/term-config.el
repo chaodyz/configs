@@ -2,6 +2,9 @@
 
 ;;; Code:
 
+(use-package eat
+  :ensure t)
+
 (use-package vterm
   :ensure t
   :commands vterm
