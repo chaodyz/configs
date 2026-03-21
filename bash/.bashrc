@@ -183,6 +183,9 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
 
   # GNU libtool
   PATH="/opt/homebrew/opt/libtool/libexec/gnubin:$PATH"
+  
+  # MYSQL
+  export PATH="/opt/homebrew/opt/mysql-client/bin:$PATH"
 
   # Terminal Prompt
   eval "$(starship init bash)"

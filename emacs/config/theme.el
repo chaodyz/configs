@@ -1,4 +1,4 @@
-;;; theme.el --- Theme configuration -*- lexical-binding: t -*-
+;;; theme.jl --- Theme configuration -*- lexical-binding: t -*-
 
 ;;; Commentary:
 ;; This module contains theme configuration:
@@ -24,17 +24,24 @@
 (use-package doom-themes
   :ensure t)
 
-;; Load Theme by location's sunrise and sunset
-(use-package circadian
+(use-package everforest-theme
   :ensure t
-  :config
-  ;; Set Toronto as the location for sunrise and sunset times
-  (setq calendar-latitude 43.6532
-        calendar-longitude -79.3832
-        calendar-location-name "Toronto, Canada")
-  (setq circadian-themes '((:sunrise . solarized-light-high-contrast)
-                           (:sunset  . nord)))
-  (circadian-setup))
+  :vc (:url "https://github.com/Theory-of-Everything/everforest-emacs.git" :rev :newest)
+  )
+
+
+(load-theme 'doom-nord t)
+;; ;; Load Theme by location's sunrise and sunset
+;; (use-package circadian
+;;   :ensure t
+;;   :config
+;;   ;; Set Toronto as the location for sunrise and sunset times
+;;   (setq calendar-latitude 43.6532
+;;         calendar-longitude -79.3832
+;;         calendar-location-name "Toronto, Canada")
+;;   (setq circadian-themes '((:sunrise . solarized-light-high-contrast)
+;;                            (:sunset  . zenburn)))
+;;   (circadian-setup))
 
 (provide 'theme)
 ;;; theme.el ends here

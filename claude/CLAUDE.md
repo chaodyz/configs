@@ -1,7 +1,8 @@
-- Never pop out code change on question, talk about the solution and explain it first
-- Plans location ~/eSync/org/notes/{topic_folder}/{topic_name}.org
-- Dotfiles location: ~/projects/configs/
-- Always use `gh` for Github operations
-- Always use `glab` for Gitlab operations
+- Never pop out code change directly on question, talk about the solution and explain it first
 - When Brainstorming,try ask me if i need to do it in broad level or be more specific, interview me if it needs to be specific.
 - When CodeReview, Do not post the review as comment if i never asked you to do so.
+- Write to doc usually go to ~/eSync/org/ as .org file
+- Dotfiles location: ~/projects/configs/ 
+- Emacs configuration ~/projects/configs/emacs/
+- Always use `gh` for Github operations
+- Always use `glab` for Gitlab operations

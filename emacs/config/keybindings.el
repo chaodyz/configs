@@ -24,6 +24,16 @@
   )
 
 ;; =============================================================================
+;; Xref helpers
+;; =============================================================================
+
+(defun my/xref-find-references-buffer ()
+  "Find references using the classic *xref* buffer instead of ivy."
+  (interactive)
+  (let ((xref-show-xrefs-function #'xref-show-definitions-buffer))
+    (call-interactively #'xref-find-references)))
+
+;; =============================================================================
 ;; General (Leader Key Configuration)
 ;; =============================================================================
 (use-package general
@@ -91,7 +101,7 @@
   (leader-key-def
     "l" '(:ignore t :which-key " LSP/Code...")
     "l d" '(xref-find-definitions :which-key "Go to definition")
-    "l r" '(xref-find-references :which-key "Find references")
+    "l r" '(my/xref-find-references-buffer :which-key "Find references (xref buffer)")
     "l n" '(eglot-rename :which-key "Rename symbol")
     "l a" '(eglot-code-actions :which-key "Code actions")
     "l f" '(eglot-format :which-key "Format")
