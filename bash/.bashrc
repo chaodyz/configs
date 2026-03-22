@@ -95,6 +95,7 @@ if [[ "$OSTYPE" == "linux-gnu" ]]; then
   # Terminal prompt
   eval "$(starship init bash)"
   # fast node manager
+  eval "$(fnm env --use-on-cd --shell bash)"
   FNM_PATH="/home/librarie/.local/share/fnm"
   if [ -d "$FNM_PATH" ]; then
    export PATH="$FNM_PATH:$PATH"

@@ -140,8 +140,8 @@
                  . (lambda (&optional _interactive)
                      (if-let ((project-root (locate-dominating-file default-directory "angular.json")))
                          (let* ((node-modules (expand-file-name "node_modules" project-root))
-                                (node-bin "/home/diz/.local/share/fnm/node-versions/v18.3.0/installation/bin/node")
-                                (ngserver "/home/diz/.local/share/fnm/node-versions/v18.3.0/installation/lib/node_modules/@angular/language-server/bin/ngserver"))
+                                (node-bin (executable-find "node"))
+                                (ngserver (expand-file-name "ngserver" (file-name-directory node-bin))))
                            (list node-bin ngserver
                                  "--stdio"
                                  "--tsProbeLocations" node-modules
