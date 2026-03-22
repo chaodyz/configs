@@ -130,7 +130,7 @@
                            (list "typescript-language-server" "--stdio"
                                  :initializationOptions
                                  `(:plugins [(:name "@angular/language-service"
-                                              :location ,node-modules)])))
+                                                    :location ,node-modules)])))
                        '("typescript-language-server" "--stdio")))))
 
   ;; HTML files: Angular LS for template → TS navigation in Angular projects,
@@ -141,7 +141,8 @@
                      (if-let ((project-root (locate-dominating-file default-directory "angular.json")))
                          (let* ((node-modules (expand-file-name "node_modules" project-root))
                                 (node-bin (executable-find "node"))
-                                (ngserver (expand-file-name "ngserver" (file-name-directory node-bin))))
+                                (ngserver (or (executable-find "ngserver")
+                                              (expand-file-name "ngserver" (file-name-directory node-bin)))))
                            (list node-bin ngserver
                                  "--stdio"
                                  "--tsProbeLocations" node-modules
@@ -190,7 +191,6 @@
         (alist-get 'python-ts-mode apheleia-mode-alist) 'black)
 
   (apheleia-global-mode +1))
-
 
 (provide 'coding)
 ;;; coding.el ends here

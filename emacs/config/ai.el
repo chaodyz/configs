@@ -117,7 +117,7 @@
   :bind ("C-c a" . claude-code-ide-menu) ; Set your favorite keybinding
   :config
   ;; Use eat terminal backend (better scrolling during Claude thinking)
-  (setq claude-code-ide-terminal-backend 'eat)
+  (setq claude-code-ide-terminal-backend 'vterm)
   ;; Configure diff view behavior to prevent "session reload" appearance
   (setq claude-code-ide-show-claude-window-in-ediff t)  ; Keep Claude visible during diff
   (claude-code-ide-emacs-tools-setup)
