@@ -20,7 +20,7 @@ apply_from_repo() {
     mkdir -p ~/.config
     cp "$DOTFILES_DIR/starship/starship.toml" ~/.config/starship.toml
     mkdir -p ~/.config/alacritty
-    cp "$DOTFILES_DIR/alacritty/alacritty.toml" ~/.config/alacritty/alacritty.toml
+    cp -r "$DOTFILES_DIR/alacritty/." ~/.config/alacritty/
     mkdir -p ~/.config/joplin
     cp "$DOTFILES_DIR/joplin/keymap.json" ~/.config/joplin/keymap.json
 

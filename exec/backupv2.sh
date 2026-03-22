@@ -36,7 +36,7 @@ export_to_repo() {
     # Common configs
     cp ~/.tmux.conf "$DOTFILES_DIR/tmux/.tmux.conf"
     cp ~/.config/starship.toml "$DOTFILES_DIR/starship/starship.toml"
-    cp ~/.config/alacritty/alacritty.toml "$DOTFILES_DIR/alacritty/alacritty.toml"
+    cp -r ~/.config/alacritty/. "$DOTFILES_DIR/alacritty/"
     cp ~/.config/joplin/keymap.json "$DOTFILES_DIR/joplin/keymap.json"
 
     if [ -d "$HOME/.config/nvim" ]; then
