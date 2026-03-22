@@ -95,7 +95,11 @@ if [[ "$OSTYPE" == "linux-gnu" ]]; then
   # Terminal prompt
   eval "$(starship init bash)"
   # fast node manager
-  eval "$(fnm env --use-on-cd --shell bash)"
+  FNM_PATH="/home/librarie/.local/share/fnm"
+  if [ -d "$FNM_PATH" ]; then
+   export PATH="$FNM_PATH:$PATH"
+   eval "$(fnm env --shell bash)"
+  fi
 
   # Java
   [ -s "/Users/$USER/.jabba/jabba.sh" ] && source "/Users/$USER/.jabba/jabba.sh"
@@ -198,3 +202,10 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
 fi
 
 export PATH="$HOME/.local/bin:$PATH"
+
+# fnm
+FNM_PATH="/home/librarie/.local/share/fnm"
+if [ -d "$FNM_PATH" ]; then
+  export PATH="$FNM_PATH:$PATH"
+  eval "$(fnm env --shell bash)"
+fi
