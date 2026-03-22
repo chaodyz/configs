@@ -50,7 +50,8 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes
-   '("82f4291a091046ecc4c6611ebc7c18f2a4aba9906db8514a6a2d1c8a84d78855"
+   '("21d2bf8d4d1df4859ff94422b5e41f6f2eeff14dd12f01428fa3cb4cb50ea0fb"
+     "82f4291a091046ecc4c6611ebc7c18f2a4aba9906db8514a6a2d1c8a84d78855"
      "efcecf09905ff85a7c80025551c657299a4d18c5fcfedd3b2f2b6287e4edd659"
      "c9d837f562685309358d8dc7fccb371ed507c0ae19cf3c9ae67875db0c038632"
      "e1df746a4fa8ab920aafb96c39cd0ab0f1bac558eff34532f453bd32c687b9d6"

@@ -12,22 +12,13 @@
   :ensure t)
 
 (use-package solarized-theme
-  :ensure t
-  :config
-  (setq solarized-high-contrast-mode-line 0)
-  )
+  :ensure t)
 
 (use-package nord-theme
   :ensure t)
 
 (use-package doom-themes
   :ensure t)
-
-(use-package everforest-theme
-  :ensure t
-  :vc (:url "https://github.com/Theory-of-Everything/everforest-emacs.git" :rev :newest)
-  )
-
 
 (if (display-graphic-p)
     (load-theme 'doom-nord t)

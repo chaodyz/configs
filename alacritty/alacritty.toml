@@ -1,63 +1,42 @@
 general.live_config_reload = true
 
-[colors]
-draw_bold_text_with_bright_colors = true
-
-[colors.bright]
-black = "#625A5B"
-blue = "#61ABDA"
-cyan = "#65B8C1"
-green = "#8BAE68"
-magenta = "#CF86C1"
-red = "#EC8685"
-white = "#C0AB86"
-yellow = "#D68C67"
-
-[colors.cursor]
-cursor = "#F3EADB"
-text = "#404040"
-
-[colors.normal]
-black = "#404040"
-blue = "#6099C0"
-cyan = "#66A5AD"
-green = "#819B69"
-magenta = "#B279A7"
-red = "#E3716E"
-white = "#F0E4CF"
-yellow = "#B77E64"
-
-[colors.primary]
-background = "#404040"
-foreground = "#F0E4CF"
-
 [env]
 TERM = "xterm-256color"
 TERM_PROGRAM = "alacritty"
 
+[window]
+option_as_alt = "OnlyLeft"
+
+[window.padding]
+x = 2
+y = 2
+
 [font]
-size = 15.0
-
-[font.bold]
-family = "FiraCode Nerd Font Mono"
-style = "Medium"
-
-[font.glyph_offset]
-x = 0
-y = 0
+size = 12.0
 
 [font.normal]
 family = "FiraCode Nerd Font Mono"
 style = "Regular"
 
+[font.bold]
+family = "FiraCode Nerd Font Mono"
+style = "Medium"
+
 [font.offset]
 x = 0
 y = 0
 
-[[keyboard.bindings]]
-action = "Paste"
-key = "V"
-mods = "Control|Shift"
+[font.glyph_offset]
+x = 0
+y = 0
+
+[scrolling]
+history = 10000
+multiplier = 10
+
+[selection]
+save_to_clipboard = true
+semantic_escape_chars = ",│`|:\"' ()[]{}<>"
 
 [[keyboard.bindings]]
 action = "Copy"
@@ -65,9 +44,14 @@ key = "C"
 mods = "Control|Shift"
 
 [[keyboard.bindings]]
-action = "ResetFontSize"
-key = "Key0"
-mods = "Control"
+action = "Paste"
+key = "V"
+mods = "Control|Shift"
+
+[[keyboard.bindings]]
+action = "SpawnNewInstance"
+key = "N"
+mods = "Control|Shift"
 
 [[keyboard.bindings]]
 action = "IncreaseFontSize"
@@ -85,9 +69,9 @@ key = "Minus"
 mods = "Control"
 
 [[keyboard.bindings]]
-action = "SpawnNewInstance"
-key = "N"
-mods = "Control|Shift"
+action = "ResetFontSize"
+key = "Key0"
+mods = "Control"
 
 [[keyboard.bindings]]
 action = "ScrollPageUp"
@@ -100,29 +84,14 @@ key = "PageDown"
 mods = "Shift"
 
 [[keyboard.bindings]]
-action = "ScrollToBottom"
-key = "End"
-mods = "Shift"
-
-[[keyboard.bindings]]
 action = "ScrollToTop"
 key = "Home"
 mods = "Shift"
 
-[scrolling]
-history = 10000
-multiplier = 10
-
-[selection]
-save_to_clipboard = true
-semantic_escape_chars = ",│`|:\"' ()[]{}<>"
-
-[window]
-opacity = 0.95
-
-[window.padding]
-x = 2
-y = 2
+[[keyboard.bindings]]
+action = "ScrollToBottom"
+key = "End"
+mods = "Shift"
 
 [[keyboard.bindings]]
 key = "Return"
