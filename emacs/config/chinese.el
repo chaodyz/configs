@@ -22,20 +22,16 @@
 ;;; Code:
 
 ;; =============================================================================
-;; Pyim Dictionaries
-;; =============================================================================
-
-(setq pyim-dicts
-      '((:name "懒人包" :file "~/eSync/pyim/lazy.gz")
-        (:name "搜狗－饮食大全（官方推荐）" :file "~/eSync/pyim/food.pyim")))
-
-;; =============================================================================
 ;; Pyim Configuration
 ;; =============================================================================
 
 (use-package pyim
   :ensure t
   :config
+  (setq pyim-dicts
+        '((:name "懒人包" :file "~/eSync/pyim/lazy.gz")
+          (:name "搜狗－饮食大全（官方推荐）" :file "~/eSync/pyim/food.pyim")))
+
   ;; Activate basedict 拼音词库
   (use-package pyim-basedict
     :ensure t
@@ -71,7 +67,7 @@
   (add-hook 'emacs-startup-hook
             #'(lambda () (pyim-restart-1 t)))
 
-  :bind
+  :bind*
   (
    ;; Force convert pinyin at point to Chinese (works with pyim-probe-dynamic-english)
    ("M-j" . pyim-convert-string-at-point)

@@ -21,7 +21,8 @@
   :ensure t)
 
 (if (display-graphic-p)
-    (load-theme 'doom-nord t)
+    ;; (load-theme 'doom-nord t)
+    (load-theme 'solarized-light-high-contrast t)
   (use-package circadian
     :ensure t
     :config

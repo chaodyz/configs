@@ -80,7 +80,15 @@
      "5a4cdc4365122d1a17a7ad93b6e3370ffe95db87ed17a38a94713f6ffe0d8ceb"
      "972f792651d32b0506481b9e87b2fbc9b732ae9da2527562668c6e7d149fefda"
      default))
- '(package-selected-packages nil)
+ '(package-selected-packages
+   '(ai-code apheleia circadian claude-code-ide command-log-mode company
+             copilot copilot-chat counsel-projectile doom-themes eat
+             eterm-256color everforest everforest-theme
+             evil-collection evil-nerd-commenter general helpful hydra
+             iflipb ivy-rich ivy-xref minuet nord-theme org-download
+             org-roam org-superstar pyim-basedict restart-emacs
+             solarized-theme treesit-auto undo-tree visual-fill-column
+             vterm xclip yaml-mode zenburn-theme))
  '(package-vc-selected-packages
    '((claude-code-ide :url
                       "https://github.com/manzaltu/claude-code-ide.el")
