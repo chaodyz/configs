@@ -97,15 +97,45 @@
 
 
 ;; =============================================================================
-;; Minuet AI Completion (OpenAI backend)
+;; Minuet AI Completion 
 ;; =============================================================================
-
 ;; (use-package minuet
 ;;   :ensure t
+;;   :vc (:url "https://github.com/milanglacier/minuet-ai.el"
+;;             :rev :newest
+;;             :branch "main")
+;;   :bind
+;;   (("M-y" . #'minuet-complete-with-minibuffer) ;; use minibuffer for completion
+;;    ("M-i" . #'minuet-show-suggestion) ;; use overlay for completion
+;;    ("C-c m" . #'minuet-configure-provider)
+;;    :map minuet-active-mode-map
+;;    ;; These keymaps activate only when a minuet suggestion is displayed in the current buffer
+;;    ("M-p" . #'minuet-previous-suggestion) ;; invoke completion or cycle to next completion
+;;    ("M-n" . #'minuet-next-suggestion) ;; invoke completion or cycle to previous completion
+;;    ("M-A" . #'minuet-accept-suggestion) ;; accept whole completion
+;;    ;; Accept the first line of completion, or N lines with a numeric-prefix:
+;;    ;; e.g. C-u 2 M-a will accepts 2 lines of completion.
+;;    ("M-a" . #'minuet-accept-suggestion-line)
+;;    ("M-e" . #'minuet-dismiss-suggestion))
+;;   :hook (prog-mode . minuet-auto-suggestion-mode)
 ;;   :config
-;;   (setq minuet-provider 'claude)
-;;   (plist-put minuet-claude-options :model "claude-haiku-4-5-20251001"))
+;;   (setq minuet-provider 'openai-fim-compatible)
+;;   (setq minuet-n-completions 1) ; recommended for Local LLM for resource saving
+;;   ;; I recommend beginning with a small context window size and incrementally
+;;   ;; expanding it, depending on your local computing power. A context window
+;;   ;; of 512, serves as an good starting point to estimate your computing
+;;   ;; power. Once you have a reliable estimate of your local computing power,
+;;   ;; you should adjust the context window to a larger value.
+;;   (setq minuet-context-window 512)
+;;   (plist-put minuet-openai-fim-compatible-options :end-point "http://100.79.1.45:11434/v1/completions")
+;;   ;; an arbitrary non-null environment variable as placeholder.
+;;   ;; For Windows users, TERM may not be present in environment variables.
+;;   ;; Consider using APPDATA instead.
+;;   (plist-put minuet-openai-fim-compatible-options :name "Ollama")
+;;   (plist-put minuet-openai-fim-compatible-options :api-key "TERM")
+;;   (plist-put minuet-openai-fim-compatible-options :model "qwen2.5-coder:3b")
 
+;;   (minuet-set-optional-options minuet-openai-fim-compatible-options :max_tokens 56))
 
 ;; =============================================================================
 ;; Claude Code IDE
@@ -116,35 +146,14 @@
   :vc (:url "https://github.com/manzaltu/claude-code-ide.el" :rev :newest)
   :bind ("C-c a" . claude-code-ide-menu) ; Set your favorite keybinding
   :config
-  ;; Use eat terminal backend (better scrolling during Claude thinking)
+  ;; Compares with eat, vterm has better compatibility with evil.
+  ;; However, the terminal output blocks cursor location,
+  ;; use C-c C-t to enter terminal copy mode as workaround
   (setq claude-code-ide-terminal-backend 'vterm)
   ;; Configure diff view behavior to prevent "session reload" appearance
   (setq claude-code-ide-show-claude-window-in-ediff t)  ; Keep Claude visible during diff
   (claude-code-ide-emacs-tools-setup)
   ) ; Optionally enable Emacs MCP tools
-
-
-;; (use-package ai-code
-;;   :ensure t
-;;   :config
-;;   ;; Enable global keybinding for the main menu
-;;   (global-set-key (kbd "C-c a") #'ai-code-menu)
-;;   ;; Optional: Use eat if you prefer, by default it is vterm
-;;   ;; (setq ai-code-backends-infra-terminal-backend 'eat)
-;;   ;; Note: This configures terminal backend for native CLI support.
-;;   ;; For external backends (claude-code-ide.el, claude-code.el), check their config
-;;   ;; Optional: Enable @ file completion in comments and AI sessions
-;;   (ai-code-prompt-filepath-completion-mode 1)
-;;   ;; Optional: Ask AI to run test after code changes, for a tighter build-test loop
-;;   (defvar ai-code-auto-test-type)  ; Silence byte-compiler warning
-;;   (setq ai-code-auto-test-type 'test-after-change)
-;;   ;; Optional: In AI session buffers, SPC in Evil normal state triggers the prompt-enter UI
-;;   (with-eval-after-load 'evil (ai-code-backends-infra-evil-setup))
-;;   ;; Optional: Turn on auto-revert buffer, so that the AI code change automatically appears in the buffer
-;;   (global-auto-revert-mode 1)
-;;   (setq auto-revert-interval 1) ;; set to 1 second for faster update
-;;   )
-
 
 (provide 'ai)
 ;;; ai.el ends here

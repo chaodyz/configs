@@ -99,6 +99,23 @@
   (define-key evil-normal-state-map (kbd "gr") #'xref-find-references))
 
 ;; =============================================================================
+;; Ediff
+;; =============================================================================
+
+;; Force single-frame side-by-side layout
+(setq ediff-window-setup-function 'ediff-setup-windows-plain)
+(setq ediff-split-window-function 'split-window-horizontally)
+
+;; Cleanup on quit
+;; Kill three way merge buffers when done
+(setq ediff-keep-variants nil)
+;; Mordern experience enhancer, no need to keep the diff buffers around
+(setq ediff-keep-temporary-buffers nil)
+
+;; In merge mode, only show conflicting regions
+(setq ediff-show-clashes-only t)
+
+;; =============================================================================
 ;; Hydra (Text Scaling)
 ;; =============================================================================
 

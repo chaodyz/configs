@@ -19,6 +19,19 @@
   :bind ("C-x g" . magit-status))
 
 ;; =============================================================================
+;; Diff-HL (Git change indicators in the fringe)
+;; =============================================================================
+
+(use-package diff-hl
+  :ensure t
+  :hook ((prog-mode . diff-hl-mode)
+         (conf-mode . diff-hl-mode)
+         (magit-pre-refresh . diff-hl-magit-pre-refresh)
+         (magit-post-refresh . diff-hl-magit-post-refresh))
+  :config
+  (diff-hl-flydiff-mode 1))
+
+;; =============================================================================
 ;; Markdown Mode
 ;; =============================================================================
 
@@ -151,6 +164,17 @@
 
   ;; Show documentation on hover (like VS Code)
   (setq eldoc-echo-area-use-multiline-p nil))  ; Keep it concise
+
+;; =============================================================================
+;; Eldoc-box (floating documentation popups for eglot)
+;; =============================================================================
+
+(use-package eldoc-box
+  :vc (:url "https://github.com/casouri/eldoc-box" :branch "main")
+  :bind (:map eglot-mode-map
+              ("K" . eldoc-box-eglot-help-at-point))
+  :config
+  (evil-define-key 'normal eglot-mode-map (kbd "K") #'eldoc-box-eglot-help-at-point))
 
 ;; gd replaces current window instead of splitting (default is 'other-window)
 (setq xref-window-type 'same-window)

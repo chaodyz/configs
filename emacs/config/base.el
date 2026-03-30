@@ -64,11 +64,23 @@
 
 (setq use-short-answers t)
 
+;; Soft-wrap long lines at window edge (useful in split windows)
+(global-visual-line-mode 1)
+
 ;; Scroll UX
 (when (fboundp 'pixel-scroll-precision-mode)
   (pixel-scroll-precision-mode 1))
 (setq scroll-margin 5
       scroll-conservatively 101)
+
+;; Global auto-revert for all file buffers
+(global-auto-revert-mode 1)
+
+;; Optional: also revert non-file buffers (like Magit/Dired)
+(setq global-auto-revert-non-file-buffers t)
+
+;; Optional: silence the revert messages
+(setq auto-revert-verbose nil)
 
 (provide 'base)
 ;;; base.el ends here

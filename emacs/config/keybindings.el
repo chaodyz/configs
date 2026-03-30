@@ -91,12 +91,17 @@
     )
 
   (leader-key-def
-    "g" '(:ignore t :which-key " Magit...")
+    "g" '(:ignore t :which-key " Git...")
     "g s" 'magit-status
     "g b" 'magit-blame
     "g l" 'magit-log-buffer-file
     "g g" 'magit-dispatch
-    "g c" 'magit-commit-create)
+    "g c" 'magit-commit-create
+    "g h" '(:ignore t :which-key " Hunks...")
+    "g h n" '(diff-hl-next-hunk :which-key "Next hunk")
+    "g h p" '(diff-hl-previous-hunk :which-key "Previous hunk")
+    "g h v" '(diff-hl-show-hunk :which-key "Preview hunk")
+    "g h r" '(diff-hl-revert-hunk :which-key "Revert hunk"))
 
   (leader-key-def
     "l" '(:ignore t :which-key " LSP/Code...")
@@ -106,7 +111,7 @@
     "l a" '(eglot-code-actions :which-key "Code actions")
     "l f" '(eglot-format :which-key "Format")
     "l p" '(apheleia-format-buffer :which-key "Format buffer")
-    "l h" '(eldoc-doc-buffer :which-key "Show documentation")
+    "l h" '(eldoc-box-eglot-help-at-point :which-key "Show documentation")
     "l e" '(flymake-show-buffer-diagnostics :which-key "Show errors"))
   )
 
