@@ -96,5 +96,24 @@
   (setq xref-show-xrefs-function #'ivy-xref-show-xrefs
         xref-show-definitions-function #'ivy-xref-show-defs))
 
+;; =============================================================================
+;; Swiper with persistent highlight (C-c s)
+;; =============================================================================
+
+(defun my/swiper-with-highlight ()
+  "Run swiper and keep matches highlighted after selection."
+  (interactive)
+  (swiper)
+  (when (and ivy-text (not (string-empty-p ivy-text)))
+    (unhighlight-regexp t)
+    (highlight-regexp (regexp-quote ivy-text) 'hi-aquamarine)))
+
+(global-set-key (kbd "C-c C-s") 'my/swiper-with-highlight)
+
+;; Unset C-c C-s in sgml-mode and html-mode to avoid conflicts with Emmet's expand-abbreviation
+(with-eval-after-load 'sgml-mode
+  (define-key sgml-mode-map (kbd "C-c C-s") nil)
+  (define-key html-mode-map (kbd "C-c C-s") nil))
+
 (provide 'completion)
 ;;; completion.el ends here

@@ -57,7 +57,7 @@
     "s" '(counsel-rg :which-key " Search in project")
     "w" 'save-buffer
     "R" 'restart-emacs
-    "v" '(vterm :which-key " Vterm")
+    "v" '((lambda () (interactive) (evil-window-vsplit) (evil-window-right 1)) :which-key " Vertical Split")
     )
   (leader-key-def
     "b" '(:ignore t :which-key " Buffer...")

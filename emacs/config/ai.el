@@ -144,7 +144,7 @@
 (use-package claude-code-ide
   :ensure t
   :vc (:url "https://github.com/manzaltu/claude-code-ide.el" :rev :newest)
-  :bind ("C-c a" . claude-code-ide-menu) ; Set your favorite keybinding
+  :bind ("C-c c" . claude-code-ide-menu)
   :config
   ;; Compares with eat, vterm has better compatibility with evil.
   ;; However, the terminal output blocks cursor location,

@@ -73,14 +73,5 @@
 (setq scroll-margin 5
       scroll-conservatively 101)
 
-;; Global auto-revert for all file buffers
-(global-auto-revert-mode 1)
-
-;; Optional: also revert non-file buffers (like Magit/Dired)
-(setq global-auto-revert-non-file-buffers t)
-
-;; Optional: silence the revert messages
-(setq auto-revert-verbose nil)
-
 (provide 'base)
 ;;; base.el ends here
