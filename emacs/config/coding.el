@@ -171,6 +171,7 @@
 
 (use-package eldoc-box
   :vc (:url "https://github.com/casouri/eldoc-box" :branch "main")
+  :after eglot
   :config
   (evil-define-key 'normal eglot-mode-map (kbd "K") #'eldoc-box-eglot-help-at-point))
 
