@@ -6,3 +6,4 @@
 - Emacs configuration ~/projects/configs/emacs/
 - Always use `gh` for Github operations
 - Always use `glab` for Gitlab operations
+- Store a copy plan mode plans relative to the project folder at ./.claude/plans

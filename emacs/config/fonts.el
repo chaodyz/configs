@@ -12,9 +12,9 @@
 
 (defvar my/is-mac (eq system-type 'darwin)                            
   "Non-nil when running on macOS.")                                   
-(defvar my/font-default-height (if (eq system-type 'darwin) 150 130)
+(defvar my/font-default-height (if (eq system-type 'darwin) 150 120)
   "Height for default font.")
-(defvar my/font-fixed-height (if (eq system-type 'darwin) 140 120)
+(defvar my/font-fixed-height (if (eq system-type 'darwin) 140 110)
   "Height for fixed-pitch font.")
 (defvar my/font-variable-height (if (eq system-type 'darwin) 180 160)
   "Height for variable-pitch font.")

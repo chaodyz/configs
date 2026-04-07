@@ -106,6 +106,11 @@ if [[ "$OSTYPE" == "linux-gnu" ]]; then
   # Java
   [ -s "/Users/$USER/.jabba/jabba.sh" ] && source "/Users/$USER/.jabba/jabba.sh"
 
+  # Python
+  export PYENV_ROOT="$HOME/.pyenv"
+  [[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
+  eval "$(pyenv init - bash)"
+
   #   .--.
   #  |o_o |
   #  |:_/ |
@@ -179,6 +184,7 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
   # Version managers
   # Python
   alias brew='env PATH="${PATH//$(pyenv root)\/shims:/}" brew'
+
   # Node
   eval "$(fnm env --use-on-cd --shell bash)"
   # Java
