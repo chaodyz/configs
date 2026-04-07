@@ -111,7 +111,7 @@
     "l a" '(eglot-code-actions :which-key "Code actions")
     "l f" '(eglot-format :which-key "Format")
     "l p" '(apheleia-format-buffer :which-key "Format buffer")
-    "l h" '(eldoc-box-eglot-help-at-point :which-key "Show documentation")
+    "l h" '(eldoc-doc-buffer :which-key "Show documentation")
     "l e" '(flymake-show-buffer-diagnostics :which-key "Show errors"))
   )
 
