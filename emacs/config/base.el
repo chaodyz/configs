@@ -67,11 +67,6 @@
 ;; Soft-wrap long lines at window edge (useful in split windows)
 (global-visual-line-mode 1)
 
-;; Scroll UX
-(when (fboundp 'pixel-scroll-precision-mode)
-  (pixel-scroll-precision-mode 1))
-(setq scroll-margin 5
-      scroll-conservatively 101)
 
 (provide 'base)
 ;;; base.el ends here

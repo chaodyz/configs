@@ -1,3 +1,4 @@
+- Never make assumption without facts. No Hallucination.
 - Never pop out code change directly on question, talk about the solution and explain it first
 - When Brainstorming,try ask me if i need to do it in broad level or be more specific, interview me if it needs to be specific.
 - When CodeReview, Do not post the review as comment if i never asked you to do so.
