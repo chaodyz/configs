@@ -91,6 +91,11 @@
     )
 
   (leader-key-def
+    "e" '(:ignore t :which-key " Editing...")
+    "e t" '(toggle-truncate-lines :which-key "Toggle truncate lines")
+    )
+
+  (leader-key-def
     "g" '(:ignore t :which-key " Git...")
     "g s" 'magit-status
     "g b" 'magit-blame
