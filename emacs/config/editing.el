@@ -41,6 +41,10 @@
 (use-package undo-tree
   :ensure t
   :init
+  :custom
+  (undo-tree-history-directory-alist
+   `(("." . ,(expand-file-name "undo-tree/" user-emacs-directory))))
+  (undo-tree-auto-save-history t)
   :config
   (global-undo-tree-mode 1))
 
