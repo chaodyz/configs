@@ -164,7 +164,16 @@
 (use-package editorconfig
   :ensure t
   :config
-  (editorconfig-mode 1))
+  (editorconfig-mode 1)
+  ;; Org requires tab-width 8 (org 9.6.6+ hard-errors otherwise).
+  ;; Re-assert it after editorconfig applies a project's tab_width setting.
+  (add-hook 'editorconfig-after-apply-functions
+            (lambda (&rest _)
+              (when (derived-mode-p 'org-mode)
+                (setq tab-width 8)))))
+
+;; Org buffers outside editorconfig-managed repos also need tab-width 8
+(add-hook 'org-mode-hook (lambda () (setq tab-width 8)))
 
 ;; Minimal fallback for files without .editorconfig
 (setq-default indent-tabs-mode nil)      ; Use spaces by default
