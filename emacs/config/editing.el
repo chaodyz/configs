@@ -164,20 +164,18 @@
 (use-package editorconfig
   :ensure t
   :config
-  (editorconfig-mode 1)
-  ;; Org requires tab-width 8 (org 9.6.6+ hard-errors otherwise).
-  ;; Re-assert it after editorconfig applies a project's tab_width setting.
-  (add-hook 'editorconfig-after-apply-functions
-            (lambda (&rest _)
-              (when (derived-mode-p 'org-mode)
-                (setq tab-width 8)))))
+  (editorconfig-mode 1))
 
-;; Org buffers outside editorconfig-managed repos also need tab-width 8
-(add-hook 'org-mode-hook (lambda () (setq tab-width 8)))
+;; Org requires tab-width 8 (hard error since org 9.6.6). On Emacs 30 the
+;; built-in editorconfig applies tab_width via hack-local-variables, which
+;; runs AFTER mode hooks — so re-assert it after local variables are applied.
+(add-hook 'hack-local-variables-hook
+          (lambda ()
+            (when (derived-mode-p 'org-mode)
+              (setq tab-width 8))))
 
 ;; Minimal fallback for files without .editorconfig
 (setq-default indent-tabs-mode nil)      ; Use spaces by default
-(setq-default tab-width 2)               ; Display tabs as 2 spaces
 
 (provide 'editing)
 ;;; editing.el ends here
