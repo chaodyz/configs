@@ -102,6 +102,10 @@
   (define-key evil-normal-state-map (kbd "gd") #'xref-find-definitions)
   (define-key evil-normal-state-map (kbd "gr") #'xref-find-references))
 
+(use-package evil-ghostel
+  :after (ghostel evil)
+  :hook (ghostel-mode . evil-ghostel-mode))
+
 ;; =============================================================================
 ;; Ediff
 ;; =============================================================================

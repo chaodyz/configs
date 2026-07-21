@@ -149,7 +149,7 @@
   ;; Compares with eat, vterm has better compatibility with evil.
   ;; However, the terminal output blocks cursor location,
   ;; use C-c C-t to enter terminal copy mode as workaround
-  (setq claude-code-ide-terminal-backend 'vterm)
+  (setq claude-code-ide-terminal-backend 'ghostel)  ; Use Ghostel for terminal integration
   ;; Configure diff view behavior to prevent "session reload" appearance
   (setq claude-code-ide-show-claude-window-in-ediff t)  ; Keep Claude visible during diff
   (claude-code-ide-emacs-tools-setup)
