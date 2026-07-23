@@ -114,6 +114,7 @@
     "l r" '(my/xref-find-references-buffer :which-key "Find references (xref buffer)")
     "l n" '(eglot-rename :which-key "Rename symbol")
     "l a" '(eglot-code-actions :which-key "Code actions")
+    "l i" '(eglot-find-implementation :which-key "Find implementation")
     "l f" '(eglot-format :which-key "Format")
     "l p" '(apheleia-format-buffer :which-key "Format buffer")
     "l h" '(eldoc-doc-buffer :which-key "Show documentation")

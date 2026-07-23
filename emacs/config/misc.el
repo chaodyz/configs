@@ -72,9 +72,15 @@
 ;; Handle potential issue with backup files
 ;; Issue: https://discourse.joplinapp.org/t/note-for-emacs-users/623
 ;; Set backup file to a specific directory
-(setq backup-directory-alist '(("." . "~/eSync/backups")))
-(setq auto-save-file-name-transforms
-      `((".*" ,(expand-file-name "auto-save/" user-emacs-directory) t)))
+(let ((backup-dir (expand-file-name "~/eSync/backups"))
+      (auto-save-dir (expand-file-name "auto-save/" user-emacs-directory)))
+  (unless (file-directory-p backup-dir)
+    (make-directory backup-dir t))
+  (unless (file-directory-p auto-save-dir)
+    (make-directory auto-save-dir t))
+  (setq backup-directory-alist `(("." . ,backup-dir)))
+  (setq auto-save-file-name-transforms
+        `((".*" ,auto-save-dir t))))
 
 ;; =============================================================================
 ;; YAML Mode

@@ -44,6 +44,17 @@ alias rm='rm -i'
 # Git
 alias gc="git checkout"
 
+if [[ "$INSIDE_EMACS" = 'ghostel' ]]; then
+  # Open a file in Emacs from the terminal
+  e() { ghostel_cmd find-file-other-window "$@"; }
+
+  # Open dired in another window
+  dow() { ghostel_cmd dired-other-window "$@"; }
+
+  # Open magit for the current directory
+  gst() { ghostel_cmd magit-status-setup-buffer "$(pwd)"; }
+fi
+
 if [[ "$OSTYPE" == "linux-gnu" ]]; then
   #----Linux ----------------------
   #  (\(\
@@ -168,7 +179,11 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
       echo "    ^^^^      ^^^^     ^^^    ^^        "
       echo "         ^^^^      ^^^^                "
 
-      export KUBECONFIG=$(ls ~/.kube/config/*.yaml | tr '\n' ':')                             
+      export KUBECONFIG=$(ls ~/.kube/config/*.yaml | tr '\n' ':')
+
+      if [[ -f ~/.bashrc_extra ]]; then
+        source ~/.bashrc_extra
+      fi
     fi
   fi
   # K8s
@@ -191,11 +206,13 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
   [ -s "/Users/$USER/.jabba/jabba.sh" ] && source "/Users/$USER/.jabba/jabba.sh"
 
   # Go
-  export GOPATH="$HOME/go"; export GOROOT="$HOME/.go"; export PATH="$GOPATH/bin:$PATH"; # g-install: do NOT edit, see https://github.com/stefanmaric/g
+  export GOPATH="$HOME/go"
+  export GOROOT="$HOME/.go"
+  export PATH="$GOPATH/bin:$PATH" # g-install: do NOT edit, see https://github.com/stefanmaric/g
 
   # GNU libtool
   PATH="/opt/homebrew/opt/libtool/libexec/gnubin:$PATH"
-  
+
   # MYSQL
   export PATH="/opt/homebrew/opt/mysql-client/bin:$PATH"
 
@@ -217,3 +234,4 @@ if [ -d "$FNM_PATH" ]; then
   export PATH="$FNM_PATH:$PATH"
   eval "$(fnm env --use-on-cd --shell bash)"
 fi
+alias nb-db='~/projects/configs/exec/nb-db.sh'

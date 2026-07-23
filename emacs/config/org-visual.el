@@ -14,7 +14,8 @@
 
 (defun my-org-mode-setup ()
   "Setup visual modes and local settings for Org mode."
-  (visual-line-mode)
+  (visual-line-mode -1)
+  (setq-local truncate-lines t)
   (variable-pitch-mode 1)
   (setq-local line-spacing 0.2)
   (setq-local org-blank-before-new-entry
@@ -74,13 +75,14 @@
   (setq-default org-download-image-html-width 800))
 
 ;; Centered text layout
-(defun efs/org-mode-visual-fill ()
-  (setq visual-fill-column-width 120
-        visual-fill-column-center-text t)
-  (visual-fill-column-mode 1))
+;; comment out because i prefer more text than look
+;; (defun efs/org-mode-visual-fill ()
+;;   (setq visual-fill-column-width 120
+;;         visual-fill-column-center-text t)
+;;   (visual-fill-column-mode 1))
 
-(use-package visual-fill-column
-  :hook (org-mode . efs/org-mode-visual-fill))
+;; (use-package visual-fill-column
+;;   :hook (org-mode . efs/org-mode-visual-fill))
 
 ;; Headline bullets
 (use-package org-superstar

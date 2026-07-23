@@ -104,7 +104,12 @@
 
 (use-package evil-ghostel
   :after (ghostel evil)
-  :hook (ghostel-mode . evil-ghostel-mode))
+  :hook (ghostel-mode . evil-ghostel-mode)
+  ;; Always route insert-state ESC to evil (enter normal state) instead of the
+  ;; `auto' default, which forwards ESC to the terminal in alt-screen TUIs like
+  ;; Claude Code.  Trades ESC-to-Claude for ESC-to-normal; toggle per-buffer
+  ;; with `evil-ghostel-toggle-send-escape' when the terminal needs a raw ESC.
+  :custom (evil-ghostel-escape 'evil))
 
 ;; =============================================================================
 ;; Ediff

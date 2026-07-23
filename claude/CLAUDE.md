@@ -7,4 +7,5 @@
 - Emacs configuration ~/projects/configs/emacs/
 - Always use `gh` for Github operations
 - Always use `glab` for Gitlab operations
-- Store a copy plan mode plans relative to the project folder at ./.claude/plans
+- Always use `acli` for Atlassian JIRA operations, only use Atlasisan MCP for Confluence
+- when push a fix, or revision a code change. Do not include the reason why previous decision was wrong and the new one is picked by default. Instead, reasoning about whether it should be included as comment.
