@@ -1,5 +1,22 @@
 # Engineering Workflow
 
+How it looks in short:
+
+1. **Is there a `HANDOFF.md`?**
+   - No → create one.
+
+2. **Is there a ticket?**
+   - No → gather design and specs.
+     - PRD missing → brainstorm the business idea first.
+     - Then → create the ticket
+   - Yes → continue.
+
+3. **Is it a small task?**
+   - Yes → implement directly.
+   - No → brainstorm implementation, enter plan mode, and write the plan.
+     - Review and refine the plan.
+     - Execute the plan.
+
 ## Working Style
 * Use brief, concise communication.
 * Keep changes scoped to the ticket.
