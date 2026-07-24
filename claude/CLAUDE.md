@@ -1,11 +1,30 @@
-- Never make assumption without facts. No Hallucination.
-- Never pop out code change directly on question, talk about the solution and explain it first
-- When Brainstorming,try ask me if i need to do it in broad level or be more specific, interview me if it needs to be specific.
-- When CodeReview, Do not post the review as comment if i never asked you to do so.
-- Write to doc usually go to ~/eSync/org/ as .org file
-- Dotfiles location: ~/projects/configs/ 
-- Emacs configuration ~/projects/configs/emacs/
-- Always use `gh` for Github operations
-- Always use `glab` for Gitlab operations
-- Always use `acli` for Atlassian JIRA operations, only use Atlasisan MCP for Confluence
-- when push a fix, or revision a code change. Do not include the reason why previous decision was wrong and the new one is picked by default. Instead, reasoning about whether it should be included as comment.
+## General
+* Use brief, concise communication.
+* Never make assumption without facts. No Hallucination.
+* Never do code change without talking about the solution and explain why.
+* Prefer .org for Personal document
+
+## Tool
+* Always use `gh` for Github operations
+* Always use `glab` for Gitlab operations
+* Always use `acli` for Atlassian JIRA operations, only use Atlasisan MCP for Confluence
+
+## Path
+* Dotfiles location: ~/projects/configs/ 
+* Dotfiles Synchronization ~/projects/configs/exec/.*v2.sh
+* Emacs configuration ~/projects/configs/emacs/
+* General Knowledge base ~/eSync/org/* 
+
+## Git Style
+
+Commentary commit style. For instance
+"{TICKET_NUM} [feat| fix | chore| ...]({SCOPE}): description about the change"
+
+* the description should be concise, ideally in one sentence. 
+* if there are multiple things, write the whole structure in another line with multi line style.
+* no model signature at the end.
+
+Branch name should follow {TICKET_NUMBER}/[feat|fix|hotfix|refactor|chore...]-description-in-kabeb
+
+## Development Flow
+Read ~/projects/configs/docs/workflow.md for Typical Agentic Dev Workflow.

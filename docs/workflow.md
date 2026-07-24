@@ -1,34 +1,299 @@
-## How to work (WIP)
+# Engineering Workflow
 
-Use breif and concise wording.
+## Working Style
+* Use brief, concise communication.
+* Keep changes scoped to the ticket.
+* Prefer simple solutions over unnecessary abstraction.
+* Record important decisions outside production code.
 
-### Convention
+## Agent Documents
 
-- **Record technical decisions with plan doc**. Small feature (small effort, straightforward no much tech design), can directly implement without plan.
-  med to large feature, use plan mode, write a plan to record technical decisions.
-- Maintain a Hand-Off doc, create a handoff doc from get go, and update it when new ticket is created, keep track the implemenation and testing progress of each ticket. TODO items, action items. Update it after each implementation and review is done, and after each ticket creation, and after each plan doc created.
-- Plan and Hand-off docs store in /docs/agent/{EPICNUMBER_EPIC_NAME}/
-- never commit /agent docs, keep it local, back it up with ONE stash record with Epic name then apply back
+Store all working documents under:
 
-### 1. create ticket
+`/docs/agent/{EPIC_NUMBER}_{EPIC_NAME}/`
 
-when create a ticket, i will try to gather the spec for you. keep in mind the ticket should be Business focus, AC should be goal focus. Impl detail can be vary for a goal.
+Recommended files:
 
-interview with me if you think detail is missing that the Business goal isnt clear or the AC goal is not clear.
+* `PLAN-{TICKET_NUMBER}.md`
+* `HANDOFF.md`
 
-### 2.Plan with Brainstorm
+These files must remain local and must never be auto committed.
 
-We will then brainstorm the technical implementation, where we figure out the possible technical solutions, trade offs.
+Keep one Git stash named after the Epic as the backup for all agent documents. Re-apply it when resuming work and refresh the same stash when documents change.
 
-### 3.Implement
+---
 
-Start with writing test cases, keep them simple and true to AC.
-Keep in mind, we can go back edit AC when edge cases needs to be handled, or certain AC needs to be satisfied to achieve the goal.
+## Planning Threshold
 
-### 4.Review
+### Small Change
 
-Run build ,test, verify passes, then handover me to test with description of whats done, and how to test
+Implement directly when the work is:
 
-### Bonus: bugfix
+* Low effort
+* Straightforward
+* Low risk
+* Limited to a small area
+* Not dependent on significant technical decisions
 
-when work with bugfix, do not include unesesary context as comment, unless it's important to be there for handover/future phases, or maintaince,limitation with workaround reason.
+A plan document is optional.
+
+### Medium or Large Change
+
+Use plan mode when the work includes:
+
+* Multiple components or services
+* Data-model or API changes
+* Architectural decisions
+* Migration or compatibility concerns
+* Significant edge cases
+* Higher regression risk
+* Multiple implementation options
+
+Create `PLAN.md` before implementation.
+
+---
+
+## Hand-Off Document
+
+Create `HANDOFF.md` as soon as work on the Epic begins.
+
+Update it after:
+
+* Each ticket is created
+* Each plan document is created or changed
+* Each implementation is completed
+* Each review is completed
+* Testing results change
+* A blocker, limitation, or follow-up is discovered
+
+Track:
+
+* Ticket list
+* Ticket status
+* Implementation progress
+* Test progress
+* Completed work
+* TODO items
+* Action items
+* Blockers
+* Known limitations
+* Manual testing instructions
+
+Statuses:
+
+* Not started
+* Planning
+* In progress
+* In review
+* Ready for testing
+* Blocked
+* Done
+
+---
+
+# 1. Create the Ticket
+
+Tickets should focus on the business problem and expected outcome.
+
+## Ticket Content
+
+Include:
+
+* Business problem
+* Business value
+* Expected user or system outcome
+* Acceptance criteria
+* Relevant constraints
+* Explicitly excluded scope
+
+## Acceptance Criteria
+
+Acceptance criteria should:
+
+* Describe observable outcomes
+* Be goal-focused
+* Be testable
+* Avoid prescribing implementation details
+* Allow different technical solutions
+
+Ask questions when:
+
+* The business goal is unclear
+* The expected outcome is unclear
+* Acceptance criteria are ambiguous
+* Acceptance criteria cannot be tested
+* Important constraints are missing
+* Scope boundaries are unclear
+
+Create or update the Hand-Off document after the ticket is created.
+
+---
+
+# 2. Plan and Brainstorm
+
+For medium or large work, explore technical options before selecting an implementation.
+
+Consider:
+
+* Possible solutions
+* Trade-offs
+* Complexity
+* Maintainability
+* Performance
+* Security
+* Compatibility
+* Migration requirements
+* Failure scenarios
+* Testing strategy
+* Rollback strategy
+
+The plan should contain:
+
+1. Business goal
+2. Current behavior
+3. Desired behavior
+4. Constraints and assumptions
+5. Considered solutions
+6. Selected solution
+7. Decision rationale
+8. Implementation steps
+9. Testing strategy
+10. Risks and limitations
+11. Follow-up work
+
+Record meaningful rejected approaches and why they were rejected.
+
+Update the Hand-Off document after the plan is created or changed.
+
+---
+
+# 3. Implement
+
+## Start With Tests
+
+Write simple tests that directly represent the acceptance criteria.
+
+Tests should:
+
+* Focus on behavior
+* Avoid unnecessary implementation coupling
+* Cover the main success path
+* Cover important failure paths
+* Cover confirmed edge cases
+
+Do not add speculative tests for unsupported requirements.
+
+## Implementation Rules
+
+* Implement the smallest change that satisfies the acceptance criteria.
+* Follow existing project patterns unless there is a documented reason not to.
+* Avoid unrelated refactoring.
+* Avoid premature abstraction.
+* Keep commits and diffs easy to review.
+* Do not hide new scope inside implementation details.
+
+## Discovered Requirements
+
+When implementation reveals a missing requirement or edge case:
+
+1. Confirm the intended business behavior.
+2. Update the ticket and acceptance criteria.
+3. Update the plan when the technical decision changes.
+4. Update the Hand-Off document.
+5. Add or update tests.
+6. Implement the agreed behavior.
+
+Acceptance criteria should be updated before treating the new behavior as required.
+
+---
+
+# 4. Review and Verify
+
+Before handoff:
+
+* Review the final diff
+* Remove debugging code
+* Remove unrelated changes
+* Run formatting
+* Run linting or static analysis
+* Run the build
+* Run relevant unit tests
+* Run relevant integration tests
+* Run relevant E2E tests
+* Verify each acceptance criterion
+* Check affected existing behavior
+
+When a check cannot be run, document:
+
+* Which check was skipped
+* Why it was skipped
+* What risk remains
+* How it should be verified later
+
+Update the Hand-Off document after implementation and review.
+
+---
+
+# 5. Handoff for Testing
+
+Provide a concise handoff containing:
+
+## What Changed
+
+* Main behavior implemented
+* Components or services affected
+* Important technical decisions
+
+## Verification Completed
+
+* Build result
+* Test result
+* Lint or static-analysis result
+* Acceptance criteria verified
+
+## How to Test
+
+Provide clear manual steps:
+
+1. Required setup
+2. Action to perform
+3. Expected result
+4. Important edge cases to verify
+
+## Remaining Work
+
+Include:
+
+* Known limitations
+* Deferred scope
+* Follow-up tickets
+* Risks
+* Blockers
+
+Do not mark the ticket done until the agreed verification is complete.
+
+---
+
+# Bug-Fix Workflow
+
+For bug fixes:
+
+1. Reproduce the issue.
+2. Identify the root cause.
+3. Add a regression test when practical.
+4. Implement the smallest safe fix.
+5. Verify the original issue.
+6. Verify surrounding behavior.
+7. Record limitations or follow-up work in the Hand-Off document.
+
+Avoid unnecessary comments in production code.
+
+Add comments only when they explain:
+
+* A non-obvious constraint
+* A necessary workaround
+* A compatibility limitation
+* A future maintenance risk
+* Why a simpler-looking solution is incorrect
+
+Keep investigation history, discarded theories, and temporary context in the ticket, plan, or Hand-Off document.
