@@ -24,7 +24,7 @@ Commentary commit style. For instance
 * if there are multiple things, write the whole structure in another line with multi line style.
 * no model signature at the end.
 
-Branch name should follow {TICKET_NUMBER}/[feat|fix|hotfix|refactor|chore...]-description-in-kabeb
+Branch name should follow [feat|fix|hotfix|refactor|chore...]/{TICKET_NUMBER}-description-in-kabeb
 
 ## Development Flow
 Read ~/projects/configs/docs/workflow.md for Typical Agentic Dev Workflow.
