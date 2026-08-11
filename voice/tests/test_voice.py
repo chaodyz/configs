@@ -158,6 +158,22 @@ class VoiceTest(unittest.TestCase):
 
         self.assertIn("Done. Changed the configuration.", output.read_text())
 
+    def test_stop_speaking_terminates_active_provider(self):
+        speaker = self.executable(
+            "long-say",
+            "trap 'exit 0' TERM; while true; do sleep 0.1; done",
+        )
+        config = self.config(say_command=speaker)
+        process = voice.speak("Keep speaking.", config, summary=False, background=True)
+        pid = voice.read_pid(config.speech_pid_path)
+
+        self.assertIsNotNone(pid)
+        self.assertTrue(voice.process_alive(pid))
+        voice.stop_speaking(config)
+        process.wait(timeout=2)
+
+        self.assertFalse(config.speech_pid_path.exists())
+
     def test_claude_stop_extracts_last_assistant_message(self):
         transcript = self.root / "session.jsonl"
         transcript.write_text(

@@ -69,13 +69,34 @@ Merge =adapters/opencode/tui.json.example= into
 
 | Action | Command | Key |
 |--------+---------+-----|
-| Toggle record/transcribe | =/stt-record= | =Ctrl-r= |
-| Transcribe and submit | =/stt-submit= | =Ctrl-x r= |
-| Cancel recording | =/stt-stop= | none |
-| Speak last response | =/tts-speak= | =Ctrl-x s= |
+| Hold to record | =/stt-record= internally | hold =Space= |
+| Transcribe and submit | =/stt-submit= internally | release =Space= |
+| Cancel recording | =/stt-stop= | press =Escape= while holding Space |
+| Speak full last response | =/tts-speak= | =Ctrl-x s= |
+| Speak selected text | =/tts-selection= | =Ctrl-x Shift-s= |
+| Cycle automatic speech mode | =/tts-mode= | =Ctrl-x v= |
+| Stop current speech | =/tts-stop= | none |
+| Show voice diagnostics | =/voice-status= | none |
 
-The adapter disables OpenCode's default =Ctrl-r= session-rename binding. Session
-rename remains available through =/rename=.
+Hold-Space uses OpenTUI's native keyboard interceptor. A direct terminal can
+provide Kitty release events; tmux 3.6 discards that event subtype, so the
+adapter also recognizes the terminal's repeated Space presses and treats a
+short pause after them as release. Tapping Space inserts immediately. A hold is
+recognized when key repeat starts, and submits about 180 milliseconds after the
+last repeat.
+
+Automatic TTS defaults to =final= mode, which speaks a short summary only after
+the final assistant response completes and ignores intermediate tool-call
+messages. =/tts-mode= cycles through =final=, =live=, and =off=. =live= is the
+speculative mode: it buffers complete sentences and speaks while the response
+streams, so tool-progress text may be audible. Fenced code blocks are skipped.
+Starting a new response, starting a recording, selecting text to speak, or
+running =/tts-stop= interrupts current playback and clears queued sentences.
+
+OpenCode normally copies a mouse selection to the macOS clipboard and clears the
+visual selection on mouse-up. =/tts-selection= first reads an active OpenTUI
+selection and then falls back to =pbpaste=, so invoke it immediately after
+selecting the desired text. Selection alone does not trigger speech.
 
 * Claude Code
 
@@ -100,4 +121,5 @@ approve the microphone prompt.
 
 #+begin_src bash
 python3 -m unittest discover -s voice/tests -v
+node --test voice/adapters/opencode/index.test.js
 #+end_src

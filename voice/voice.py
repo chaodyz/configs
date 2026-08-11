@@ -81,6 +81,10 @@ class Config:
     def recording_log_path(self) -> Path:
         return self.state_dir / "recording.log"
 
+    @property
+    def speech_pid_path(self) -> Path:
+        return self.state_dir / "speech.pid"
+
 
 def command_exists(command: str) -> bool:
     return Path(command).is_file() if "/" in command else shutil.which(command) is not None
@@ -272,7 +276,19 @@ def summarize(text: str, config: Config) -> str:
     )
 
 
-def speak(text: str, config: Config, *, summary: bool, background: bool) -> None:
+def stop_speaking(config: Config) -> None:
+    pid = read_pid(config.speech_pid_path)
+    if pid and process_alive(pid):
+        try:
+            os.kill(pid, signal.SIGTERM)
+        except ProcessLookupError:
+            pass
+    config.speech_pid_path.unlink(missing_ok=True)
+
+
+def speak(
+    text: str, config: Config, *, summary: bool, background: bool
+) -> subprocess.Popen:
     if not command_exists(config.say_command):
         raise VoiceError(f"speech command not found: {config.say_command}")
     spoken = summarize(text, config) if summary else text.strip()
@@ -283,18 +299,24 @@ def speak(text: str, config: Config, *, summary: bool, background: bool) -> None
     if config.voice_name:
         args.extend(["-v", config.voice_name])
     args.extend(["--", spoken])
+    config.state_dir.mkdir(parents=True, exist_ok=True)
+    stop_speaking(config)
+    process = subprocess.Popen(
+        args,
+        stdin=subprocess.DEVNULL,
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+        start_new_session=True,
+    )
+    config.speech_pid_path.write_text(f"{process.pid}\n")
     if background:
-        subprocess.Popen(
-            args,
-            stdin=subprocess.DEVNULL,
-            stdout=subprocess.DEVNULL,
-            stderr=subprocess.DEVNULL,
-            start_new_session=True,
-        )
-    else:
-        result = subprocess.run(args, check=False)
-        if result.returncode != 0:
-            raise VoiceError(f"speech command exited {result.returncode}")
+        return process
+    returncode = process.wait()
+    if read_pid(config.speech_pid_path) == process.pid:
+        config.speech_pid_path.unlink(missing_ok=True)
+    if returncode != 0 and returncode != -signal.SIGTERM:
+        raise VoiceError(f"speech command exited {returncode}")
+    return process
 
 
 def extract_last_assistant_text(transcript_path: Path) -> str:
@@ -383,6 +405,7 @@ def parser() -> argparse.ArgumentParser:
     commands.add_parser("record", help="Start recording from the configured microphone.")
     commands.add_parser("stop", help="Stop recording, transcribe, and print text.")
     commands.add_parser("cancel", help="Cancel and delete the active recording.")
+    commands.add_parser("stop-speaking", help="Stop current speech playback.")
     transcribe_parser = commands.add_parser("transcribe", help="Transcribe an existing WAV file.")
     transcribe_parser.add_argument("audio", type=Path)
     speak_parser = commands.add_parser("speak", help="Speak arguments or stdin.")
@@ -407,6 +430,8 @@ def main(argv: list[str] | None = None) -> int:
         elif args.command == "cancel":
             cancel_recording(config)
             print("recording cancelled", file=sys.stderr)
+        elif args.command == "stop-speaking":
+            stop_speaking(config)
         elif args.command == "transcribe":
             print(transcribe(args.audio, config))
         elif args.command == "speak":
