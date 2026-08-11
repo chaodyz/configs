@@ -1,0 +1,103 @@
+#+title: Shared Voice Interface
+
+One local speech core for OpenCode, Claude Code, and future Emacs adapters.
+Audio engines remain external and replaceable; client adapters only handle UI
+events and prompt insertion.
+
+* Current Providers
+
+- STT: local =whisper-cli= from Whisper.cpp
+- Recording: =sox=
+- TTS: macOS =say=
+- Claude STT: Claude Code's native hold-to-talk mode
+
+No audio or transcript is sent to a remote service by this implementation.
+
+* Install Prerequisites
+
+#+begin_src bash
+brew install whisper-cpp sox
+mkdir -p ~/.local/share/whisper-cpp
+curl -L -o ~/.local/share/whisper-cpp/ggml-large-v3-turbo-q5_0.bin \
+  https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-large-v3-turbo-q5_0.bin
+#+end_src
+
+The model download is intentionally manual because it is large. Select a
+different model with =VOICE_WHISPER_MODEL=/absolute/path/model.bin=.
+
+* CLI
+
+#+begin_src bash
+voice/bin/voice doctor
+voice/bin/voice record
+voice/bin/voice stop
+voice/bin/voice cancel
+voice/bin/voice transcribe /path/to/audio.wav
+voice/bin/voice speak --summary 'Long markdown response...'
+#+end_src
+
+Only transcription text is written to stdout. Status and errors use stderr, so
+the CLI can be composed safely with client adapters.
+
+* Configuration
+
+| Variable | Default |
+|----------+---------|
+| =VOICE_STATE_DIR= | =~/.cache/voice-interface= |
+| =VOICE_SOX_COMMAND= | =sox= |
+| =VOICE_WHISPER_COMMAND= | =whisper-cli= |
+| =VOICE_WHISPER_MODEL= | =~/.local/share/whisper-cpp/ggml-large-v3-turbo-q5_0.bin= |
+| =VOICE_MICROPHONE= | system default |
+| =VOICE_SAY_COMMAND= | =/usr/bin/say= |
+| =VOICE_TTS_VOICE= | macOS default |
+| =VOICE_TTS_RATE= | =210= |
+| =VOICE_SUMMARY_CHARS= | =400= |
+| =VOICE_SUMMARY_SENTENCES= | =3= |
+| =VOICE_SUMMARY_SOFT_STOP= | =0= (disabled) |
+
+How much of a response gets spoken is bounded by three limits, whichever hits
+first: =VOICE_SUMMARY_SENTENCES= sentences, =VOICE_SUMMARY_CHARS= characters
+(cut on a word boundary), and =VOICE_SUMMARY_SOFT_STOP= — an early stop once the
+summary reaches that many characters, disabled by default. Set the soft stop to a
+low value for terse announcements; to hear (nearly) the whole response use
+=VOICE_SUMMARY_SENTENCES=999 VOICE_SUMMARY_CHARS=100000=.
+
+* OpenCode
+
+Merge =adapters/opencode/tui.json.example= into
+=~/.config/opencode/tui.json=, then restart OpenCode.
+
+| Action | Command | Key |
+|--------+---------+-----|
+| Toggle record/transcribe | =/stt-record= | =Ctrl-r= |
+| Transcribe and submit | =/stt-submit= | =Ctrl-x r= |
+| Cancel recording | =/stt-stop= | none |
+| Speak last response | =/tts-speak= | =Ctrl-x s= |
+
+The adapter disables OpenCode's default =Ctrl-r= session-rename binding. Session
+rename remains available through =/rename=.
+
+* Claude Code
+
+Claude native voice handles STT. The shared CLI replaces the custom TTS script
+for response output. Merge =adapters/claude/settings.json.example= into
+=~/.claude/settings.json=.
+
+The Stop hook must remain asynchronous. The CLI reads Claude's
+=last_assistant_message= hook field, extracts a short Markdown-safe summary, and
+invokes the configured TTS provider. Transcript parsing remains only as a
+fallback for older Claude versions because transcript writes can lag behind the
+Stop event.
+
+* macOS Microphone Permission
+
+macOS grants microphone access to the host application. For Alacritty, enable
+Alacritty under System Settings, Privacy & Security, Microphone. For a terminal
+inside Emacs.app, run =exec/emacs-mic-patch.sh= after each Emacs upgrade, then
+approve the microphone prompt.
+
+* Tests
+
+#+begin_src bash
+python3 -m unittest discover -s voice/tests -v
+#+end_src

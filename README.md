@@ -10,6 +10,8 @@ configs/
 ├── emacs/             # Emacs config (modular: config/{area}.el)
 ├── nvim/              # Neovim config (VSCode-Neovim integration)
 ├── claude/            # Claude Code config & custom skills
+├── opencode/          # OpenCode TUI config
+├── voice/             # Shared STT/TTS core and client adapters
 ├── vscode/            # VS Code keybindings (linux/mac)
 ├── cursor/            # Cursor IDE keybindings (linux/mac)
 ├── alacritty/         # Alacritty terminal config

@@ -11,7 +11,7 @@ export_to_repo() {
     echo "📦 Exporting local configs into repo: $DOTFILES_DIR"
 
     # Ensure folder structure exists
-    mkdir -p "$DOTFILES_DIR"/{bash,vscode,cursor,starship,alacritty,emacs,nvim,joplin,tmux,claude}
+    mkdir -p "$DOTFILES_DIR"/{bash,vscode,cursor,starship,alacritty,emacs,nvim,joplin,tmux,claude,opencode}
 
     # Platform specific
     if [[ "$(uname)" == "Darwin" ]]; then
@@ -62,6 +62,9 @@ export_to_repo() {
         rsync -av "$HOME/.claude/commands/" "$DOTFILES_DIR/claude/commands"
     fi
 
+    # OpenCode configs
+    [[ -f ~/.config/opencode/tui.json ]] && cp ~/.config/opencode/tui.json "$DOTFILES_DIR/opencode/tui.json"
+
     echo "✅ Export complete."
 }
 
@@ -71,7 +74,7 @@ export_to_repo() {
 link_from_repo() {
     echo "🔗 Linking local config paths to repo files in: $DOTFILES_DIR"
 
-    mkdir -p ~/.config ~/.config/alacritty ~/.config/joplin ~/.emacs.d ~/.claude
+    mkdir -p ~/.config ~/.config/alacritty ~/.config/joplin ~/.config/opencode ~/.emacs.d ~/.claude
 
     # Backup old files if they are not symlinks
     backup_if_not_symlink() {
@@ -122,6 +125,11 @@ link_from_repo() {
         rm -rf "$HOME/.claude/commands"
     fi
     ln -s "$DOTFILES_DIR/claude/commands" "$HOME/.claude/commands"
+
+    # OpenCode config
+    echo "🔗 Symlinking OpenCode config ..."
+    [[ -f "$DOTFILES_DIR/opencode/tui.json" ]] && \
+        ln -sf "$DOTFILES_DIR/opencode/tui.json" ~/.config/opencode/tui.json
 
     # Neovim config
     echo "🔗 Symlinking Neovim config ..."

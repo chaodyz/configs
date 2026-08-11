@@ -43,3 +43,10 @@ lazy-lock.json
 
 # Emacs Undo tree
 *~undo-tree~*
+
+# Local agent planning documents
+docs/agent/
+
+# Python runtime artifacts
+__pycache__/
+*.pyc

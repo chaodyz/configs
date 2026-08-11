@@ -55,6 +55,10 @@ apply_from_repo() {
         cp -rf "$DOTFILES_DIR/claude/commands" ~/.claude/
     fi
 
+    # --- OpenCode ---
+    mkdir -p ~/.config/opencode
+    [[ -f "$DOTFILES_DIR/opencode/tui.json" ]] && cp "$DOTFILES_DIR/opencode/tui.json" ~/.config/opencode/tui.json
+
     # --- VSCode & Cursor (per platform) ---
     if [[ "$(uname)" == "Darwin" ]]; then
         mkdir -p "$HOME/Library/Application Support/Code/User"
