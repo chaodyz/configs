@@ -8,34 +8,20 @@ import voiceAdapter, {
 } from "./index.js";
 
 function createAdapterHarness() {
-  const editor = {
-    inserted: [],
-    deleted: 0,
-    insertText(text) {
-      this.inserted.push(text);
-    },
-    deleteCharBackward() {
-      this.deleted += 1;
-    },
-  };
-  let intercept;
+  let commands;
   const api = {
-    renderer: {
-      currentFocusedEditor: editor,
-      enableKittyKeyboard() {},
-    },
-    keymap: {
-      intercept(_kind, callback) {
-        intercept = callback;
-        return () => {};
-      },
-    },
+    renderer: {},
+    keymap: {},
     mode: { current: () => "base" },
     route: { current: { name: "home" } },
     kv: { get: (_key, fallback) => fallback, set() {} },
     ui: { toast() {} },
     event: { on() {} },
-    command: { register() {} },
+    command: {
+      register(callback) {
+        commands = callback();
+      },
+    },
     lifecycle: { onDispose() {} },
     client: {
       tui: {
@@ -45,21 +31,7 @@ function createAdapterHarness() {
     },
   };
 
-  return voiceAdapter.tui(api).then(() => ({ editor, intercept }));
-}
-
-function spaceEvent(eventType = "press") {
-  return {
-    event: {
-      name: "space",
-      eventType,
-      ctrl: false,
-      meta: false,
-      shift: false,
-      option: false,
-    },
-    consume() {},
-  };
+  return voiceAdapter.tui(api).then(() => ({ commands }));
 }
 
 test("streams complete sentences across deltas", () => {
@@ -117,44 +89,14 @@ test("distinguishes final answers from intermediate tool-call text", () => {
   assert.equal(isFinalAssistantMessage({ ...base, finish: "stop", error: {} }), false);
 });
 
-test("inserts a tapped Space immediately", async () => {
-  const { editor, intercept } = await createAdapterHarness();
+test("registers the Ctrl-x voice chord shortcuts", async () => {
+  const { commands } = await createAdapterHarness();
+  const keybinds = Object.fromEntries(
+    commands.map((command) => [command.value, command.keybind]),
+  );
 
-  intercept(spaceEvent("press"));
-  intercept(spaceEvent("release"));
-
-  assert.deepEqual(editor.inserted, [" "]);
-  assert.equal(editor.deleted, 0);
-});
-
-test("keeps two separated Space taps instead of treating them as a hold", async () => {
-  const { editor, intercept } = await createAdapterHarness();
-
-  intercept(spaceEvent());
-  await new Promise((resolve) => setTimeout(resolve, 190));
-  intercept(spaceEvent());
-  await new Promise((resolve) => setTimeout(resolve, 130));
-
-  assert.deepEqual(editor.inserted, [" ", " "]);
-  assert.equal(editor.deleted, 0);
-});
-
-test("recognizes tmux-style repeated Space presses as a hold", async () => {
-  const originalVoice = process.env.VOICE_CLI;
-  process.env.VOICE_CLI = "/usr/bin/true";
-  try {
-    const { editor, intercept } = await createAdapterHarness();
-
-    intercept(spaceEvent());
-    await new Promise((resolve) => setTimeout(resolve, 190));
-    intercept(spaceEvent());
-    intercept(spaceEvent());
-
-    assert.deepEqual(editor.inserted, [" "]);
-    assert.equal(editor.deleted, 1);
-    await new Promise((resolve) => setTimeout(resolve, 220));
-  } finally {
-    if (originalVoice === undefined) delete process.env.VOICE_CLI;
-    else process.env.VOICE_CLI = originalVoice;
-  }
+  assert.equal(keybinds["voice.tts-stop"], "<leader>s");
+  assert.equal(keybinds["voice.record-start"], "<leader>r");
+  assert.equal(keybinds["voice.record-submit"], "<leader>g");
+  assert.equal(keybinds["voice.speak-last"], "<leader>a");
 });

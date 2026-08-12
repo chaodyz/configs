@@ -204,13 +204,6 @@ export default {
   tui: async (api) => {
     let recording = false;
     let processing = false;
-    let spaceCandidate = null;
-    let spaceCandidateTimer = null;
-    let releaseTimer = null;
-    let holdActivated = false;
-    let holdCancelled = false;
-    let recordingStart = null;
-    let releaseEventsSeen = 0;
     let streamSource = null;
     let activeStreamSession = null;
     const spokenMessages = new Set();
@@ -240,7 +233,7 @@ export default {
           await runVoice(["record"]);
         }
         recording = true;
-        toast("Recording... release Space to transcribe and submit");
+        toast("Recording... press Ctrl-x g to transcribe and submit");
       } catch (error) {
         toast(error.message, "error");
       }
@@ -274,142 +267,6 @@ export default {
         toast("Recording cancelled");
       }
     }
-
-    function clearSpaceCandidate(removeInserted = false, commitPending = false) {
-      if (spaceCandidateTimer) clearTimeout(spaceCandidateTimer);
-      spaceCandidateTimer = null;
-      if (
-        commitPending &&
-        spaceCandidate?.pendingAt &&
-        spaceCandidate.editor === api.renderer.currentFocusedEditor
-      ) {
-        spaceCandidate.editor.insertText(" ");
-      }
-      if (
-        removeInserted &&
-        spaceCandidate?.editor === api.renderer.currentFocusedEditor
-      ) {
-        spaceCandidate.editor.deleteCharBackward();
-      }
-      spaceCandidate = null;
-    }
-
-    function clearReleaseTimer() {
-      if (releaseTimer) clearTimeout(releaseTimer);
-      releaseTimer = null;
-    }
-
-    function setSpaceCandidate(editor, startedAt) {
-      clearSpaceCandidate();
-      spaceCandidate = { editor, startedAt, pendingAt: null };
-      spaceCandidateTimer = setTimeout(() => clearSpaceCandidate(), 1500);
-    }
-
-    function setPendingRepeat(startedAt) {
-      if (spaceCandidateTimer) clearTimeout(spaceCandidateTimer);
-      spaceCandidate.pendingAt = startedAt;
-      spaceCandidateTimer = setTimeout(
-        () => clearSpaceCandidate(false, true),
-        120,
-      );
-    }
-
-    function armReleaseTimer() {
-      clearReleaseTimer();
-      releaseTimer = setTimeout(() => releaseSpaceHold(), 180);
-    }
-
-    function pressSpace(eventType) {
-      const editor = api.renderer.currentFocusedEditor;
-      if (!editor) return;
-
-      if (holdActivated) {
-        armReleaseTimer();
-        return;
-      }
-
-      const now = performance.now();
-      if (spaceCandidate?.pendingAt) {
-        clearSpaceCandidate(true);
-        holdActivated = true;
-        holdCancelled = false;
-        recordingStart = startRecording();
-        armReleaseTimer();
-        return;
-      }
-
-      if (spaceCandidate && eventType === "repeat") {
-        clearSpaceCandidate(true);
-        holdActivated = true;
-        holdCancelled = false;
-        recordingStart = startRecording();
-        armReleaseTimer();
-        return;
-      }
-
-      if (spaceCandidate && now - spaceCandidate.startedAt >= 180) {
-        setPendingRepeat(now);
-        return;
-      }
-
-      editor.insertText(" ");
-      setSpaceCandidate(editor, now);
-    }
-
-    async function releaseSpaceHold() {
-      releaseEventsSeen += 1;
-      clearReleaseTimer();
-      clearSpaceCandidate(false, true);
-      if (holdActivated && !holdCancelled) {
-        await recordingStart;
-        if (recording) await finishRecording(true);
-      }
-      holdActivated = false;
-      holdCancelled = false;
-      recordingStart = null;
-    }
-
-    async function cancelSpaceHold() {
-      holdCancelled = true;
-      clearReleaseTimer();
-      clearSpaceCandidate(true);
-      if (recordingStart) await recordingStart;
-      if (recording || processing) await cancelRecording();
-      holdActivated = false;
-      recordingStart = null;
-    }
-
-    // Direct terminals provide Kitty release events. tmux drops the event
-    // subtype, so repeated presses plus a short silence provide the fallback.
-    api.renderer.enableKittyKeyboard(0b00111);
-    const offPushToTalk = api.keymap.intercept(
-      "key",
-      ({ event, consume }) => {
-        const noModifiers = !event.ctrl && !event.meta && !event.shift && !event.option;
-        const promptFocused = api.mode.current() === "base" && api.renderer.currentFocusedEditor;
-
-        if (event.name === "space" && noModifiers && promptFocused) {
-          consume();
-          if (event.eventType === "release") {
-            releaseSpaceHold();
-          } else {
-            pressSpace(event.eventType);
-          }
-          return;
-        }
-
-        if (
-          event.name === "escape" &&
-          (spaceCandidate || holdActivated || recording)
-        ) {
-          consume();
-          if (event.eventType !== "release") cancelSpaceHold();
-        } else if (event.eventType !== "release") {
-          clearSpaceCandidate(false, true);
-        }
-      },
-      { priority: 10, release: true },
-    );
 
     api.event.on("session.status", (event) => {
       stats.status += 1;
@@ -466,7 +323,7 @@ export default {
         title: "Voice: start recording",
         value: "voice.record-start",
         description: "Start local microphone recording",
-        keybind: "ctrl+r",
+        keybind: "<leader>r",
         slash: { name: "stt-record" },
         onSelect: startRecording,
       },
@@ -474,7 +331,7 @@ export default {
         title: "Voice: transcribe and submit",
         value: "voice.record-submit",
         description: "Stop recording, transcribe, and submit the prompt",
-        keybind: "<leader>r",
+        keybind: "<leader>g",
         slash: { name: "stt-submit" },
         onSelect() {
           if (!recording) return toast("No recording is active", "warning");
@@ -493,7 +350,7 @@ export default {
         title: "Voice: speak last response",
         value: "voice.speak-last",
         description: "Interrupt playback and read the full last response",
-        keybind: "<leader>s",
+        keybind: "<leader>a",
         slash: { name: "tts-speak" },
         async onSelect() {
           try {
@@ -539,6 +396,7 @@ export default {
         title: "Voice: stop speech",
         value: "voice.tts-stop",
         description: "Stop current speech and clear queued sentences",
+        keybind: "<leader>s",
         slash: { name: "tts-stop" },
         async onSelect() {
           await speaker.interrupt();
@@ -552,7 +410,7 @@ export default {
         slash: { name: "voice-status" },
         onSelect() {
           toast(
-            `mode=${speechMode()} active=${activeStreamSession || "none"} deltas=${stats.acceptedDelta}/${stats.legacyDelta + stats.nextDelta} releases=${releaseEventsSeen}`,
+            `mode=${speechMode()} active=${activeStreamSession || "none"} deltas=${stats.acceptedDelta}/${stats.legacyDelta + stats.nextDelta}`,
           );
         },
       },
@@ -560,9 +418,6 @@ export default {
 
     api.command.register(() => commands);
     api.lifecycle.onDispose(async () => {
-      offPushToTalk();
-      clearSpaceCandidate();
-      clearReleaseTimer();
       await speaker.interrupt();
       if (recording || processing) {
         try {

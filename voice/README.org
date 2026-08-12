@@ -41,19 +41,19 @@ the CLI can be composed safely with client adapters.
 
 * Configuration
 
-| Variable | Default |
-|----------+---------|
-| =VOICE_STATE_DIR= | =~/.cache/voice-interface= |
-| =VOICE_SOX_COMMAND= | =sox= |
-| =VOICE_WHISPER_COMMAND= | =whisper-cli= |
-| =VOICE_WHISPER_MODEL= | =~/.local/share/whisper-cpp/ggml-large-v3-turbo-q5_0.bin= |
-| =VOICE_MICROPHONE= | system default |
-| =VOICE_SAY_COMMAND= | =/usr/bin/say= |
-| =VOICE_TTS_VOICE= | macOS default |
-| =VOICE_TTS_RATE= | =210= |
-| =VOICE_SUMMARY_CHARS= | =400= |
-| =VOICE_SUMMARY_SENTENCES= | =3= |
-| =VOICE_SUMMARY_SOFT_STOP= | =0= (disabled) |
+| Variable                  | Default                                                   |
+|---------------------------+-----------------------------------------------------------|
+| =VOICE_STATE_DIR=         | =~/.cache/voice-interface=                                |
+| =VOICE_SOX_COMMAND=       | =sox=                                                     |
+| =VOICE_WHISPER_COMMAND=   | =whisper-cli=                                             |
+| =VOICE_WHISPER_MODEL=     | =~/.local/share/whisper-cpp/ggml-large-v3-turbo-q5_0.bin= |
+| =VOICE_MICROPHONE=        | system default                                            |
+| =VOICE_SAY_COMMAND=       | =/usr/bin/say=                                            |
+| =VOICE_TTS_VOICE=         | macOS default                                             |
+| =VOICE_TTS_RATE=          | =210=                                                     |
+| =VOICE_SUMMARY_CHARS=     | =400=                                                     |
+| =VOICE_SUMMARY_SENTENCES= | =3=                                                       |
+| =VOICE_SUMMARY_SOFT_STOP= | =0= (disabled)                                            |
 
 How much of a response gets spoken is bounded by three limits, whichever hits
 first: =VOICE_SUMMARY_SENTENCES= sentences, =VOICE_SUMMARY_CHARS= characters
@@ -67,23 +67,16 @@ low value for terse announcements; to hear (nearly) the whole response use
 Merge =adapters/opencode/tui.json.example= into
 =~/.config/opencode/tui.json=, then restart OpenCode.
 
-| Action | Command | Key |
-|--------+---------+-----|
-| Hold to record | =/stt-record= internally | hold =Space= |
-| Transcribe and submit | =/stt-submit= internally | release =Space= |
-| Cancel recording | =/stt-stop= | press =Escape= while holding Space |
-| Speak full last response | =/tts-speak= | =Ctrl-x s= |
-| Speak selected text | =/tts-selection= | =Ctrl-x Shift-s= |
-| Cycle automatic speech mode | =/tts-mode= | =Ctrl-x v= |
-| Stop current speech | =/tts-stop= | none |
-| Show voice diagnostics | =/voice-status= | none |
-
-Hold-Space uses OpenTUI's native keyboard interceptor. A direct terminal can
-provide Kitty release events; tmux 3.6 discards that event subtype, so the
-adapter also recognizes the terminal's repeated Space presses and treats a
-short pause after them as release. Tapping Space inserts immediately. A hold is
-recognized when key repeat starts, and submits about 180 milliseconds after the
-last repeat.
+| Action                      | Command          | Key              |
+|-----------------------------+------------------+------------------|
+| Start recording             | =/stt-record=    | =Ctrl-x r=       |
+| Transcribe and submit       | =/stt-submit=    | =Ctrl-x g=       |
+| Cancel recording            | =/stt-stop=      | =Ctrl-g=         |
+| Stop current speech         | =/tts-stop=      | =Ctrl-x s=       |
+| Speak full last response    | =/tts-speak=     | =Ctrl-x a=       |
+| Speak selected text         | =/tts-selection= | =Ctrl-x Shift-s= |
+| Cycle automatic speech mode | =/tts-mode=      | =Ctrl-x v=       |
+| Show voice diagnostics      | =/voice-status=  | none             |
 
 Automatic TTS defaults to =final= mode, which speaks a short summary only after
 the final assistant response completes and ignores intermediate tool-call
