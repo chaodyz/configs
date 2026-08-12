@@ -45,6 +45,13 @@
     ;; Set to <your Dropbox root directory>/MobileOrg.
     (setq org-mobile-directory "~/Dropbox/Apps/MobileOrg"))
 
+;; In a terminal (emacs -nw) TAB and C-i are the same byte, so evil's
+;; `evil-want-C-i-jump' binding of C-i in motion state shadows `org-cycle'.
+;; Restore TAB folding in org normal state; C-i jump stays intact elsewhere.
+(with-eval-after-load 'org
+  (with-eval-after-load 'evil
+    (evil-define-key 'normal org-mode-map (kbd "TAB") #'org-cycle)))
+
 ;; =============================================================================
 ;; Org Babel
 ;; =============================================================================
