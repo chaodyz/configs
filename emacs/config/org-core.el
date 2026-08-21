@@ -22,14 +22,8 @@
 (defvar my/org-default-notes-path (expand-file-name "index.org" my/org-root-directory)
   "Default capture file for Org notes.")
 
-(defvar my/org-tasks-file (expand-file-name "tasks.org" my/org-root-directory)
-  "Primary tasks file.")
-
 (defvar my/org-journal-file (expand-file-name "journal.org" my/org-root-directory)
   "Journal file.")
-
-(defvar my/org-french-file (expand-file-name "french.org" my/org-root-directory)
-  "French notes file.")
 
 (defvar my/org-flagged-file (expand-file-name "flagged.org" my/org-root-directory)
   "MobileOrg inbox file.")
